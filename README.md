@@ -57,13 +57,24 @@ SmartRoom est une application moderne permettant à une entreprise de gérer eff
 2. Démarrer l'application avec Docker Compose
 
    ```bash
+   # Installer les dépendances en local si nécessaire
+   npm install
    # Mode production
-   docker-compose up -d -f docker-compose.prod.yml
+   docker-compose -f docker-compose.prod.yml up -d
    # Mode développement
-   docker-compose up -d -f docker-compose.dev.yml
+   docker compose -f docker-compose.dev.yml up -d
    ```
 
-3. Accéder à l'application via `http://localhost:3000`
+3. Accéder à l'application via `http://localhost:5173`
+
+4. Arrêter l'application
+
+   ```bash
+   # Mode production
+   docker-compose -f docker-compose.prod.yml down
+   # Mode développement
+   docker compose -f docker-compose.dev.yml down
+   ```
 
 ## Licence
 
