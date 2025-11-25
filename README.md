@@ -60,7 +60,7 @@ SmartRoom est une application moderne permettant à une entreprise de gérer eff
    # Installer les dépendances en local si nécessaire
    npm install
    # Mode production
-   docker-compose -f docker-compose.prod.yml up -d
+   docker compose -f docker-compose.prod.yml up -d
    # Mode développement
    docker compose -f docker-compose.dev.yml up -d
    ```
@@ -71,7 +71,7 @@ SmartRoom est une application moderne permettant à une entreprise de gérer eff
 
    ```bash
    # Mode production
-   docker-compose -f docker-compose.prod.yml down
+   docker compose -f docker-compose.prod.yml down
    # Mode développement
    docker compose -f docker-compose.dev.yml down
    ```
