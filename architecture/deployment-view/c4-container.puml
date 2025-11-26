@@ -1,0 +1,71 @@
+@startuml c4_container_diagram
+!define C4P https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master
+!includeurl C4P/C4_Container.puml
+
+Title C4 - Diagramme des Conteneurs
+
+Person(user, "Employé / Utilisateur", "Peut consulter, rechercher et réserver une salle.")
+
+System_Boundary(app, "Application Réservation de Salles") {
+
+  Container(web, "Frontend Web", "React", "Interface utilisateur accessible via navigateur. Permet de rechercher et réserver des salles.")
+  
+  Container(api, "API Gateway / BFF", "Node.js / Express (BFF)", "Point d’entrée unique du frontend. Délègue les requêtes aux microservices.")
+  
+  Container(auth, "Service Authentification", "Node.js / JWT", "Gère la connexion, les jetons d’accès et la validation des droits.")
+  
+  Container(res, "Service Réservation", "Node.js / Express", "Gère la création, modification et suppression des réservations de salles.")
+  
+  Container(notif, "Service Notification", "Node.js / Worker", "Reçoit les événements et envoie des emails via SMTP (NodeMailer).")
+  
+  Container(report, "Service Reporting / Statistiques", "Node.js / Cron / BI", "Produit les statistiques d’occupation et les rapports d’utilisation des salles.")
+  
+  Container(admin, "Service Gestion Utilisateurs / Admin", "Node.js / Express", "Gère les rôles, droits et profils administrateurs.")
+  
+  Container(building, "Service Gestion Salles & Bâtiments", "Node.js / Express", "Stocke et fournit les informations sur les salles, bâtiments et équipements.")
+  
+  Container(incident, "Service Gestion Incidents / Demandes", "Node.js / Express", "Permet aux utilisateurs d’envoyer des incidents/demandes et de suivre leur clôture.")
+  
+  ContainerDb(db, "Base de données principale", "PostgreSQL", "Stocke les utilisateurs, réservations, salles, incidents et historiques.")
+  
+  ContainerQueue(broker, "Message Broker", "RabbitMQ", "File de messages asynchrones pour les événements du système (ex : reservation.created).")
+  
+  Container_Ext(smtp, "Service SMTP / Email (NodeMailer)", "SMTP Server / External", "Service externe pour l’envoi des emails et notifications.")
+  
+  Container(config, "Service de Configuration / Discovery", "Eureka", "Gère la configuration et la découverte des services.")
+}
+
+' Relations
+Rel(user, web, "Utilise", "HTTPS")
+Rel(web, api, "Appels REST", "HTTPS / JSON")
+
+Rel(api, auth, "Authentifie via", "REST / JWT")
+Rel(api, res, "Envoie des requêtes de réservation", "REST / JSON")
+Rel(api, notif, "Appelle pour notifications", "REST / JSON")
+Rel(api, report, "Demande des rapports / stats", "REST / JSON")
+Rel(api, admin, "Gère les utilisateurs", "REST / JSON")
+Rel(api, building, "Demande la liste des salles / équipements", "REST / JSON")
+Rel(api, incident, "Transmet les incidents / demandes", "REST / JSON")
+
+Rel(res, db, "Lit / écrit les données de réservation", "SQL")
+Rel(auth, db, "Lit / écrit les comptes utilisateurs", "SQL")
+Rel(notif, db, "Enregistre les logs de notifications", "SQL")
+Rel(report, db, "Lit les statistiques d’utilisation", "SQL")
+Rel(admin, db, "Lit / écrit les profils et droits", "SQL")
+Rel(building, db, "Lit / écrit les salles et bâtiments", "SQL")
+Rel(incident, db, "Lit / écrit les incidents / demandes", "SQL")
+
+Rel(res, broker, "Publie événements", "reservation.created / reservation.cancelled")
+Rel(incident, broker, "Publie événements", "incident.created / incident.closed")
+Rel(notif, broker, "S'abonne aux événements", "AMQP")
+
+Rel(notif, smtp, "Envoie des emails", "SMTP")
+Rel(config, auth, "Fournit configuration et secrets", "Config API")
+Rel(config, res, "Fournit paramètres DB", "Config API")
+Rel(config, notif, "Fournit paramètres SMTP", "Config API")
+Rel(config, report, "Fournit paramètres de rapport", "Config API")
+Rel(config, admin, "Fournit paramètres utilisateurs", "Config API")
+Rel(config, building, "Fournit paramètres salles", "Config API")
+Rel(config, incident, "Fournit paramètres incidents", "Config API")
+
+@enduml

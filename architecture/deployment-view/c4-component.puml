@@ -1,0 +1,46 @@
+@startuml c4_component_diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title C4 - Diagramme des Composants
+
+Person(user, "Utilisateur")
+
+System_Boundary(s1, "SmartRoom System") {
+    Container(webui, "Web UI", "React", "Interface de réservation de salles")
+
+        Container(apigw, "API Gateway", "Node.js / Express", "Point d’entrée des requêtes backend")
+        Container(config, "Service Discovery / Config", "Spring Cloud Config / Consul", "Fournit configuration et découverte des services")
+
+    Container_Boundary(s2, "Microservices") {
+        Container(auth, "Auth Service", "Spring Boot", "Gère l’authentification et les tokens")
+        Container(users, "User Service", "Spring Boot", "Gère les informations utilisateurs")
+        Container(rooms, "Room Service", "Spring Boot", "Gère les informations sur les salles")
+        Container(res, "Reservation Service", "Spring Boot", "Gère les réservations et disponibilités")
+        Container(resource, "Resource Service", "Spring Boot", "Gère le matériel associé aux salles")
+        Container(notif, "Notification Service", "Spring Boot", "Envoie les notifications email")
+        Container(stat, "Statistics Service", "Spring Boot", "Calcule les taux d’occupation et les statistiques")
+    }
+
+    ContainerDb(db, "Database", "PostgreSQL", "Stocke les données : utilisateurs, salles, réservations, ressources")
+    ContainerQueue(broker, "Message Broker", "RabbitMQ / Kafka", "Transport d’événements entre services")
+}
+
+System_Ext(smtp, "SMTP Service", "Service externe d’envoi d’emails")
+
+Rel(user, webui, "Utilise", "HTTPS")
+
+Rel(webui, apigw, "Requêtes API REST", "HTTPS")
+
+Rel(apigw, s2, "Appels API REST", "HTTPS")
+Rel(config, s2, "Fournit configuration et découverte", "HTTP/HTTPS")
+
+Rel(res, db, "Lit / Écrit", "SQL")
+Rel(rooms, db, "Lit / Écrit", "SQL")
+Rel(users, db, "Lit / Écrit", "SQL")
+
+Rel(res, broker, "Publie événements", "AMQP / Kafka topic")
+Rel(broker, notif, "Diffuse événements")
+Rel(broker, stat, "Diffuse événements")
+Rel(notif, smtp, "Envoie emails")
+
+@enduml

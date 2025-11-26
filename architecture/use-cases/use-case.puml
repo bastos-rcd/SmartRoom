@@ -1,0 +1,81 @@
+@startuml usecase_diagram
+left to right direction
+
+legend center
+  |<color:green><size:24>●</size></color> | <size:20>**Tâches cruciales** </size>|
+  |<color:LightBlue><size:24>●</size></color> | <size:20>**Tâches importantes** </size>|
+  |<color:gold><size:24>●</size></color> | <size:20>**Tâches agréables** </size>|
+  |<color:red><size:24>●</size></color> | <size:20>**Tâches non prioritaires** </size>|
+end legend
+
+title Diagramme des Cas d'utilisation
+
+actor "Utilisateur Non Connecté" as Guest
+actor "Utilisateur Connecté" as User  
+actor "Administrateur" as Admin
+actor "Système de Notification" as Notif
+
+rectangle "SmartRoom" {
+    package "Gestion Administrateur" as AdminPackage {
+        package "Gestion bâtiments" as BuildingPackage {
+            (Créer bâtiment) as UC28 #LightBlue
+            (Modifier bâtiment) as UC29 #gold
+            (Supprimer bâtiment) as UC30 #red
+        }
+        package "Gestion salles & équipements" as RoomPackage {
+            (Ajouter salle) as UC23 #green
+            (Modifier salle) as UC24 #LightBlue
+            (Supprimer salle) as UC25 #LightBlue
+            (Désactiver salle) as UC26 #LightBlue
+            (Configurer équipements) as UC27 #green
+        }
+        package "Gestion utilisateurs" as UserPackage {
+            (Créer utilisateur) as UC5 #gold
+            (Modifier profil utilisateur) as UC6 #gold
+            (Supprimer utilisateur) as UC7 #LightBlue
+            (Bloquer utilisateur) as UC33 #LightBlue
+        }
+        package "Gestion des droits d'accès" as AccessPackage {
+            (Gérer droits d'accès) as UC8 #green
+            (Attribuer rôle utilisateur) as UC20 #LightBlue
+            (Donner droits administrateur) as UC21 #green
+            (Révoquer droits administrateur) as UC22 #green
+        }
+        package "Gestion des tickets" as TicketPackage {
+            (Gérer demandes / tickets) as UC9 #gold
+            (Consulter demandes) as UC14 #gold
+            (Répondre à une demande) as UC15 #LightBlue
+            (Clôturer une demande) as UC16 #gold
+            (Notifier l'utilisateur) as UC17 #LightBlue
+        }
+        (Consulter rapports & statistiques) as UC10 #green
+    }
+    package "Gestion des réservations" as ReservationPackage {
+        (Consulter disponibilités) as UC1 #green
+        (Rechercher salles) as UC2 #LightBlue
+        (Réserver salle) as UC3 #green
+        (Modifier / Annuler réservation) as UC4 #green
+        (Consulter mes réservations) as UC11 #LightBlue
+        (Créer une demande / ticket) as UC12 #gold
+        (Suivre mes demandes) as UC13 #red
+    }
+    
+    package "Gestion utilisateurs non connectés" as GuestPackage {
+        (Consulter disponibilités) as UC18 #green
+        (Rechercher salles) as UC19 #gold
+    }
+    package "Notifications & Reporting" as NotificationPackage {
+        (Envoyer confirmation) as UC31 #green
+        (Envoyer rappel) as UC32 #gold
+    }
+
+    User --> ReservationPackage
+    Admin --> AdminPackage
+    Admin --> ReservationPackage
+    Guest --> GuestPackage
+    Notif --> NotificationPackage
+    UC3 .-> UC31 : <<include>>
+    UC4 .-> UC31 : <<include>>
+}
+
+@enduml

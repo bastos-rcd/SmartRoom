@@ -1,0 +1,57 @@
+@startuml c4_code_diagram
+
+title C4 - Diagramme de Code
+
+' ===========================
+'  Contexte
+' ===========================
+class user as "**Utilisateur**\nEffectue des réservations, annulations, etc."
+class admin as "**Administrateur**\nGère les utilisateurs, salles et rapports."
+
+package "Application de Réservation de Salles" as app {
+
+  class auth as "**Gestion Authentification**\n(Module)\nPermet la connexion, la gestion des rôles et statuts utilisateur."
+
+  class reservation as "**Gestion Réservations**\n(Module)\nCrée, modifie, annule et confirme les réservations de salles."
+
+  class salles as "**Gestion Salles & Bâtiments**\n(Module)\nPermet de gérer les bâtiments, salles et leur disponibilité."
+
+  class equipements as "**Gestion Équipements**\n(Module)\nPermet de gérer les équipements disponibles dans les salles."
+
+  class notification as "**Service Notifications**\n(Module)\nEnvoie des notifications (confirmation, rappel, annulation)."
+
+  class rapport as "**Service Rapports & Statistiques**\n(Module)\nGénère des rapports sur l’utilisation et le taux d’occupation."
+
+  class support as "**Gestion des Demandes / Tickets**\n(Module)\nPermet aux utilisateurs de créer des tickets de support et aux administrateurs de les gérer."
+
+  class db as "**Base de Données**\n(MySQL/PostgreSQL)\nStocke les informations sur les utilisateurs, salles, réservations, notifications, etc."
+}
+
+' ===========================
+'  Relations
+' ===========================
+user --> auth : se connecte
+user --> reservation : crée / annule / modifie réservation
+user --> support : crée des demandes
+user <-- notification : reçoit notifications
+
+admin --> salles : gère bâtiments et salles
+admin --> equipements : gère équipements
+admin --> reservation : gère réservations
+admin --> rapport : consulte rapports
+admin --> support : gère demandes
+admin --> auth : attribue droits et bloque utilisateurs
+
+reservation --> salles : vérifie disponibilité
+reservation --> equipements : vérifie équipements associés
+reservation --> notification : génère notifications
+reservation --> db : lit/écrit données réservation
+
+auth --> db : stocke utilisateurs / rôles
+salles --> db : stocke infos bâtiments / salles
+equipements --> db : stocke équipements
+rapport --> db : lit données pour statistiques
+notification --> db : enregistre historique
+support --> db : stocke demandes
+
+@enduml

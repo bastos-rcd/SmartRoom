@@ -1,0 +1,21 @@
+@startuml c4_system_context_diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title C4 - Diagramme de Contexte
+
+' --- Acteurs ---
+Person(guest, "Utilisateur Non Connecté", "Peut consulter les disponibilités et rechercher des salles")
+Person(user, "Utilisateur Connecté", "Peut réserver, modifier ou annuler ses réservations et suivre ses demandes")
+Person(admin, "Administrateur", "Gère les bâtiments, salles, utilisateurs et rapports/statistiques")
+System_Ext(notif, "Système de Notification", "Envoie les emails de confirmation, rappel ou annulation")
+
+' --- Système principal ---
+System(smartroom, "SmartRoom", "Application web de réservation et gestion des salles")
+
+' --- Relations ---
+Rel(guest, smartroom, "Consulte les disponibilités et recherche des salles")
+Rel(user, smartroom, "Réserve et gère ses réservations")
+Rel(admin, smartroom, "Administre le système, gère bâtiments, salles, utilisateurs et statistiques")
+Rel(smartroom, notif, "Envoie des notifications automatiques (confirmation, rappel, annulation)", "SMTP / API")
+
+@enduml

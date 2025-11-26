@@ -1,0 +1,37 @@
+@startuml component_diagram
+
+title Diagramme de Composants
+
+component "Web UI (React)" as UI
+component "API Gateway" as APIGW
+component "Service Discovery / Config" as Config
+
+package "Microservices" as MS {
+  component "Auth Service" as Auth
+  component "User Service" as User
+  component "Room Service" as Room
+  component "Reservation Service" as Res
+  component "Resource Service" as Resource
+  component "Notification Service" as Notif
+  component "Statistics Service" as Stat
+}
+
+component "DataBase" as DB
+component "SMTP Service" as SMTP
+queue "Message Broker" as Broker
+
+UI -down-> APIGW
+
+APIGW --> MS
+Config --> MS
+
+Res --> DB
+Room --> DB
+User --> DB
+
+Res --> Broker
+Broker --> Stat
+Broker --> Notif
+Notif --> SMTP
+
+@enduml

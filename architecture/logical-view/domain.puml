@@ -1,0 +1,104 @@
+@startuml domain_diagram
+
+title Diagramme de Domaine
+
+' =====================
+' Acteur
+' =====================
+class User {
+  - id: int
+  - first_name: string
+  - last_name: string
+  - email: string
+  - password: string
+  - role: string <<user/admin>>
+  - status: string <<active/blocked>>
+}
+
+' =====================
+' Gestion des bâtiments et salles
+' =====================
+class Building {
+  - id: int
+  - name: string
+  - address: string
+  - nb_floors: int
+}
+
+class Room {
+  - id: int
+  - name: string
+  - capacity: int
+  - state: string <<active/inactive>>
+  - location: string
+}
+
+Building "1" -- "0..*" Room : contains >
+
+' =====================
+' Équipements
+' =====================
+class Equipment {
+  - id: int
+  - name: string
+  - type: string
+  - available : bool
+}
+
+Room "0..*" -- "0..*" Equipment : possesses >
+
+' =====================
+' Réservations
+' =====================
+class Reservation {
+  - id: int
+  - start_date: datetime
+  - end_date: datetime
+  - status: string <<confirmed / cancelled / modified>>
+  - comment: string
+}
+
+User "1" -- "0..*" Reservation : makes >
+Room "1" -- "0..*" Reservation : reserved in >
+
+' =====================
+' Notifications
+' =====================
+class Notification {
+  - id: int
+  - type: string <<confirmation / reminder / cancellation>>
+  - message: string
+  - sent_date: datetime
+  - status: string <<sent / failed>>
+}
+
+Reservation "1" -- "0..*" Notification : triggers >
+User "1" -- "0..*" Notification : receives >
+
+' =====================
+' Rapports
+' =====================
+class Report {
+  - id: int
+  - generation_date: datetime
+  - type: string <<use / rate>>
+  - content: string
+}
+
+User "1" -- "0..*" Report : consults if admin >
+
+' =====================
+' Tickets de support
+' =====================
+class Request {
+  - id: int
+  - type: string <<incident / request>>
+  - description: string
+  - status: string <<open / closed>>
+  - creation_date: datetime
+}
+
+User "1" -- "0..*" Request : creates >
+User "1" -- "0..*" Request : manages if admin >
+
+@enduml

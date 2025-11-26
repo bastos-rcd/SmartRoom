@@ -1,0 +1,56 @@
+@startuml sequence_user_diagram
+
+actor "Utilisateur" as User
+boundary "Interface Web/Mobile" as UI
+control "API Gateway / Backend" as API
+entity "Service Authentification" as Auth
+entity "Service Réservation" as Res
+entity "Service Notification" as Notif
+database "Base de données Réservations" as DB
+entity "Service Reporting" as Report
+
+title Diagramme de Séquence Utilisateur
+
+== Authentification ==
+User -> UI : Se connecter
+UI -> API : [POST] /login (identifiants)
+API -> Auth : Vérification identifiants
+Auth --> API : Jeton d’accès (token)
+API --> UI : Authentification réussie
+
+alt Identifiants valides
+    Auth --> API : token
+    API --> UI : Authentification réussie
+    UI --> User : Affiche tableau de bord
+else Identifiants invalides
+    Auth --> API : 401 Unauthorized
+    API --> UI : Erreur "Identifiants incorrects"
+    UI --> User : Affiche message d'erreur
+end
+
+== Recherche de salle ==
+User -> UI : Filtre salle (date, heure, capacité, équipements)
+UI -> API : [GET] /salles?date=...&capacite=...&equipements=...
+API -> Res : Requête de disponibilité
+Res -> DB : SELECT * FROM salles WHERE critères
+DB --> Res : Liste des salles disponibles
+Res --> API : Résultats
+API --> UI : Affichage des salles disponibles
+
+== Sélection et réservation ==
+User -> UI : Sélectionne une salle et confirme la réservation
+UI -> API : [POST] /reservations (salle.Id, date, heure)
+API -> Res : Créer la réservation
+Res -> DB : INSERT réservation
+DB --> Res : Confirmation écrite
+Res --> API : Réservation créée (ID réservation)
+API --> Notif : Envoyer confirmation
+Notif -> User : Email / Notification "Réservation confirmée"
+API --> Report : Enregistrer l’événement (pour statistiques)
+API --> UI : Message de succès (réservation validée)
+
+== Rappels automatiques ==
+Notif -> DB : Lire les réservations à venir
+Notif -> User : Envoi automatique de rappel avant l’heure
+
+@enduml

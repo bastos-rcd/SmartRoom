@@ -2,7 +2,8 @@
 
 SmartRoom est une application moderne permettant à une entreprise de gérer efficacement l'ensemble de ses salles : réservation, disponibilité, équipements, statistiques d'utilisation.
 
-> [Bastien](https://github.com/bastos-rcd) - [Alexandre](https://github.com/AlexandreLassaigne) - [Cassam](https://github.com/Ecmosplasmidou)
+> Equipe 1 \
+> [Bastien RECORD](https://github.com/bastos-rcd) - [Alexandre LASSAIGNE](https://github.com/AlexandreLassaigne) - [Cassam Barakatally MAHADAWOO](https://github.com/Ecmosplasmidou)
 
 ## Fonctionnalités
 

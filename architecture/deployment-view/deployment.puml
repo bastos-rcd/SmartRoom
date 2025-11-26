@@ -1,0 +1,77 @@
+@startuml deployment_diagram
+
+title Diagramme de Déploiement
+
+' Clients
+node "Client Web" as WebClient {
+  artifact "Frontend Web (React)" as WebUI
+}
+
+' Serveur API / Backend
+node "Serveur Backend / API" as APIServer {
+  artifact "API Gateway / BFF" as APIGW
+  artifact "Service Authentification" as Auth
+  artifact "Service Réservation" as Res
+  artifact "Service Notification" as Notif
+  artifact "Service Reporting / Statistiques" as Report
+  artifact "Service Gestion Utilisateurs / Admin" as AdminService
+  artifact "Service Gestion Salles & Bâtiments" as BuildingService
+  artifact "Service Gestion Incidents / Demandes" as IncidentService
+}
+
+' Base de données
+node "Serveur Base de données (PostgreSQL)" as DBServer {
+  database "DB Principale" as DB
+}
+
+' Message Broker
+node "Broker" as BrokerNode {
+  queue "Message Broker (RabbitMQ)" as Broker
+}
+
+' Services externes
+node "SMTP/Email Service (NodeMailer)" as MailerNode {
+  artifact "SMTP / Push Service" as Mailer
+}
+
+node "Service Config / Discovery" as ConfigNode {
+  artifact "Config / Service Discovery" as Config
+}
+
+' Relations
+WebUI --> APIGW : HTTPS / REST API
+
+APIGW --> Auth : Authentification / validation JWT
+APIGW --> Res : Gestion des réservations
+APIGW --> Notif : Notifications
+APIGW --> Report : Rapports & statistiques
+APIGW --> AdminService : Gestion utilisateurs / droits
+APIGW --> BuildingService : Gestion bâtiments / salles
+APIGW --> IncidentService : Gestion incidents / demandes
+
+' Services vers base de données
+Res --> DB : CRUD Réservations / Consultation salles
+Notif --> DB : Historique notifications
+Report --> DB : Statistiques historiques
+AdminService --> DB : Gestion utilisateurs / droits
+BuildingService --> DB : Gestion salles / bâtiments
+IncidentService --> DB : Suivi des incidents / demandes
+
+' Événements asynchrones
+Res --> Broker : reservation.created / reservation.cancelled
+IncidentService --> Broker : incident.created / incident.closed
+Notif --> Broker : abonnement aux événements
+
+' Notifications externes
+Notif --> Mailer : Envoi emails / push (confirmation, clôture, etc.)
+
+' Config / découverte
+Config --> Auth : URL et secrets JWT
+Config --> Res : URL DB, règles réservation
+Config --> Notif : SMTP host, port, templates email
+Config --> Report : URL DB, fréquence rapports
+Config --> AdminService : paramètres droits utilisateurs
+Config --> BuildingService : paramètres salles / bâtiments
+Config --> IncidentService : paramètres incidents / demandes
+
+@enduml

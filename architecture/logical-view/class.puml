@@ -1,0 +1,98 @@
+@startuml class_diagram
+
+title Diagramme de Classe participante
+
+' =====================
+' Main Actors
+' =====================
+class User {
+  + login()
+  + reserveRoom()
+  + cancelReservation()
+  + modifyReservation()
+  + createRequest()
+  + receiveNotification()
+}
+
+class Admin {
+  + createRoom()
+  + updateRoom()
+  + deleteRoom()
+  + deactivateRoom()
+  + createUser()
+  + blockUser()
+  + deleteUser()
+  + assignAdminRights()
+  + manageBuildings()
+  + manageRequests()
+}
+
+User <|-- Admin
+
+' =====================
+' Buildings & Rooms
+' =====================
+class Building {
+  + listRooms()
+}
+
+class Room {
+  + checkAvailability(start, end)
+}
+
+Building "1" -- "0..*" Room : contains >
+
+' =====================
+' Equipment
+' =====================
+class Equipment {
+  + checkAvailability()
+}
+
+Room "0..*" -- "0..*" Equipment : contains >
+
+' =====================
+' Reservations
+' =====================
+class Reservation {
+  + confirm()
+  + cancel()
+  + modify()
+  + disable()
+}
+
+User "1" -- "0..*" Reservation : makes >
+Room "1" -- "0..*" Reservation : reserved in >
+
+' =====================
+' Notifications
+' =====================
+class Notification {
+  + send()
+  + logHistory()
+}
+
+Reservation "1" -- "0..*" Notification : triggers >
+User "1" -- "0..*" Notification : receives >
+
+' =====================
+' Reporting
+' =====================
+class Report {
+  + generate()
+}
+
+Admin "1" -- "0..*" Report : consults >
+
+' =====================
+' Support Requests
+' =====================
+class SupportRequest {
+  + open()
+  + close()
+}
+
+User "1" -- "0..*" SupportRequest : creates >
+Admin "1" -- "0..*" SupportRequest : manages >
+
+@enduml

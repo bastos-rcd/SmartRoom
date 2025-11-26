@@ -1,0 +1,69 @@
+@startuml sequence_notif_diagram
+
+actor "Système de notification" as Notif
+entity "Message Broker" as Broker
+database "Base de données Réservations" as DBRes
+database "Base de données Notifications" as DBNotif
+entity "SMTP / Push Service" as Mailer
+actor "Utilisateur" as User
+entity "Service Reporting" as Report
+
+title Diagramme de Séquence Notification
+
+== Réception d’un événement ==
+Broker -> Notif : Événement reçu (reservation.created / updated / deleted)
+
+== Traitement de la notification ==
+Notif -> DBRes : Récupère les détails de la réservation
+DBRes --> Notif : Détails réservation
+Notif -> DBNotif : Enregistre notification dans les logs
+DBNotif --> Notif : OK
+
+== Envoi du message ==
+alt Envoi automatique réussi
+    Notif -> Mailer : Envoi email / push
+    Mailer --> Notif : Succès
+    Notif -> User : Email / Push envoyé
+    Notif -> Report : "notification envoyée"
+    Report --> Notif : OK
+
+else Envoi automatique échoué
+    Notif -> Mailer : Envoi email / push
+    Mailer --> Notif : Erreur
+
+    Notif -> DBNotif : Log "échec envoi automatique"
+    DBNotif --> Notif : OK
+    Notif -> Report : "échec envoi automatique"
+    Report --> Notif : OK
+
+    == Envoi manuel ==
+    Admin -> Notif : Forcer envoi manuel
+    
+    loop Réessai manuel jusqu'à succès
+        Notif -> Mailer : Tentative manuelle d’envoi
+        alt Réussite
+            Mailer --> Notif : Succès
+            Notif -> DBNotif : Log "envoi manuel réussi"
+            Notif -> User : Notification envoyée manuellement
+            Notif -> Report : "notification envoyée manuellement"
+            Report --> Notif : OK
+            break
+        else Échec
+            Mailer --> Notif : Erreur
+            Notif -> DBNotif : Log "échec envoi manuel (retry)"
+        end
+    end
+end
+
+== Rappel automatique ==
+loop Vérification planifiée (ex : toutes les heures)
+    Notif -> DBRes : Cherche réservations dans < 24h
+    DBRes --> Notif : Liste des rappels
+
+    Notif -> Mailer : Envoi rappels
+    Mailer --> Notif : Succès
+
+    Notif -> DBNotif : Log “rappel envoyé”
+end
+
+@enduml

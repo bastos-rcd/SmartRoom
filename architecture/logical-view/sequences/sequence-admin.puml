@@ -1,0 +1,72 @@
+@startuml sequence_admin_diagram
+
+actor "Administrateur" as Admin
+boundary "Interface d’administration" as UI
+control "API Gateway / Backend" as API
+entity "Service Authentification" as Auth
+entity "Service Gestion Salles" as Room
+entity "Service Gestion Utilisateurs" as UserService
+entity "Service Reporting" as Report
+entity "Service Notification" as Notif
+database "Base de données Salles" as DBSalles
+database "Base de données Utilisateurs" as DBUsers
+database "Base de données Réservations" as DBRes
+
+title Diagramme de Séquence Administrateur
+
+== Authentification ==
+Admin -> UI : Se connecter à l’espace admin
+UI -> API : [POST] /admin/login (identifiants)
+API -> Auth : Vérification identifiants
+Auth --> API : Jeton d’accès (token)
+API --> UI : Authentification réussie
+
+alt Identifiants valides
+    Auth --> API : token
+    API --> UI : Authentification réussie
+    UI --> Admin : Affiche tableau de bord
+else Identifiants invalides
+    Auth --> API : 401 Unauthorized
+    API --> UI : Erreur "Identifiants incorrects"
+    UI --> Admin : Affiche message d'erreur
+end
+
+== Gestion des bâtiments et salles ==
+Admin -> UI : Créer / Modifier / Supprimer une salle
+UI -> API : [POST|PUT|DELETE] /salles (données salle)
+API -> Room : Valider données de salle
+Room -> DBSalles : INSERT / UPDATE / DELETE salle
+DBSalles --> Room : Confirmation
+Room --> API : Opération réussie
+API --> Notif : Envoyer notification de mise à jour
+Notif -> Admin : Confirmation "Salle mise à jour"
+
+== Gestion des utilisateurs ==
+Admin -> UI : Créer / Modifier / Bloquer un utilisateur
+UI -> API : [POST|PUT] /utilisateurs (infos utilisateur)
+API -> UserService : Valider et exécuter action
+UserService -> DBUsers : INSERT / UPDATE / SET statut='bloqué'
+DBUsers --> UserService : Succès
+UserService --> API : Utilisateur mis à jour
+API --> Notif : Envoyer email à l’utilisateur
+Notif -> UserService : Notification envoyée
+
+== Gestion des droits ==
+Admin -> UI : Donner droits administrateur à un utilisateur
+UI -> API : [PUT] /utilisateurs/:id/role (admin)
+API -> UserService : Mise à jour du rôle
+UserService -> DBUsers : UPDATE rôle='admin'
+DBUsers --> UserService : Succès
+UserService --> API : Droits mis à jour
+API --> UI : Confirmation à l’administrateur
+
+== Consultation des rapports ==
+Admin -> UI : Consulter statistiques d’utilisation
+UI -> API : [GET] /reporting?periode=mois
+API -> Report : Générer rapport (taux d’occupation, nombre de réservations)
+Report -> DBRes : SELECT COUNT(*) FROM réservations GROUP BY salle
+DBRes --> Report : Données statistiques
+Report --> API : Rapport généré (JSON)
+API --> UI : Affiche graphiques et indicateurs
+
+@enduml
