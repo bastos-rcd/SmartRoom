@@ -43,7 +43,7 @@ rectangle "SmartRoom" {
         }
         package "Gestion des tickets" as TicketPackage {
             (Gérer demandes / tickets) as UC9 #gold
-            (Consulter demandes) as UC14 #gold
+            (Consulter demandes) as UC14 #green
             (Répondre à une demande) as UC15 #LightBlue
             (Clôturer une demande) as UC16 #gold
             (Notifier l'utilisateur) as UC17 #LightBlue
