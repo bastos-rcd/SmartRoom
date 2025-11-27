@@ -11,21 +11,21 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb?schema=public
-      - CHOKIDAR_USEPOLLING=true
-    restart: always
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./backend:/app
+  #     - /app/node_modules
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb?schema=public
+  #     - CHOKIDAR_USEPOLLING=true
+  #   restart: always
 
   frontend:
     build:
@@ -36,8 +36,8 @@ services:
       - /app/node_modules
     ports:
       - "5173:5173"
-    depends_on:
-      - backend
+    # depends_on:
+    #   - backend
     environment:
       - CHOKIDAR_USEPOLLING=true
     restart: always
