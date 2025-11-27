@@ -10,3 +10,19 @@ services:
       - "5173:5173"
     environment:
       - CHOKIDAR_USEPOLLING=true
+    restart: always
+
+  db:
+    image: postgres:16
+    volumes:
+      - db_data_dev:/var/lib/postgresql/data
+      - ./db/init-dev.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: smartroomdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+volumes:
+  db_data_dev:
