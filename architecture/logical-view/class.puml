@@ -1,98 +1,244 @@
 @startuml class_diagram
 
-title Diagramme de Classe participante
+title Diagramme de Classes participantes
 
-' =====================
-' Main Actors
-' =====================
-class User {
-  + login()
-  + reserveRoom()
-  + cancelReservation()
-  + modifyReservation()
-  + createRequest()
-  + receiveNotification()
+' ========================
+'       ENTITES DOMAINES
+' ========================
+class User
+class Building
+class Room
+class Equipment
+class Reservation
+class Request
+class Parameter
+
+
+' ========================
+'       USER
+' ========================
+class UserController {
+  + createUser()
+  + updateUser()
+  + deleteUser()
+  + getUserById()
+  + getAllUsers()
 }
 
-class Admin {
+class UserService {
+  + createUser()
+  + updateUser()
+  + deleteUser()
+  + getUserById()
+  + getAllUsers()
+}
+
+class UserRepository {
+  + save()
+  + deleteById()
+  + findById()
+  + findAll()
+}
+
+UserController --> UserService
+UserService --> UserRepository
+UserService --> User
+UserRepository --> User
+
+
+' ========================
+'       BUILDING
+' ========================
+class BuildingController {
+  + createBuilding()
+  + updateBuilding()
+  + deleteBuilding()
+  + getBuildingById()
+  + getAllBuildings()
+}
+
+class BuildingService {
+  + createBuilding()
+  + updateBuilding()
+  + deleteBuilding()
+  + getBuildingById()
+  + getAllBuildings()
+}
+
+class BuildingRepository {
+  + save()
+  + deleteById()
+  + findById()
+  + findAll()
+}
+
+BuildingController --> BuildingService
+BuildingService --> BuildingRepository
+BuildingService --> Building
+BuildingRepository --> Building
+
+
+' ========================
+'       ROOM
+' ========================
+class RoomController {
   + createRoom()
   + updateRoom()
-  + deleteRoom()
   + deactivateRoom()
-  + createUser()
-  + blockUser()
-  + deleteUser()
-  + assignAdminRights()
-  + manageBuildings()
-  + manageRequests()
+  + getRoomById()
+  + getRoomsByBuilding()
 }
 
-User <|-- Admin
-
-' =====================
-' Buildings & Rooms
-' =====================
-class Building {
-  + listRooms()
+class RoomService {
+  + createRoom()
+  + updateRoom()
+  + deactivateRoom()
+  + getRoomById()
+  + getRoomsByBuilding()
 }
 
-class Room {
-  + checkAvailability(start, end)
+class RoomRepository {
+  + save()
+  + deleteById()
+  + findById()
+  + findByBuildingId()
 }
 
-Building "1" -- "0..*" Room : contains >
+RoomController --> RoomService
+RoomService --> RoomRepository
+RoomService --> Room
+RoomRepository --> Room
 
-' =====================
-' Equipment
-' =====================
-class Equipment {
+Building --> Room : contains >
+
+
+' ========================
+'       EQUIPMENT
+' ========================
+class EquipmentController {
+  + createEquipment()
+  + updateEquipment()
+  + deleteEquipment()
+  + getEquipmentById()
+  + getAllEquipment()
+}
+
+class EquipmentService {
+  + createEquipment()
+  + updateEquipment()
+  + deleteEquipment()
+  + getEquipmentById()
+  + getAllEquipment()
+}
+
+class EquipmentRepository {
+  + save()
+  + deleteById()
+  + findById()
+  + findAll()
+}
+
+EquipmentController --> EquipmentService
+EquipmentService --> EquipmentRepository
+EquipmentService --> Equipment
+EquipmentRepository --> Equipment
+
+Room --> Equipment : possesses >
+
+
+' ========================
+'       RESERVATION
+' ========================
+class ReservationController {
+  + createReservation()
+  + updateReservation()
+  + cancelReservation()
+  + getReservationById()
+  + getReservationsByUser()
+}
+
+class ReservationService {
+  + createReservation()
+  + updateReservation()
+  + cancelReservation()
+  + getReservationById()
+  + getReservationsByUser()
   + checkAvailability()
 }
 
-Room "0..*" -- "0..*" Equipment : contains >
-
-' =====================
-' Reservations
-' =====================
-class Reservation {
-  + confirm()
-  + cancel()
-  + modify()
-  + disable()
+class ReservationRepository {
+  + save()
+  + deleteById()
+  + findById()
+  + findByUserId()
 }
 
-User "1" -- "0..*" Reservation : makes >
-Room "1" -- "0..*" Reservation : reserved in >
+ReservationController --> ReservationService
+ReservationService --> ReservationRepository
+ReservationService --> Reservation
+ReservationRepository --> Reservation
 
-' =====================
-' Notifications
-' =====================
-class Notification {
-  + send()
-  + logHistory()
+User --> Reservation : makes >
+Room --> Reservation : "reserved in" >
+
+
+' ========================
+'       SUPPORT REQUEST
+' ========================
+class RequestController {
+  + createRequest()
+  + closeRequest()
+  + getRequestById()
+  + getRequestsByUser()
 }
 
-Reservation "1" -- "0..*" Notification : triggers >
-User "1" -- "0..*" Notification : receives >
-
-' =====================
-' Reporting
-' =====================
-class Report {
-  + generate()
+class RequestService {
+  + createRequest()
+  + closeRequest()
+  + getRequestById()
+  + getRequestsByUser()
 }
 
-Admin "1" -- "0..*" Report : consults >
-
-' =====================
-' Support Requests
-' =====================
-class SupportRequest {
-  + open()
-  + close()
+class RequestRepository {
+  + save()
+  + findById()
+  + findByUserId()
 }
 
-User "1" -- "0..*" SupportRequest : creates >
-Admin "1" -- "0..*" SupportRequest : manages >
+RequestController --> RequestService
+RequestService --> RequestRepository
+RequestService --> Request
+RequestRepository --> Request
+
+User --> Request : creates >
+
+
+' ========================
+'       PARAMETERS
+' ========================
+class ParameterController {
+  + updateParameter()
+  + getParameter()
+  + getAllParameters()
+}
+
+class ParameterService {
+  + updateParameter()
+  + getParameter()
+  + getAllParameters()
+}
+
+class ParameterRepository {
+  + save()
+  + findByName()
+  + findAll()
+}
+
+ParameterController --> ParameterService
+ParameterService --> ParameterRepository
+ParameterService --> Parameter
+ParameterRepository --> Parameter
+
+User --> Parameter : manages if admin >
 
 @enduml

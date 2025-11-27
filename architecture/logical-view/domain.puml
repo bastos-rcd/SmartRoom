@@ -12,7 +12,7 @@ class User {
   - email: string
   - password: string
   - role: string <<user/admin>>
-  - status: string <<active/blocked>>
+  - status: int <<active/blocked>>
 }
 
 ' =====================
@@ -29,7 +29,8 @@ class Room {
   - id: int
   - name: string
   - capacity: int
-  - state: string <<active/inactive>>
+  - floor: int
+  - state: int <<active/inactive>>
   - location: string
 }
 
@@ -42,10 +43,10 @@ class Equipment {
   - id: int
   - name: string
   - type: string
-  - available : bool
+  - available : int
 }
 
-Room "0..*" -- "0..*" Equipment : possesses >
+Room "0..1" -- "0..*" Equipment : possesses >
 
 ' =====================
 ' Réservations
@@ -62,43 +63,27 @@ User "1" -- "0..*" Reservation : makes >
 Room "1" -- "0..*" Reservation : reserved in >
 
 ' =====================
-' Notifications
-' =====================
-class Notification {
-  - id: int
-  - type: string <<confirmation / reminder / cancellation>>
-  - message: string
-  - sent_date: datetime
-  - status: string <<sent / failed>>
-}
-
-Reservation "1" -- "0..*" Notification : triggers >
-User "1" -- "0..*" Notification : receives >
-
-' =====================
-' Rapports
-' =====================
-class Report {
-  - id: int
-  - generation_date: datetime
-  - type: string <<use / rate>>
-  - content: string
-}
-
-User "1" -- "0..*" Report : consults if admin >
-
-' =====================
 ' Tickets de support
 ' =====================
 class Request {
   - id: int
   - type: string <<incident / request>>
   - description: string
-  - status: string <<open / closed>>
+  - status: int <<open / closed>>
   - creation_date: datetime
 }
 
 User "1" -- "0..*" Request : creates >
-User "1" -- "0..*" Request : manages if admin >
+
+' =====================
+' Paramètres
+' =====================
+class Parameter {
+  - id: int
+  - name: string
+  - value: string
+}
+
+User "0" -- "0..*" Parameter : manages if admin >
 
 @enduml

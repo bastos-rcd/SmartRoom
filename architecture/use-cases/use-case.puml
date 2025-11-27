@@ -1,4 +1,4 @@
-@startuml diagramme_usecase
+@startuml use-case-diagram
 left to right direction
  
 legend center
@@ -8,7 +8,7 @@ legend center
   |<color:red><size:24>●</size></color> | <size:20>**Tâches non prioritaires** </size>|
 end legend
 
-title Diagramme des cas d'utilisation - SmartRoom
+title Diagramme des Cas d'utilisation
 
 actor "Utilisateur Non Connecté" as Guest
 actor "Utilisateur Connecté" as User  
