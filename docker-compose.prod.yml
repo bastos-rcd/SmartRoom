@@ -1,12 +1,4 @@
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
-    ports:
-      - "80:80"
-    restart: always
-
   db:
     image: postgres:16
     volumes:
@@ -16,6 +8,28 @@ services:
       POSTGRES_DB: smartroomdb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb?schema=public
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
     restart: always
 
 volumes:
