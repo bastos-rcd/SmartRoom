@@ -1,0 +1,1 @@
+//Vérifie que le JSON envoyé (email, password) est syntaxiquement correct.

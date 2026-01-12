@@ -1,0 +1,1 @@
+//Définit les endpoints /login et /register.

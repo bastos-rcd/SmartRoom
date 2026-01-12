@@ -1,0 +1,1 @@
+//Vérifier que lors de la création d'une salle, la capacité est bien un nombre positif et que le nom n'est pas vide.

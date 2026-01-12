@@ -1,0 +1,1 @@
+//Logique métier pure (calculs, vérifications de conflits)

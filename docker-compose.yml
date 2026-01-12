@@ -27,6 +27,34 @@ services:
   #     - CHOKIDAR_USEPOLLING=true
   #   restart: always
 
+  auth-service:
+    build: ./backend/services/auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb
+      - JWT_SECRET=votre_secret
+    depends_on:
+      - db
+
+  booking-service:
+    build: ./backend/services/booking-service
+    ports:
+      - "3002:3002"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb
+    depends_on:
+      - db
+
+  room-service:
+    build: ./backend/services/room-service
+    ports:
+      - "3003:3003"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb
+    depends_on:
+      - db
+
   frontend:
     build:
       context: ./frontend

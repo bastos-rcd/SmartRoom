@@ -1,0 +1,1 @@
+//Définition des types/interfaces (ou schémas ORM)

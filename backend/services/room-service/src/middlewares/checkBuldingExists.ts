@@ -1,0 +1,1 @@
+//Avant de créer une salle, vérifier que l'ID du bâtiment (building_id) existe bien en base de données.

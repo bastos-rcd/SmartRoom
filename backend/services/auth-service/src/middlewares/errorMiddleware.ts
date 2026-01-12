@@ -1,0 +1,1 @@
+//Centralise les erreurs pour répondre proprement au Front-end.
