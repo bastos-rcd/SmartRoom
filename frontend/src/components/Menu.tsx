@@ -1,3 +1,3 @@
 export default function Menu() {
-  return <></>;
+  return <>MENU</>;
 }

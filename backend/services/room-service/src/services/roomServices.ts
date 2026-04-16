@@ -1,1 +1,0 @@
-//Logique de filtrage (ex: "Filtrer les salles par capacité ou par présence d'un vidéoprojecteur").

@@ -1,1 +1,0 @@
-//Gère la liste des bâtiments (Main, Aile Nord, etc.).

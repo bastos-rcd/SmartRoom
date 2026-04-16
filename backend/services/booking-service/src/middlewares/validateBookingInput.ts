@@ -1,1 +1,0 @@
-//vérifier que les données envoyées par le front-end sont cohérentes.

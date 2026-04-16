@@ -1,1 +1,0 @@
-//vérifie si le token JWT envoyé par le Front est valide.

@@ -1,1 +1,0 @@
-//vérifie que l'utilisateur est connecté via son Token JWT.

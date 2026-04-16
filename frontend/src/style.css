@@ -1,31 +1,31 @@
 html,
 body,
 #root {
-    height: 100%;
-    margin: 0;
-    font-family: 'Nunito', sans-serif;
+  height: 100%;
+  margin: 0;
+  font-family: "Nunito", sans-serif;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-    width: 6px;
-    background: transparent;
+  width: 6px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent !important;
+  background: transparent !important;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.35);
-    border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.55);
 }
 
 * {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
 }

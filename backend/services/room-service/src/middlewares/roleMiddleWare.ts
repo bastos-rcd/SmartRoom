@@ -1,1 +1,0 @@
-//Vérifier si l'utilisateur qui tente de supprimer une salle est bien un admin.

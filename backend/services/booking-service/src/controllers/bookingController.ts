@@ -1,1 +1,0 @@
-//Logique de pilotage (reçoit la requête, renvoie la réponse)

@@ -1,1 +1,0 @@
-//Logique de vérification (ex: "L'email est-il déjà utilisé ?").

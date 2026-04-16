@@ -6,10 +6,9 @@ import AppRouter from "./AppRouter";
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="layout">
+      <div>
         <Menu />
-
-        <div className="content">
+        <div>
           <AppRouter />
         </div>
       </div>

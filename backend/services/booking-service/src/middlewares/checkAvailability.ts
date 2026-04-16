@@ -1,1 +1,0 @@
-//interroge la base de données pour voir s'il existe déjà une réservation pour cette salle sur ce créneau horaire.

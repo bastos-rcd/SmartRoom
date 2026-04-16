@@ -1,1 +1,0 @@
-//Configuration de la connexion à Postgres.

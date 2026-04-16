@@ -11,49 +11,43 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ./backend:/app
-  #     - /app/node_modules
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb?schema=public
-  #     - CHOKIDAR_USEPOLLING=true
-  #   restart: always
-
-  auth-service:
-    build: ./backend/services/auth-service
+  user-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start user --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     ports:
       - "3001:3001"
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb
-      - JWT_SECRET=votre_secret
     depends_on:
       - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=smartroomdb
+      - USER_SERVICE_PORT=3001
 
-  booking-service:
-    build: ./backend/services/booking-service
+  gateway:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start gateway --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     ports:
-      - "3002:3002"
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb
+      - "3000:3000"
     depends_on:
-      - db
-
-  room-service:
-    build: ./backend/services/room-service
-    ports:
-      - "3003:3003"
+      - user-service
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/smartroomdb
-    depends_on:
-      - db
+      - JWT_SECRET=3a088ef46c49745e
+      - PORT=3000
+      - USER_SERVICE_HOST=user-service
+      - USER_SERVICE_PORT=3001
 
   frontend:
     build:
@@ -64,8 +58,6 @@ services:
       - /app/node_modules
     ports:
       - "5173:5173"
-    # depends_on:
-    #   - backend
     environment:
       - CHOKIDAR_USEPOLLING=true
     restart: always

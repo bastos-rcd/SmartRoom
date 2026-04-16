@@ -1,1 +1,0 @@
-//Requêtes SQL complexes (souvent avec des JOIN entre les tables room, building et equipment).

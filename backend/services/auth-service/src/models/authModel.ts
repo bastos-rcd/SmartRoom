@@ -1,1 +1,0 @@
-//Fonctions SQL pour interagir avec la table "user" (ex: findUserByEmail, createUser).

@@ -1,1 +1,0 @@
-//Endpoints comme /rooms, /rooms/:id, /buildings.

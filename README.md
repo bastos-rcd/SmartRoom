@@ -42,11 +42,48 @@ SmartRoom est une application moderne permettant à une entreprise de gérer eff
 ## Technologies
 
 - **Frontend** : React, Bootstrap
-- **Backend** : Node.js, Express, Prisma, JWT
+- **Backend** : NestJS, JWT
 - **Base de données** : PostgreSQL
 - **Déploiement** : Docker, Docker Compose
 
-## Installation
+## Développement
+
+1. Cloner le dépôt
+
+   ```bash
+   git clone https://github.com/bastos-rcd/SmartRoom.git
+   cd SmartRoom
+   ```
+
+2. Installer les dépendances
+
+   ```bash
+   cd backend
+   npm install
+
+   cd frontend
+   npm install
+   ```
+
+3. Démarrer la base de données
+
+   ```bash
+   docker-compose up -d db
+   ```
+
+4. Démarrer les services
+
+   ```bash
+   cd backend
+   npm run start
+
+   cd frontend
+   npm run dev
+   ```
+
+5. Accéder à l'application via `http://localhost:5173`
+
+## Production
 
 1. Cloner le dépôt
 
