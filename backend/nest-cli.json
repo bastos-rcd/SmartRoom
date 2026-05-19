@@ -19,6 +19,15 @@
         "tsConfigPath": "apps/building/tsconfig.app.json"
       }
     },
+    "equipment": {
+      "type": "application",
+      "root": "apps/equipment",
+      "entryFile": "main",
+      "sourceRoot": "apps/equipment/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/equipment/tsconfig.app.json"
+      }
+    },
     "gateway": {
       "type": "application",
       "root": "apps/gateway",
