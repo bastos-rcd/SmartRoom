@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "nest build",
-    "start": "concurrently \"nest start gateway --watch\" \"nest start user --watch\" \"nest start reservation --watch\" \"nest start request --watch\" \"nest start parameter --watch\"",
+    "start": "concurrently \"nest start gateway --watch\" \"nest start user --watch\" \"nest start reservation --watch\" \"nest start request --watch\" \"nest start parameter --watch\" \"nest start building --watch\"",
     "test": "jest -i"
   },
   "dependencies": {
@@ -57,6 +57,9 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1"
-    }
+    },
+    "roots": [
+      "<rootDir>/apps/"
+    ]
   }
 }
