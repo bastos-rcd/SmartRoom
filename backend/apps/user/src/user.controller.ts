@@ -1,6 +1,6 @@
 import { Controller } from "@nestjs/common";
 import { UserMessages } from "@app/shared";
-import { MessagePattern } from "@nestjs/microservices";
+import { MessagePattern, Payload } from "@nestjs/microservices";
 
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
@@ -8,6 +8,11 @@ import { UserService } from "./user.service";
 @Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @MessagePattern(UserMessages.FIND_BY_EMAIL)
+  async findByEmail(@Payload() email: string) {
+    return this.userService.findByEmail(email);
+  }
 
   @MessagePattern(UserMessages.FIND_ALL_USERS)
   async findAll(): Promise<User[]> {

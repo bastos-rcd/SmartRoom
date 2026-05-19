@@ -4,6 +4,8 @@ import { Repository } from "typeorm";
 
 import { User } from "./user.entity";
 
+import * as bcrypt from "bcrypt";
+
 @Injectable()
 export class UserService {
   constructor(
@@ -13,6 +15,10 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { email } });
   }
 
   async findOne(id: number): Promise<User> {
@@ -26,7 +32,13 @@ export class UserService {
   }
 
   async create(user: User): Promise<User> {
-    const newUser = this.userRepository.create(user);
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+
+    const newUser = this.userRepository.create({
+      ...user,
+      password: hashedPassword,
+    });
     return await this.userRepository.save(newUser);
   }
 
@@ -57,10 +69,12 @@ export class UserService {
   }
 
   async delete(id: number): Promise<void> {
-    const existingUser = await this.userRepository.findOne({
+    console.log(id);
+    const user = await this.userRepository.findOne({
       where: { id },
     });
-    if (!existingUser) {
+
+    if (!user) {
       throw new Error("User not found");
     }
     await this.userRepository.delete(id);

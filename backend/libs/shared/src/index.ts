@@ -5,6 +5,7 @@ export const PARAMETER_SERVICE = "PARAMETER_SERVICE";
 
 export const UserMessages = {
   FIND_ALL_USERS: { cmd: "get_all_users" },
+  FIND_BY_EMAIL: { cmd: "get_user_by_email" },
   FIND_ONE_USER: { cmd: "get_user_by_id" },
   CREATE_USER: { cmd: "create_user" },
   UPDATE_USER: { cmd: "update_user" },

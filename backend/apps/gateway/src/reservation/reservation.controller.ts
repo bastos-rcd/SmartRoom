@@ -7,12 +7,17 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
 import { RESERVATION_SERVICE, ReservationMessages } from "@app/shared";
 import { Reservation } from "apps/reservation/src/reservation.entity";
+
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { RolesGuard } from "../auth/roles.guard";
+import { Roles } from "../auth/roles.decorator";
 
 @Controller("reservations")
 export class ReservationController {
@@ -21,6 +26,8 @@ export class ReservationController {
     private readonly reservationClient: ClientProxy,
   ) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("ADMIN", "USER")
   @Get()
   findAll(): Observable<any[]> {
     return this.reservationClient.send(
@@ -29,6 +36,8 @@ export class ReservationController {
     );
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("ADMIN", "USER")
   @Get("/:id")
   findOne(@Param("id") id: number): Observable<any> {
     return this.reservationClient.send(
@@ -37,7 +46,9 @@ export class ReservationController {
     );
   }
 
-  @Post("create")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("ADMIN", "USER")
+  @Post()
   create(@Body() reservation: Reservation): Observable<Reservation> {
     return this.reservationClient.send(
       ReservationMessages.CREATE_RESERVATION,
@@ -45,7 +56,9 @@ export class ReservationController {
     );
   }
 
-  @Put("update/:id")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("ADMIN", "USER")
+  @Put("/:id")
   update(
     @Param("id") id: number,
     @Body() reservation: Reservation,
@@ -56,7 +69,9 @@ export class ReservationController {
     });
   }
 
-  @Delete("delete/:id")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("ADMIN", "USER")
+  @Delete("/:id")
   delete(@Param("id") id: number): Observable<void> {
     return this.reservationClient.send(
       ReservationMessages.DELETE_RESERVATION,
