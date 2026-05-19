@@ -1,17 +1,33 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import type { User } from "../types/user";
+import { authService } from "../services/auth.service";
 
 export default function Menu() {
   const navigate = useNavigate();
+
+  const [logged, setLogged] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
   const handleLogin = () => {
     navigate("/login");
   };
+
   const handleLogout = () => {
+    authService.logout();
     navigate("/login");
   };
 
-  const [account, setAccount] = useState(true);
-  const [admin, setAdmin] = useState(true);
+  useEffect(() => {
+    if (authService.isAuthenticated()) {
+      setLogged(true);
+      authService.getUser().then((user) => {
+        setUser(user);
+      });
+    }
+  }, []);
+
   return (
     <nav className="navbar navbar-dark bg-custom-login fixed-lat z-1000">
       <div className="container-fluid">
@@ -25,7 +41,7 @@ export default function Menu() {
         >
           <img src="/logo-mobile.png" alt="Logo" height="60px" />
         </button>
-        {!account ? (
+        {!logged ? (
           <button
             type="submit"
             className="bg-custom-login-btn rounded px-5 py-2 fs-4 text-black ms-auto me-4"
@@ -35,7 +51,9 @@ export default function Menu() {
           </button>
         ) : (
           <div>
-            <text className="fs-4 text-white ms-auto me-4">Nom - Prénom</text>
+            <text className="fs-4 text-white ms-auto me-4">
+              {user?.firstName} {user?.lastName}
+            </text>
           </div>
         )}
         <div
@@ -49,7 +67,7 @@ export default function Menu() {
           </div>
           <div className="offcanvas-body d-flex flex-column align-items-center justify-content-between">
             <ul className="navbar-nav text-center py-4 w-100 gap-3">
-              {!account ? (
+              {!logged ? (
                 <>
                   <li className="nav-item">
                     <a
@@ -116,7 +134,7 @@ export default function Menu() {
                       Mon compte
                     </a>
                   </li>
-                  {admin && (
+                  {user?.role === "admin" && (
                     <>
                       <li className="nav-item">
                         <a
@@ -144,7 +162,7 @@ export default function Menu() {
               )}
             </ul>
             <div className="d-flex justify-content-center">
-              {account ? (
+              {logged ? (
                 <button
                   type="submit"
                   className="bg-custom-login-btn rounded px-5 py-2 mt-3 fs-4 text-black"

@@ -4,6 +4,7 @@ import API from "./api";
 
 import type { JwtPayload } from "../types/auth";
 import type { User } from "../types/user";
+import { userService } from "./user.service";
 
 export const authService = {
   async login(email: string, password: string): Promise<void> {
@@ -47,15 +48,19 @@ export const authService = {
     }
   },
 
-  getRole(): "user" | "admin" | null {
+  async getUser(): Promise<User> {
     const token = this.getToken();
-    if (!token) return null;
+    if (!token) throw new Error("No token found");
 
     try {
       const decoded = jwtDecode<JwtPayload>(token);
-      return decoded.role;
+
+      const user = await userService.getUserById(Number(decoded.sub));
+
+      return user;
     } catch {
-      return null;
+      this.logout();
+      throw new Error("User not found");
     }
   },
 };

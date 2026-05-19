@@ -18,6 +18,7 @@ export default function Home() {
   return (
     <>
       <Menu />
+
       <div className="col-10 col-md-10 mx-auto mt-4">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
