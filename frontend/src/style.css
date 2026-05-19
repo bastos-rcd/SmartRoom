@@ -29,3 +29,15 @@ body,
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
 }
+
+.bg-custom-login {
+  background-color: #0e172a;
+}
+
+.bg-custom-login-input {
+  background-color: #fefcfd;
+}
+
+.bg-custom-login-btn {
+  background-color: #eff9f0;
+}
