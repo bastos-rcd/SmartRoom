@@ -32,6 +32,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 
 @ApiTags("Utilisateurs")
+@ApiBearerAuth("JWT-auth")
 @Controller("users")
 export class UserController {
   constructor(
@@ -39,7 +40,6 @@ export class UserController {
     private readonly userClient: ClientProxy,
   ) {}
 
-  @ApiBearerAuth("JWT-auth")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("ADMIN")
   @Get()
@@ -66,7 +66,6 @@ export class UserController {
     return this.userClient.send(UserMessages.FIND_ALL_USERS, {});
   }
 
-  @ApiBearerAuth("JWT-auth")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("USER", "ADMIN")
   @Get(":id")
@@ -107,7 +106,6 @@ export class UserController {
     return this.userClient.send(UserMessages.CREATE_USER, user);
   }
 
-  @ApiBearerAuth("JWT-auth")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("USER", "ADMIN")
   @Put("/:id")
@@ -138,7 +136,6 @@ export class UserController {
     });
   }
 
-  @ApiBearerAuth("JWT-auth")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("ADMIN")
   @Delete("/:id")
