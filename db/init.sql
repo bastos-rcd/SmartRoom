@@ -8,10 +8,11 @@ CREATE TABLE "user" (
     status INT NOT NULL CHECK (status IN (0, 1))
 );
 
+-- password : hashedpwd
 INSERT INTO "user" (first_name, last_name, email, password, role, status)
-VALUES ('John', 'Doe', 'john.doe@example.com', 'hashedpwd', 'admin', 1);
+VALUES ('John', 'Doe', 'john.doe@example.com', '$2b$10$GwKnopMR9OUARx1AzEhfFuwWw629JxMhpG2nyMUqYIW9zpERHO1Tq', 'admin', 1); 
 INSERT INTO "user" (first_name, last_name, email, password, role, status)
-VALUES ('Jane', 'Smith', 'jane.smith@example.com', 'hashedpwd', 'user', 1);
+VALUES ('Jane', 'Smith', 'jane.smith@example.com', '$2b$10$GwKnopMR9OUARx1AzEhfFuwWw629JxMhpG2nyMUqYIW9zpERHO1Tq', 'user', 1);
 
 CREATE TABLE "building" (
     id SERIAL PRIMARY KEY,

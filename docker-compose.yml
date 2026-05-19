@@ -11,43 +11,188 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
-  # user-service:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   command: npx nest start user --watch
-  #   volumes:
-  #     - ./backend:/app
-  #     - /app/node_modules
-  #   ports:
-  #     - "3001:3001"
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     - DB_HOST=db
-  #     - DB_PORT=5432
-  #     - DB_USER=postgres
-  #     - DB_PASSWORD=postgres
-  #     - DB_NAME=smartroomdb
-  #     - USER_SERVICE_PORT=3001
+  user-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start user --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=smartroomdb
+      - USER_SERVICE_PORT=3001
 
-  # gateway:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   command: npx nest start gateway --watch
-  #   volumes:
-  #     - ./backend:/app
-  #     - /app/node_modules
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - user-service
-  #   environment:
-  #     - JWT_SECRET=3a088ef46c49745e
-  #     - PORT=3000
-  #     - USER_SERVICE_HOST=user-service
-  #     - USER_SERVICE_PORT=3001
+  building-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start building --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db
+      - user-service
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=smartroomdb
+      - BUILDING_SERVICE_PORT=3002
+
+  room-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start room --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3003:3003"
+    depends_on:
+      - db
+      - building-service
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=smartroomdb
+      - ROOM_SERVICE_PORT=3003
+
+  equipment-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start equipment --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3004:3004"
+    depends_on:
+      - db
+      - room-service
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=smartroomdb
+      - EQUIPMENT_SERVICE_PORT=3004
+
+  reservation-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start reservation --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3005:3005"
+    depends_on:
+      - db
+      - room-service
+      - user-service
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=smartroomdb
+      - RESERVATION_SERVICE_PORT=3005
+
+  request-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start request --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3006:3006"
+    depends_on:
+      - db
+      - user-service
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=smartroomdb
+      - REQUEST_SERVICE_PORT=3006
+
+  parameter-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start parameter --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3007:3007"
+    depends_on:
+      - db
+      - user-service
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=smartroomdb
+      - PARAMETER_SERVICE_PORT=3007
+
+  gateway:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: npx nest start gateway --watch
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+      - building-service
+      - room-service
+      - equipment-service
+      - reservation-service
+      - request-service
+      - parameter-service
+    environment:
+      - JWT_SECRET=3a088ef46c49745e
+      - PORT=3000
+      - USER_SERVICE_HOST=user-service
+      - USER_SERVICE_PORT=3001
+      - BUILDING_SERVICE_HOST=building-service
+      - BUILDING_SERVICE_PORT=3002
+      - ROOM_SERVICE_HOST=room-service
+      - ROOM_SERVICE_PORT=3003
+      - EQUIPMENT_SERVICE_HOST=equipment-service
+      - EQUIPMENT_SERVICE_PORT=3004
+      - RESERVATION_SERVICE_HOST=reservation-service
+      - RESERVATION_SERVICE_PORT=3005
+      - REQUEST_SERVICE_HOST=request-service
+      - REQUEST_SERVICE_PORT=3006
+      - PARAMETER_SERVICE_HOST=parameter-service
+      - PARAMETER_SERVICE_PORT=3007
 
   frontend:
     build:
@@ -60,6 +205,9 @@ services:
       - "5173:5173"
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - VITE_GATEWAY_URL=http://localhost:3000
+    depends_on:
+      - gateway
     restart: always
 
 volumes:
