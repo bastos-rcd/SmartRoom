@@ -31,13 +31,13 @@ body,
 }
 
 .bg-custom-login {
-  background-color: #0e172a;
+  background-color: #0e172a !important;
 }
 
 .bg-custom-login-input {
-  background-color: #fefcfd;
+  background-color: #fefcfd !important;
 }
 
 .bg-custom-login-btn {
-  background-color: #eff9f0;
+  background-color: #eff9f0 !important;
 }
