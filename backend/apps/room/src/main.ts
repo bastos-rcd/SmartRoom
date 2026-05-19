@@ -10,7 +10,7 @@ async function bootstrap() {
       transport: Transport.TCP,
       options: {
         host: "0.0.0.0",
-        port: Number(process.env.ROOM_SERVICE_PORT) || 3006,
+        port: Number(process.env.ROOM_SERVICE_PORT) || 3003,
       },
     },
   );

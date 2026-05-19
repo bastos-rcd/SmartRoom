@@ -13,7 +13,7 @@ import { RequestController } from "./request.controller";
         transport: Transport.TCP,
         options: {
           host: process.env.REQUEST_SERVICE_HOST || "localhost",
-          port: Number(process.env.REQUEST_SERVICE_PORT) || 3003,
+          port: Number(process.env.REQUEST_SERVICE_PORT) || 3006,
         },
       },
     ]),

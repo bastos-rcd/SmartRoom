@@ -13,7 +13,7 @@ import { ReservationController } from "./reservation.controller";
         transport: Transport.TCP,
         options: {
           host: process.env.RESERVATION_SERVICE_HOST || "localhost",
-          port: Number(process.env.RESERVATION_SERVICE_PORT) || 3002,
+          port: Number(process.env.RESERVATION_SERVICE_PORT) || 3005,
         },
       },
     ]),

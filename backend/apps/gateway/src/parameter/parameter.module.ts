@@ -13,7 +13,7 @@ import { ParameterController } from "./parameter.controller";
         transport: Transport.TCP,
         options: {
           host: process.env.PARAMETER_SERVICE_HOST || "localhost",
-          port: Number(process.env.PARAMETER_SERVICE_PORT) || 3004,
+          port: Number(process.env.PARAMETER_SERVICE_PORT) || 3007,
         },
       },
     ]),

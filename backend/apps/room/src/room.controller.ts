@@ -1,8 +1,8 @@
 import { Controller } from "@nestjs/common";
-import { RoomService } from "./room.service";
 import { RoomMessages } from "@app/shared";
-
 import { MessagePattern } from "@nestjs/microservices";
+
+import { RoomService } from "./room.service";
 import { Room } from "./room.entity";
 
 @Controller()

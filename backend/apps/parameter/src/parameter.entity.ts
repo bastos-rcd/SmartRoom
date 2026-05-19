@@ -1,12 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  /* ManyToOne,
-  JoinColumn, */
-} from "typeorm";
-/* import { User } from "./user.entity";
-import { Room } from "./room.entity"; */
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity("parameter")
 export class Parameter {
@@ -21,8 +13,4 @@ export class Parameter {
 
   @Column({ name: "user_id" })
   userId: number;
-
-  /* @ManyToOne(() => User, (user) => user.reservations)
-  @JoinColumn({ name: "user_id" })
-  user: User; */
 }

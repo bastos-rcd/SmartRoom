@@ -13,7 +13,7 @@ import { EquipmentController } from "./equipment.controller";
         transport: Transport.TCP,
         options: {
           host: process.env.EQUIPMENT_SERVICE_HOST || "localhost",
-          port: Number(process.env.EQUIPMENT_SERVICE_PORT) || 3007,
+          port: Number(process.env.EQUIPMENT_SERVICE_PORT) || 3004,
         },
       },
     ]),

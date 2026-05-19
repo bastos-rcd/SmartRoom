@@ -20,6 +20,6 @@ export class Room {
   @Column({ name: "location" })
   location: string;
 
-  // @Column({ type: "int" })
-  // buildingId: number;
+  @Column({ name: "building_id" })
+  buildingId: number;
 }

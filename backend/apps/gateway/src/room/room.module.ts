@@ -13,11 +13,11 @@ import { RoomController } from "./room.controller";
         transport: Transport.TCP,
         options: {
           host: process.env.ROOM_SERVICE_HOST || "localhost",
-          port: Number(process.env.ROOM_SERVICE_PORT) || 3006,
+          port: Number(process.env.ROOM_SERVICE_PORT) || 3003,
         },
       },
     ]),
   ],
   controllers: [RoomController],
 })
-export class ReservationModule {}
+export class RoomModule {}

@@ -1,11 +1,4 @@
 export const USER_SERVICE = "USER_SERVICE";
-export const BUILDING_SERVICE = "BUILDING_SERVICE";
-export const ROOM_SERVICE = "ROOM_SERVICE";
-export const EQUIPMENT_SERVICE = "EQUIPMENT_SERVICE";
-export const RESERVATION_SERVICE = "RESERVATION_SERVICE";
-export const REQUEST_SERVICE = "REQUEST_SERVICE";
-export const PARAMETER_SERVICE = "PARAMETER_SERVICE";
-
 export const UserMessages = {
   FIND_ALL_USERS: { cmd: "get_all_users" },
   FIND_BY_EMAIL: { cmd: "get_user_by_email" },
@@ -15,6 +8,7 @@ export const UserMessages = {
   DELETE_USER: { cmd: "delete_user" },
 };
 
+export const BUILDING_SERVICE = "BUILDING_SERVICE";
 export const BuildingMessages = {
   FIND_ALL_BUILDINGS: { cmd: "get_all_buildings" },
   FIND_ONE_BUILDING: { cmd: "get_building_by_id" },
@@ -23,6 +17,7 @@ export const BuildingMessages = {
   DELETE_BUILDING: { cmd: "delete_building" },
 };
 
+export const ROOM_SERVICE = "ROOM_SERVICE";
 export const RoomMessages = {
   FIND_ALL_ROOMS: { cmd: "get_all_rooms" },
   FIND_ONE_ROOM: { cmd: "get_room_by_id" },
@@ -31,6 +26,7 @@ export const RoomMessages = {
   DELETE_ROOM: { cmd: "delete_room" },
 };
 
+export const EQUIPMENT_SERVICE = "EQUIPMENT_SERVICE";
 export const EquipmentMessages = {
   FIND_ALL_EQUIPMENTS: { cmd: "get_all_equipments" },
   FIND_ONE_EQUIPMENT: { cmd: "get_equipment_by_id" },
@@ -39,6 +35,7 @@ export const EquipmentMessages = {
   DELETE_EQUIPMENT: { cmd: "delete_equipment" },
 };
 
+export const RESERVATION_SERVICE = "RESERVATION_SERVICE";
 export const ReservationMessages = {
   FIND_ALL_RESERVATIONS: { cmd: "get_all_reservations" },
   FIND_ONE_RESERVATION: { cmd: "get_reservation_by_id" },
@@ -47,6 +44,7 @@ export const ReservationMessages = {
   DELETE_RESERVATION: { cmd: "delete_reservation" },
 };
 
+export const REQUEST_SERVICE = "REQUEST_SERVICE";
 export const RequestMessages = {
   FIND_ALL_REQUESTS: { cmd: "get_all_requests" },
   FIND_ONE_REQUEST: { cmd: "get_request_by_id" },
@@ -55,6 +53,7 @@ export const RequestMessages = {
   DELETE_REQUEST: { cmd: "delete_request" },
 };
 
+export const PARAMETER_SERVICE = "PARAMETER_SERVICE";
 export const ParameterMessages = {
   FIND_ALL_PARAMETERS: { cmd: "get_all_parameters" },
   FIND_ONE_PARAMETER: { cmd: "get_parameter_by_id" },
