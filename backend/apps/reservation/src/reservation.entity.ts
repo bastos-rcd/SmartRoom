@@ -1,12 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  /* ManyToOne,
-  JoinColumn, */
-} from "typeorm";
-/* import { User } from "./user.entity";
-import { Room } from "./room.entity"; */
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity("reservation")
 export class Reservation {
@@ -32,14 +24,6 @@ export class Reservation {
   @Column({ name: "user_id" })
   userId: number;
 
-  /* @ManyToOne(() => User, (user) => user.reservations, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "user_id" })
-  user: User; */
-
   @Column({ name: "room_id" })
   roomId: number;
-
-  /* @ManyToOne(() => Room, (room) => room.reservations, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "room_id" })
-  room: Room; */
 }

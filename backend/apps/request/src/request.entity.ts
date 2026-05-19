@@ -3,10 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  /* ManyToOne,
-  JoinColumn, */
 } from "typeorm";
-/* import { User } from "./user.entity" */
 
 @Entity("request")
 export class Request {
@@ -27,8 +24,4 @@ export class Request {
 
   @Column({ name: "user_id" })
   userId: number;
-
-  /* @ManyToOne(() => User, (user) => user.reservations, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "user_id" })
-  user: User; */
 }

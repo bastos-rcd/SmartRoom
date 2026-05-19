@@ -1,8 +1,8 @@
 import { Controller } from "@nestjs/common";
-import { ParameterService } from "./parameter.service";
+import { MessagePattern } from "@nestjs/microservices";
 import { ParameterMessages } from "@app/shared";
 
-import { MessagePattern } from "@nestjs/microservices";
+import { ParameterService } from "./parameter.service";
 import { Parameter } from "./parameter.entity";
 
 @Controller()

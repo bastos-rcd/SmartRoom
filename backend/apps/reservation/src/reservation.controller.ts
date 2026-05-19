@@ -1,8 +1,8 @@
 import { Controller } from "@nestjs/common";
-import { ReservationService } from "./reservation.service";
+import { MessagePattern } from "@nestjs/microservices";
 import { ReservationMessages } from "@app/shared";
 
-import { MessagePattern } from "@nestjs/microservices";
+import { ReservationService } from "./reservation.service";
 import { Reservation } from "./reservation.entity";
 
 @Controller()

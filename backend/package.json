@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "nest build",
-    "start": "concurrently \"nest start gateway --watch\" \"nest start user --watch\" \"nest start reservation --watch\" \"nest start request --watch\" \"nest start parameter --watch\"",
+    "start": "concurrently \"nest start gateway --watch\" \"nest start user --watch\" \"nest start reservation --watch\" \"nest start request --watch\" \"nest start parameter --watch\" \"nest start building --watch\" \"nest start room --watch\" \"nest start equipment --watch\"",
     "test": "jest -i"
   },
   "dependencies": {
@@ -13,9 +13,11 @@
     "@nestjs/microservices": "^11.1.17",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.4.3",
     "@nestjs/testing": "^11.1.19",
     "@nestjs/typeorm": "^11.0.1",
     "@types/jest": "^30.0.0",
+    "bcrypt": "^6.0.0",
     "jest": "^30.3.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -28,8 +30,10 @@
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.7",
+    "@types/passport-jwt": "^4.0.1",
     "concurrently": "^9.2.1",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
@@ -43,7 +47,7 @@
       "ts"
     ],
     "rootDir": ".",
-    "testRegex": ".*\\.test\\.ts$",
+    "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
@@ -52,6 +56,10 @@
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/apps",
+      "<rootDir>/libs"
+    ],
     "moduleNameMapper": {
       "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1"
     }

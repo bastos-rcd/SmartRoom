@@ -11,43 +11,43 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
-  user-service:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    command: npx nest start user --watch
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    ports:
-      - "3001:3001"
-    depends_on:
-      - db
-    environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=smartroomdb
-      - USER_SERVICE_PORT=3001
+  # user-service:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   command: npx nest start user --watch
+  #   volumes:
+  #     - ./backend:/app
+  #     - /app/node_modules
+  #   ports:
+  #     - "3001:3001"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=postgres
+  #     - DB_NAME=smartroomdb
+  #     - USER_SERVICE_PORT=3001
 
-  gateway:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    command: npx nest start gateway --watch
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    ports:
-      - "3000:3000"
-    depends_on:
-      - user-service
-    environment:
-      - JWT_SECRET=3a088ef46c49745e
-      - PORT=3000
-      - USER_SERVICE_HOST=user-service
-      - USER_SERVICE_PORT=3001
+  # gateway:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   command: npx nest start gateway --watch
+  #   volumes:
+  #     - ./backend:/app
+  #     - /app/node_modules
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - user-service
+  #   environment:
+  #     - JWT_SECRET=3a088ef46c49745e
+  #     - PORT=3000
+  #     - USER_SERVICE_HOST=user-service
+  #     - USER_SERVICE_PORT=3001
 
   frontend:
     build:
