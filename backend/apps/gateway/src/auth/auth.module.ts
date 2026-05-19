@@ -7,6 +7,7 @@ import { RolesGuard } from "./roles.guard";
 import { AuthService } from "./auth.service";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 import { USER_SERVICE } from "@app/shared";
+import { AuthController } from "./auth.controller";
 
 @Global()
 @Module({
@@ -29,5 +30,6 @@ import { USER_SERVICE } from "@app/shared";
   ],
   providers: [JwtStrategy, JwtAuthGuard, RolesGuard, AuthService],
   exports: [JwtModule, JwtAuthGuard, RolesGuard, AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}

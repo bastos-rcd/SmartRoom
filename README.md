@@ -83,6 +83,8 @@ SmartRoom est une application moderne permettant à une entreprise de gérer eff
 
 5. Accéder à l'application via `http://localhost:5173`
 
+6. Accéder à la documentation de l'API via `http://localhost:3000/docs`
+
 ## Production
 
 1. Cloner le dépôt
@@ -103,7 +105,9 @@ SmartRoom est une application moderne permettant à une entreprise de gérer eff
 
 3. Accéder à l'application via `http://localhost:5173`
 
-4. Arrêter l'application
+4. Accéder à la documentation de l'API via `http://localhost:3000/docs`
+
+5. Arrêter l'application
 
    ```bash
    docker compose down
