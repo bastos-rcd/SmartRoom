@@ -27,6 +27,12 @@ export default function Home() {
           title: `${room.name} : ${event.comment}`,
           start: event.startDate,
           end: event.endDate,
+          backgroundColor:
+            event.type === "confirmed"
+              ? "#4ade80"
+              : event.type === "cancelled"
+                ? "#f87171"
+                : "#60a5fa",
         };
       });
 

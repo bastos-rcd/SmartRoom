@@ -12,6 +12,11 @@ export default function Login() {
   const [error, setError] = useState<boolean>(false);
 
   const handleLogin = () => {
+    if (email.trim() === "" || password.trim() === "") {
+      setError(true);
+      return;
+    }
+
     authService
       .login(email, password)
       .then(() => {
