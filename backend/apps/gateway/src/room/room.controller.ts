@@ -12,53 +12,47 @@ import {
 import { ClientProxy } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
-import { BUILDING_SERVICE, BuildingMessages } from "@app/shared";
-import { Building } from "apps/building/src/building.entity";
+import { ROOM_SERVICE, RoomMessages } from "@app/shared";
+import { Room } from "apps/room/src/room.entity";
 
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 
-@Controller("buildings")
-export class BuildingController {
+@Controller("rooms")
+export class RoomController {
   constructor(
-    @Inject(BUILDING_SERVICE)
-    private readonly buildingClient: ClientProxy,
+    @Inject(ROOM_SERVICE)
+    private readonly roomClient: ClientProxy,
   ) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("ADMIN", "USER")
   @Get()
   findAll(): Observable<any[]> {
-    return this.buildingClient.send(BuildingMessages.FIND_ALL_BUILDINGS, {});
+    return this.roomClient.send(RoomMessages.FIND_ALL_ROOMS, {});
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("ADMIN", "USER")
   @Get("/:id")
   findOne(@Param("id") id: number): Observable<any> {
-    return this.buildingClient.send(
-      BuildingMessages.FIND_ONE_BUILDING,
-      Number(id),
-    );
+    return this.roomClient.send(RoomMessages.FIND_ONE_ROOM, Number(id));
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("ADMIN")
   @Post()
-  create(@Body() building: Building): Observable<Building> {
-    return this.buildingClient.send(BuildingMessages.CREATE_BUILDING, building);
+  create(@Body() room: Room): Observable<Room> {
+    return this.roomClient.send(RoomMessages.CREATE_ROOM, room);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("ADMIN")
   @Put("/:id")
-  update(
-    @Param("id") id: number,
-    @Body() building: Building,
-  ): Observable<Building> {
-    return this.buildingClient.send(BuildingMessages.UPDATE_BUILDING, {
-      ...building,
+  update(@Param("id") id: number, @Body() room: Room): Observable<Room> {
+    return this.roomClient.send(RoomMessages.UPDATE_ROOM, {
+      ...room,
       id: Number(id),
     });
   }
@@ -67,9 +61,6 @@ export class BuildingController {
   @Roles("ADMIN")
   @Delete("/:id")
   delete(@Param("id") id: number): Observable<void> {
-    return this.buildingClient.send(
-      BuildingMessages.DELETE_BUILDING,
-      Number(id),
-    );
+    return this.roomClient.send(RoomMessages.DELETE_ROOM, Number(id));
   }
 }

@@ -55,6 +55,15 @@
         "tsConfigPath": "apps/reservation/tsconfig.app.json"
       }
     },
+    "room": {
+      "type": "application",
+      "root": "apps/room",
+      "entryFile": "main",
+      "sourceRoot": "apps/room/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/room/tsconfig.app.json"
+      }
+    },
     "shared": {
       "type": "library",
       "root": "libs/shared",

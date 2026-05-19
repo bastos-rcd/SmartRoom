@@ -1,5 +1,6 @@
 export const USER_SERVICE = "USER_SERVICE";
 export const BUILDING_SERVICE = "BUILDING_SERVICE";
+export const ROOM_SERVICE = "ROOM_SERVICE";
 export const RESERVATION_SERVICE = "RESERVATION_SERVICE";
 export const REQUEST_SERVICE = "REQUEST_SERVICE";
 export const PARAMETER_SERVICE = "PARAMETER_SERVICE";
@@ -19,6 +20,14 @@ export const BuildingMessages = {
   CREATE_BUILDING: { cmd: "create_building" },
   UPDATE_BUILDING: { cmd: "update_building" },
   DELETE_BUILDING: { cmd: "delete_building" },
+};
+
+export const RoomMessages = {
+  FIND_ALL_ROOMS: { cmd: "get_all_rooms" },
+  FIND_ONE_ROOM: { cmd: "get_room_by_id" },
+  CREATE_ROOM: { cmd: "create_room" },
+  UPDATE_ROOM: { cmd: "update_room" },
+  DELETE_ROOM: { cmd: "delete_room" },
 };
 
 export const ReservationMessages = {
