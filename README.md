@@ -76,6 +76,7 @@ SmartRoom est une application moderne permettant à une entreprise de gérer eff
    ```bash
    cd backend
    npm run start
+   npm run test
 
    cd frontend
    npm run dev
