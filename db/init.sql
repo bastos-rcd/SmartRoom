@@ -54,8 +54,8 @@ VALUES ('Tableau blanc', 'fourniture', 1, 2);
 
 CREATE TABLE "reservation" (
     id SERIAL PRIMARY KEY,
-    start_date TIMESTAMP NOT NULL,
-    end_date TIMESTAMP NOT NULL,
+    start_date TIMESTAMPTZ NOT NULL,
+    end_date TIMESTAMPTZ NOT NULL,
     status VARCHAR(20) NOT NULL CHECK (status IN ('confirmed', 'cancelled', 'modified')),
     comment TEXT,
     user_id INT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
@@ -70,7 +70,7 @@ CREATE TABLE "request" (
     type VARCHAR(20) NOT NULL CHECK (type IN ('incident', 'request')),
     description TEXT NOT NULL,
     status INT NOT NULL CHECK (status IN (0, 1)), 
-    creation_date TIMESTAMP NOT NULL DEFAULT NOW(),
+    creation_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     user_id INT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE
 );
 

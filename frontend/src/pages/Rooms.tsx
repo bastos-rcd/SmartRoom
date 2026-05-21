@@ -10,7 +10,6 @@ import { authService } from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { eventService } from "../services/event.service";
 import type { Event } from "../types/event";
-import { formatDateTime } from "../utils/format";
 
 export default function Rooms() {
   const navigate = useNavigate();
@@ -20,8 +19,8 @@ export default function Rooms() {
 
   const [showModal, setShowModal] = useState(false);
   const [comment, setComment] = useState("");
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
   useEffect(() => {
@@ -69,8 +68,8 @@ export default function Rooms() {
   const handleReserve = async () => {
     eventService.createEvent({
       id: 0,
-      startDate: formatDateTime(startDate),
-      endDate: formatDateTime(endDate),
+      startDate: startDate,
+      endDate: endDate,
       status: "confirmed",
       comment,
       roomId: selectedRoom?.id || 0,
@@ -97,7 +96,7 @@ export default function Rooms() {
         <div className="row g-4 col-11 col-md-11 mx-auto mt-4">
           {rooms.map((room) => (
             <div className="col-12 col-md-6 col-lg-4" key={room.name}>
-              <RoomCard {...room} bottomVisible={true} />
+              <RoomCard {...room} events={events} bottomVisible={true} />
             </div>
           ))}
         </div>
@@ -146,10 +145,8 @@ export default function Rooms() {
                           type="datetime-local"
                           className="form-control bg-custom-login-input"
                           id="start-date"
-                          value={formatDateTime(startDate)}
-                          onChange={(e) =>
-                            setStartDate(new Date(e.target.value))
-                          }
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
                           placeholder="Date"
                         />
                       </div>
@@ -165,8 +162,8 @@ export default function Rooms() {
                           className="form-control bg-custom-login-input"
                           id="end-date"
                           placeholder="Date"
-                          value={formatDateTime(endDate)}
-                          onChange={(e) => setEndDate(new Date(e.target.value))}
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
                         />
                       </div>
 
@@ -206,7 +203,8 @@ export default function Rooms() {
                               const eventEnd = new Date(event.endDate);
 
                               return (
-                                eventStart < endDate && eventEnd > startDate
+                                eventStart < new Date(endDate) &&
+                                eventEnd > new Date(startDate)
                               );
                             });
 
