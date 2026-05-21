@@ -132,7 +132,6 @@ export default function Rooms() {
               </label>
               <select
                 className="form-select border-0 p-0 bg-transparent text-dark fw-semibold shadow-none"
-                aria-label="Select building"
                 style={{ fontSize: "0.9rem" }}
                 value={searchBuilding}
                 onChange={(e) => setSearchBuilding(e.target.value)}

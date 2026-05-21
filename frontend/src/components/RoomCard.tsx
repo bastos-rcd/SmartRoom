@@ -35,9 +35,9 @@ export default function RoomCard(props: RoomProps) {
   return (
     <div className="card h-100 border border-light-subtle rounded-4 shadow-sm overflow-hidden reservation-card">
       {/* Card Header */}
-      <div className="card-header custom-bg text-white p-3 border-0">
+      <div className="card-header bg-slate text-black p-3 border-0">
         <h4 className="card-title h5 fw-bold mb-1">{props.name}</h4>
-        <div className="text-white-50 small fw-medium">
+        <div className="text-black-50 small fw-medium">
           {props.location} • Étage {props.floor}
         </div>
       </div>
@@ -65,22 +65,6 @@ export default function RoomCard(props: RoomProps) {
           <div className="small text-secondary">
             <strong className="text-dark">Capacité :</strong> {props.capacity}{" "}
             places assises
-          </div>
-
-          <div className="small text-secondary mt-1">
-            <strong className="d-block mb-2 text-dark">
-              Équipements inclus :
-            </strong>
-            <div className="d-flex flex-wrap gap-2">
-              {props.equipment.map((eq) => (
-                <span
-                  key={eq}
-                  className="badge bg-white text-dark border border-light-subtle rounded-pill px-3 py-2 shadow-sm fs-7 fw-semibold"
-                >
-                  {eq}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
       </div>
