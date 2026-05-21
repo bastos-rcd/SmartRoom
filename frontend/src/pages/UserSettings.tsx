@@ -261,7 +261,7 @@ export default function UserSettings() {
           transform: isMobile && !mobileOpen ? "translateX(-280px)" : "none",
         }}
       >
-        <div className="d-flex flex-column align-items-center justify-content-center p-3 border-bottom border-white-10 position-relative" style={{ minHeight: "150px" }}>
+        <div className="d-flex flex-column align-items-center justify-content-center p-3 border-bottom border-white-10 position-relative" style={{ minHeight: "100px" }}>
           {isMobile && (
             <button
               className="btn btn-link text-white-50 position-absolute"
@@ -273,7 +273,7 @@ export default function UserSettings() {
           )}
 
           <div
-            className="d-flex align-items-center gap-2 text-white-50 cursor-pointer mb-3 fs-6 hover-emerald"
+            className="d-flex align-items-center gap-2 text-white-50 cursor-pointer fs-6 hover-emerald"
             onClick={() => navigate("/")}
             style={{ transition: "color 0.2s ease" }}
           >
@@ -281,11 +281,11 @@ export default function UserSettings() {
             <span>Retour à l'accueil</span>
           </div>
 
-          <div className="text-center">
+          {/* <div className="text-center">
             <small className="text-emerald text-uppercase fw-semibold" style={{ color: "#4ade80", fontSize: "0.75rem", letterSpacing: "1px" }}>
               {user?.role === "admin" ? "Administrateur" : "Utilisateur"}
             </small>
-          </div>
+          </div> */}
         </div>
 
         <div className="p-3 d-flex flex-column gap-2 flex-grow-1">
