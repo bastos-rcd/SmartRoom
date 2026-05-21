@@ -6,7 +6,6 @@ import type { User } from "../types/user";
 
 export default function UserManagement() {
   const [data, setData] = useState<User[]>([]);
-
   useEffect(() => {
     userService.getAllUsers().then((users) => {
       setData(users);
