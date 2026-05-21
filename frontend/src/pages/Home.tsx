@@ -10,7 +10,7 @@ import Menu from "../components/Menu";
 import { eventService } from "../services/event.service";
 import type { Event } from "../types/event";
 import type { Room } from "../types/room";
-import { roomService } from "../services/roomService";
+import { roomService } from "../services/room.service";
 
 export default function Home() {
   const [currentView] = useState(
@@ -28,9 +28,9 @@ export default function Home() {
           start: event.startDate,
           end: event.endDate,
           backgroundColor:
-            event.type === "confirmed"
+            event.status === "confirmed"
               ? "#4ade80"
-              : event.type === "cancelled"
+              : event.status === "cancelled"
                 ? "#f87171"
                 : "#60a5fa",
         };

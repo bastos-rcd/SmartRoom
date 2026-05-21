@@ -80,6 +80,9 @@ export default function Menu() {
                       Tableau de bord
                     </a>
                   </li>
+                </>
+              ) : (
+                <>
                   <li className="nav-item">
                     <a
                       className="nav-link fs-4"
@@ -90,9 +93,6 @@ export default function Menu() {
                       Salles
                     </a>
                   </li>
-                </>
-              ) : (
-                <>
                   <li className="nav-item">
                     <a
                       className="nav-link fs-4"
