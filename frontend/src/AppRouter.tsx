@@ -7,6 +7,7 @@ import Rooms from "./pages/Rooms";
 import Reservation from "./pages/Reservation";
 import MyAdmin from "./pages/MyAdmin";
 import Analytics from "./pages/Analytics";
+import UserSettings from "./pages/UserSettings";
 
 export default function AppRouter() {
   return (
@@ -18,6 +19,7 @@ export default function AppRouter() {
       <Route path="/reservations" element={<Reservation />} />
       <Route path="/admin" element={<MyAdmin />} />
       <Route path="/analytics" element={<Analytics />} />
+      <Route path="/userSettings" element={<UserSettings />} />
     </Routes>
   );
 }
