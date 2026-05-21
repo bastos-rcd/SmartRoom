@@ -6,6 +6,9 @@ import Signin from "./pages/Signin";
 import Rooms from "./pages/Rooms";
 import Reservation from "./pages/Reservation";
 import UserManagement from "./pages/UserManagment";
+import MyAdmin from "./pages/MyAdmin";
+import Analytics from "./pages/Analytics";
+import Request from "./pages/Request";
 
 export default function AppRouter() {
   return (
@@ -16,6 +19,9 @@ export default function AppRouter() {
       <Route path="/rooms" element={<Rooms />} />
       <Route path="/reservations" element={<Reservation />} />
       <Route path="/users" element={<UserManagement />} />
+      <Route path="/admin" element={<MyAdmin />} />
+      <Route path="/analytics" element={<Analytics />} />
+      <Route path="/requests" element={<Request />} />
     </Routes>
   );
 }

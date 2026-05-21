@@ -1,14 +1,7 @@
 import { useState } from "react";
 import BlockIcon from "@mui/icons-material/Block";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-type User = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  isAdmin: boolean;
-};
+import type { User } from "../types/user";
 
 type UserCardProps = User & {
   onDelete: () => void;
@@ -16,7 +9,8 @@ type UserCardProps = User & {
 };
 
 export default function UserCard(props: UserCardProps) {
-  const [isAdmin, setIsAdmin] = useState<boolean>(props.isAdmin);
+  const isAdmin = props.role === "admin" ? true : false;
+  const [isAdminState, setIsAdminState] = useState<boolean>(isAdmin);
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
@@ -74,8 +68,8 @@ export default function UserCard(props: UserCardProps) {
             type="checkbox"
             role="switch"
             value=""
-            checked={isAdmin}
-            onChange={() => setIsAdmin(!isAdmin)}
+            checked={isAdminState}
+            onChange={() => setIsAdminState(!isAdminState)}
             id="checkNativeSwitch"
           />
         </div>
@@ -105,7 +99,7 @@ export default function UserCard(props: UserCardProps) {
                 <div className="modal-body">
                   <div className="modal-footer d-flex justify-content-center border-0">
                     <button
-                      className="btn bg-custom-login-btn fs-4 text-black px-5 py-2"
+                      className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
                       onClick={handleConfirmBlock}
                     >
                       Désactiver
@@ -142,7 +136,7 @@ export default function UserCard(props: UserCardProps) {
                 <div className="modal-body">
                   <div className="modal-footer d-flex justify-content-center border-0">
                     <button
-                      className="btn bg-custom-login-btn fs-4 text-black px-5 py-2"
+                      className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
                       onClick={handleConfirmDelete}
                     >
                       Supprimer
