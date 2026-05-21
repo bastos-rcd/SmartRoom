@@ -11,7 +11,6 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 import Menu from "../components/Menu";
 import { eventService } from "../services/event.service";
-import { roomService } from "../services/roomService";
 import { buildingService } from "../services/buildingService";
 import { equipmentService } from "../services/equipmentService";
 import { authService } from "../services/auth.service";
@@ -20,6 +19,7 @@ import type { Event } from "../types/event";
 import type { Room } from "../types/room";
 import type { Building } from "../types/building";
 import { useNavigate } from "react-router-dom";
+import { roomService } from "../services/room.service";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -79,10 +79,10 @@ export default function Home() {
           start: event.startDate,
           end: event.endDate,
           backgroundColor:
-            event.type === "confirmed"
-              ? "#10b981"
-              : event.type === "cancelled"
-                ? "#ef4444"
+            event.status === "confirmed"
+              ? "#4ade80"
+              : event.status === "cancelled"
+                ? "#f87171"
                 : "#60a5fa",
         };
       });

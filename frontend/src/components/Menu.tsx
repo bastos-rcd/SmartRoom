@@ -180,26 +180,125 @@ export default function Menu() {
           className="d-flex flex-column h-100 w-100"
           style={{ overflowY: "auto", overflowX: "hidden" }}
         >
-          <div
-            className="d-flex align-items-center justify-content-center p-3 border-bottom border-white-10"
-            style={{
-              minHeight: collapsed ? "78px" : "150px",
-              transition: "min-height 0.3s ease",
-            }}
-          >
-            <div
-              className="d-flex justify-content-center align-items-center w-100 cursor-pointer"
-              onClick={() => {
-                setMobileOpen(false);
-                navigate("/");
-              }}
-            >
-              <img
-                src={logoSrc}
-                alt="SmartRoom"
-                className="sidebar-logo"
-                style={{ cursor: "pointer" }}
-              />
+          <div className="offcanvas-header d-flex justify-content-center">
+            <img src="/logo-desktop.png" alt="Logo" height={"150px"} />
+          </div>
+          <div className="offcanvas-body d-flex flex-column align-items-center justify-content-between">
+            <ul className="navbar-nav text-center py-4 w-100 gap-3">
+              {!logged ? (
+                <>
+                  <li className="nav-item">
+                    <a
+                      className="nav-link fs-4"
+                      aria-current="page"
+                      data-bs-dismiss="offcanvas"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate("/")}
+                    >
+                      Tableau de bord
+                    </a>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-item">
+                    <a
+                      className="nav-link fs-4"
+                      data-bs-dismiss="offcanvas"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate("/rooms")}
+                    >
+                      Salles
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className="nav-link fs-4"
+                      aria-current="page"
+                      data-bs-dismiss="offcanvas"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate("/")}
+                    >
+                      Tableau de bord
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className="nav-link fs-4"
+                      data-bs-dismiss="offcanvas"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate("/rooms")}
+                    >
+                      Salles
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className="nav-link fs-4"
+                      data-bs-dismiss="offcanvas"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate("/reservations")}
+                    >
+                      Mes réservations
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className="nav-link fs-4"
+                      data-bs-dismiss="offcanvas"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate("/account")}
+                    >
+                      Mon compte
+                    </a>
+                  </li>
+                  {user?.role === "admin" && (
+                    <>
+                      <li className="nav-item">
+                        <a
+                          className="nav-link fs-4"
+                          data-bs-dismiss="offcanvas"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => navigate("/users")}
+                        >
+                          Gérer les utilisateurs
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a
+                          className="nav-link fs-4"
+                          style={{ cursor: "pointer" }}
+                          data-bs-dismiss="offcanvas"
+                          onClick={() => navigate("/manage-rooms")}
+                        >
+                          Gérer les salles
+                        </a>
+                      </li>
+                    </>
+                  )}
+                </>
+              )}
+            </ul>
+            <div className="d-flex justify-content-center">
+              {logged ? (
+                <button
+                  type="submit"
+                  className="bg-custom-login-btn rounded px-5 py-2 mt-3 fs-4 text-black"
+                  onClick={handleLogout}
+                  data-bs-dismiss="offcanvas"
+                >
+                  Déconnexion
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="bg-custom-login-btn rounded px-5 py-2 mt-3 fs-4 text-black"
+                  onClick={handleLogin}
+                  data-bs-dismiss="offcanvas"
+                >
+                  Connexion
+                </button>
+              )}
             </div>
           </div>
 
