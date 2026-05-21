@@ -10,8 +10,8 @@ export default function Reservation() {
       name: "Salle 1",
       capacity: 10,
       floor: 1,
-      location: "Batiment A",
-      equipment: ["Video-projecteur", "Tableau blanc", "Audio"],
+      location: "Bâtiment A",
+      equipment: ["Vidéo-projecteur", "Tableau blanc", "Audio"],
       startDate: "2026-05-30 18:00",
       endDate: "2026-05-30 19:00",
     },
@@ -19,8 +19,8 @@ export default function Reservation() {
       name: "Salle 2",
       capacity: 10,
       floor: 1,
-      location: "Batiment A",
-      equipment: ["Video-projecteur", "Tableau blanc", "Audio"],
+      location: "Bâtiment A",
+      equipment: ["Vidéo-projecteur", "Tableau blanc", "Audio"],
       startDate: "2026-05-19 10:00",
       endDate: "2026-05-19 11:00",
     },
@@ -39,42 +39,63 @@ export default function Reservation() {
   return (
     <>
       <Menu />
-      <div>
-        <div className="border-bottom border-secondary-subtle p-3 m-2 text-center">
-          <h1 className="fs-1 ">Mes réservations</h1>
+      
+      <div className="container-fluid py-4 px-3 px-md-5">
+        {/* Page Header */}
+        <div className="text-center mb-4">
+          <h1 className="display-5 text-dark fw-bold mb-2">Mes réservations</h1>
         </div>
-        <div className="nav nav-underline nav-justified p-3 m-2">
-          <label
-            className={`nav-link text-decoration-none cursor-pointer ${activeTab === "current" ? "active" : ""} fs-4 ${activeTab === "current" ? "text-dark" : "text-secondary"}`}
-            role="button"
-            id="current"
-            onClick={() => setActiveTab("current")}
-          >
-            En cours
-          </label>
-          <label
-            className={`nav-link text-decoration-none cursor-pointer ${activeTab === "passed" ? "active" : ""} fs-4 ${activeTab === "passed" ? "text-dark" : "text-secondary"}`}
-            role="button"
-            id="passed"
-            onClick={() => setActiveTab("passed")}
-          >
-            Passées
-          </label>
+
+        {/* Premium Pills Tab Switcher */}
+        <div className="d-flex justify-content-center mb-5">
+          <div className="nav nav-pills bg-light border border-light-subtle rounded-pill p-1">
+            <button
+              type="button"
+              className={`nav-link rounded-pill px-4 fw-bold ${
+                activeTab === "current"
+                  ? "bg-dark text-white shadow-sm"
+                  : "text-secondary bg-transparent"
+              }`}
+              onClick={() => setActiveTab("current")}
+            >
+              En cours
+            </button>
+            <button
+              type="button"
+              className={`nav-link rounded-pill px-4 fw-bold ${
+                activeTab === "passed"
+                  ? "bg-dark text-white shadow-sm"
+                  : "text-secondary bg-transparent"
+              }`}
+              onClick={() => setActiveTab("passed")}
+            >
+              Passées
+            </button>
+          </div>
         </div>
-        <div className="row g-4 col-11 col-md-11 mx-auto mt-4">
-          {filteredData.length === 0 ? (
-            <div className="text-center">
-              <p className="fs-4">Aucune réservation</p>
-            </div>
-          ) : (
-            filteredData.map((room) => (
-              <div className="col-12 col-md-6 col-lg-4" key={room.name}>
-                <RoomCard {...room} />
+
+        {/* Reservations Grid List */}
+        <div className="row justify-content-center">
+          <div className="col-12 col-xl-11">
+            {filteredData.length === 0 ? (
+              <div className="text-center py-5 bg-white border rounded-4 shadow-sm col-12 col-md-8 mx-auto">
+                <p className="fs-5 text-secondary mb-0">
+                  Aucune réservation {activeTab === "current" ? "en cours" : "passée"} pour le moment.
+                </p>
               </div>
-            ))
-          )}
+            ) : (
+              <div className="row g-4 justify-content-center">
+                {filteredData.map((room) => (
+                  <div className="col-12 col-md-6 col-lg-4 d-flex align-items-stretch" key={room.name}>
+                    <RoomCard {...room} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
   );
 }
+

@@ -4,9 +4,41 @@ body,
   height: 100%;
   margin: 0;
   font-family: "Nunito", sans-serif;
+  background-color: #f8fafc;
 }
 
-/* Scrollbar */
+body {
+  transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  padding-left: 0 !important;
+}
+
+body.has-sidebar {
+  padding-top: 70px !important;
+}
+
+/* Sidebar padding only applies on desktop when has-sidebar is present */
+@media (min-width: 768px) {
+  body.has-sidebar {
+    padding-left: 280px !important;
+  }
+
+  body.has-sidebar.sidebar-collapsed {
+    padding-left: 78px !important;
+  }
+}
+
+/* On mobile/tablet viewports, body always has zero left padding since the menu is an overlay drawer */
+@media (max-width: 767px) {
+  body {
+    padding-left: 0 !important;
+  }
+
+  body.sidebar-collapsed {
+    padding-left: 0 !important;
+  }
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   background: transparent;
@@ -17,27 +49,335 @@ body,
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
-.bg-custom-login {
+/* --- Premium Collapsible Left Sidebar Layout --- */
+.menu-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #0e172a;
+  border-right: 3px solid rgba(255, 255, 255, 0.08); /* thicker premium border ("bord du menu") */
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1010;
+  overflow: visible !important;
+  box-shadow: 6px 0 28px rgba(0, 0, 0, 0.25); /* enhanced premium shadow */
+}
+
+.sidebar-logo {
+  height: 120px; /* enlarged logo */
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-collapsed .sidebar-logo {
+  height: 40px; /* clean and fitting when collapsed */
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 1.1rem 1.5rem !important; /* modern spacious padding */
+  border-radius: 12px !important;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  background-color: transparent !important;
+}
+
+.sidebar-link:hover {
+  background-color: transparent !important; /* completely deleted surlignage/block color */
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.sidebar-link:hover .sidebar-link-icon {
+  color: #4ade80 !important;
+  transform: scale(1.15);
+}
+
+@media (min-width: 768px) {
+  body:not(.sidebar-collapsed) .sidebar-link:hover {
+    transform: translateX(6px);
+  }
+}
+
+/* Active Highlight - Minimalist: transparent background, highlight ONLY the icon in emerald */
+.sidebar-link.active {
+  background-color: transparent !important; /* completely deleted surlignage */
+  color: rgba(255, 255, 255, 0.45) !important; /* matches normal link color exactly */
+  font-weight: 500 !important; /* standard font-weight, no bold text */
+  border: none !important;
+}
+
+.sidebar-link.active .sidebar-link-icon {
+  color: #4ade80 !important; /* only highlight the icon in emerald green */
+  transform: scale(1.25); /* enlarge the icon beautifully */
+}
+
+.sidebar-link-icon {
+  min-width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.25s ease;
+}
+
+.sidebar-link-text {
+  margin-left: 1.1rem;
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.25s ease, transform 0.25s ease, width 0.25s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.sidebar-collapsed-text {
+  opacity: 0 !important;
+  transform: translateX(-10px) !important;
+  width: 0 !important;
+  margin: 0 !important;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Absolute Floating Toggle Button on Right Sidebar Border */
+.sidebar-floating-toggle-btn {
+  position: absolute;
+  top: 48px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #0e172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1020;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-floating-toggle-btn:hover {
+  background-color: #1e293b;
+  border-color: #4ade80;
+  color: #4ade80;
+  transform: scale(1.1);
+}
+
+.sidebar-floating-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+/* --- Clean Flat Layout Button Helpers --- */
+.btn-emerald {
+  background-color: #10b981 !important;
+  border: 1px solid #10b981 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.btn-emerald:hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-logout {
+  background-color: transparent !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  color: #f87171 !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.btn-outline-logout:hover {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+/* --- Top Header layout styling --- */
+.top-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #0e172a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 1000;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+  .top-header {
+    left: 280px;
+  }
+
+  body.sidebar-collapsed .top-header {
+    left: 78px;
+  }
+}
+
+.header-clock {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 575px) {
+  .header-clock {
+    font-size: 1.15rem;
+  }
+}
+
+/* --- Mobile Sliding Overdrawer & overlay --- */
+@media (max-width: 767px) {
+  .menu-sidebar {
+    left: -280px !important;
+    width: 280px !important;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 1050 !important;
+  }
+
+  .menu-sidebar.mobile-open {
+    left: 0 !important;
+  }
+}
+
+.menu-mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 1040;
+  animation: fadeInOverlay 0.25s ease-out forwards;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- FullCalendar Clean Minimal Flat Overrides --- */
+.fc {
+  background-color: #ffffff !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.02) !important;
+  padding: 1.5rem !important;
+  font-family: "Nunito", sans-serif !important;
+}
+
+.fc .fc-toolbar-title {
+  font-weight: 800 !important;
+  color: #0e172a !important;
+}
+
+.fc .fc-button {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #334155 !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.15s ease !important;
+}
+
+.fc .fc-button:hover {
+  background-color: #e2e8f0 !important;
+  color: #0e172a !important;
+}
+
+.fc .fc-button-active {
   background-color: #0e172a !important;
+  color: #ffffff !important;
+  border-color: #0e172a !important;
 }
 
-.bg-custom-login-input {
-  background-color: #fefcfd !important;
+.fc .fc-today-button {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+  color: #059669 !important;
 }
 
-.bg-custom-login-btn {
-  background-color: #eff9f0 !important;
+.fc .fc-today-button:hover {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+.fc .fc-theme-standard th {
+  background-color: #f8fafc !important;
+  padding: 10px 0 !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: #475569 !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+.fc-event {
+  border-radius: 8px !important;
+  border: none !important;
+  padding: 4px 8px !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: transform 0.15s ease !important;
+}
+
+.fc-event:hover {
+  transform: translateY(-1px) scale(1.01) !important;
+}
+
+/* Airbnb-style search container responsiveness */
+.search-filter-pill {
+  border-radius: 20px;
+}
+
+@media (min-width: 768px) {
+  .search-filter-pill {
+    border-radius: 50rem;
+  }
 }
