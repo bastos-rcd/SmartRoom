@@ -11,8 +11,8 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 import Menu from "../components/Menu";
 import { eventService } from "../services/event.service";
-import { buildingService } from "../services/buildingService";
-import { equipmentService } from "../services/equipmentService";
+import { buildingService } from "../services/building.service";
+import { equipmentService } from "../services/equipment.service";
 import { authService } from "../services/auth.service";
 
 import type { Event } from "../types/event";

@@ -128,7 +128,7 @@ export default function Menu() {
           {
             title: "Mes réservations",
             path: "/reservations",
-            icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
+            icon: <ApartmentIcon sx={{ fontSize: "1.5rem" }} />,
           },
         ]
       : []),
@@ -143,6 +143,16 @@ export default function Menu() {
             title: "Mes réservations",
             path: "/reservations",
             icon: <ApartmentIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+          {
+            title: "Gestion des utilisateurs",
+            path: "/users",
+            icon: <SupervisorAccountIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+          {
+            title: "Analyses",
+            path: "/analytics",
+            icon: <BarChartIcon sx={{ fontSize: "1.5rem" }} />,
           },
           ...(user?.role === "admin"
             ? [
@@ -164,7 +174,7 @@ export default function Menu() {
               ]
             : []),
           {
-            title: "Demandes",
+            title: "Mes demandes",
             path: "/requests",
             icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
           },
