@@ -1,0 +1,37 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches: ["master"]
+    paths:
+      - "frontend/**"
+
+concurrency:
+  group: "frontend-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  frontend-quality:
+    name: Frontend Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Check Code Format (Prettier)
+        run: npm run prettier:check
+        working-directory: ./frontend
