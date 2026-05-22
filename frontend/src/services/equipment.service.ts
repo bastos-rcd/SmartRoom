@@ -8,4 +8,10 @@ export const equipmentService = {
 
     return response.data;
   },
+
+  async createEquipment(equipment: Omit<Equipment, "id">): Promise<Equipment> {
+    const response = await API.post(`/equipments`, equipment);
+
+    return response.data;
+  },
 };

@@ -359,10 +359,6 @@ function RoomDetailRow({
       setReserveError("Veuillez remplir tous les champs de date et d'heure.");
       return;
     }
-    if (!currentUser) {
-      setReserveError("Vous devez être connecté pour réserver.");
-      return;
-    }
 
     setSubmitting(true);
     setReserveError("");
@@ -375,7 +371,7 @@ function RoomDetailRow({
         endDate: endDateTimeStr,
         status: "confirmed",
         comment: comment.trim(),
-        userId: currentUser.id,
+        userId: currentUser!.id,
         roomId: room.id,
       });
 
@@ -438,8 +434,9 @@ function RoomDetailRow({
           <h5 className="text-dark fw-bold fs-5 mb-3">
             Réserver cet espace rapidement
           </h5>
+
           <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-            <div className="row g-2">
+            <div className="col g-2">
               <div className="col-12 col-sm-6">
                 <label className="form-label text-secondary fw-semibold fs-7 mb-1">
                   Date & Heure de début
@@ -459,6 +456,7 @@ function RoomDetailRow({
                   />
                 </div>
               </div>
+
               <div className="col-12 col-sm-6">
                 <label className="form-label text-secondary fw-semibold fs-7 mb-1">
                   Date & Heure de fin

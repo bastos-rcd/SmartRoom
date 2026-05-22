@@ -15,6 +15,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function Menu() {
   const navigate = useNavigate();
@@ -25,6 +27,19 @@ export default function Menu() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [timeStr, setTimeStr] = useState("");
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const closeDropdown = () => setDropdownOpen(false);
+    document.addEventListener("click", closeDropdown);
+    return () => document.removeEventListener("click", closeDropdown);
+  }, [dropdownOpen]);
+
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDropdownOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -101,11 +116,20 @@ export default function Menu() {
       path: "/",
       icon: <HomeIcon sx={{ fontSize: "1.5rem" }} />,
     },
-    {
-      title: "Réserver",
-      path: "/rooms",
-      icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
-    },
+    ...(logged
+      ? [
+          {
+            title: "Réserver",
+            path: "/rooms",
+            icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+          {
+            title: "Mes réservations",
+            path: "/reservations",
+            icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+        ]
+      : []),
     ...(user?.role === "admin"
       ? [
           {
@@ -120,12 +144,16 @@ export default function Menu() {
           },
         ]
       : []),
-    {
-      title: "Messagerie",
-      path: "/messages",
-      icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
-      isPlaceholder: true,
-    },
+    ...(logged
+      ? [
+          {
+            title: "Messagerie",
+            path: "/messages",
+            icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
+            isPlaceholder: true,
+          },
+        ]
+      : []),
   ];
 
   const handleNavigation = (item: (typeof menuItems)[0]) => {
@@ -166,148 +194,30 @@ export default function Menu() {
         )}
 
         <div
-          className="offcanvas offcanvas-start text-white vh-100"
-          style={{ backgroundColor: "#1a233a", width: "350px" }}
-          id="offcanvasDarkNavbar"
-          aria-labelledby="offcanvasDarkNavbarLabel"
+          className="d-flex flex-column h-100 w-100"
+          style={{ overflowY: "auto", overflowX: "hidden" }}
         >
-          <div className="offcanvas-header d-flex justify-content-center">
-            <img src="/logo-desktop.png" alt="Logo" height={"150px"} />
-          </div>
-          <div className="offcanvas-body d-flex flex-column align-items-center justify-content-between">
-            <ul className="navbar-nav text-center py-4 w-100 gap-3">
-              {!logged ? (
-                <>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link fs-4"
-                      aria-current="page"
-                      data-bs-dismiss="offcanvas"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate("/")}
-                    >
-                      Tableau de bord
-                    </a>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link fs-4"
-                      data-bs-dismiss="offcanvas"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate("/rooms")}
-                    >
-                      Salles
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link fs-4"
-                      aria-current="page"
-                      data-bs-dismiss="offcanvas"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate("/")}
-                    >
-                      Tableau de bord
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link fs-4"
-                      data-bs-dismiss="offcanvas"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate("/rooms")}
-                    >
-                      Salles
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link fs-4"
-                      data-bs-dismiss="offcanvas"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate("/reservations")}
-                    >
-                      Mes réservations
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link fs-4"
-                      data-bs-dismiss="offcanvas"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate("/account")}
-                    >
-                      Mon compte
-                    </a>
-                  </li>
-                  {user?.role === "admin" && (
-                    <>
-                      <li className="nav-item">
-                        <a
-                          className="nav-link fs-4"
-                          data-bs-dismiss="offcanvas"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => navigate("/users")}
-                        >
-                          Gérer les utilisateurs
-                        </a>
-                      </li>
-                      <li className="nav-item">
-                        <a
-                          className="nav-link fs-4"
-                          style={{ cursor: "pointer" }}
-                          data-bs-dismiss="offcanvas"
-                          onClick={() => navigate("/manage-rooms")}
-                        >
-                          Gérer les salles
-                        </a>
-                      </li>
-                    </>
-                  )}
-                </>
-              )}
-            </ul>
-            <div className="d-flex justify-content-center">
-              {logged ? (
-                <button
-                  type="submit"
-                  className="bg-custom-login-btn rounded px-5 py-2 mt-3 fs-4 text-black"
-                  onClick={handleLogout}
-                  data-bs-dismiss="offcanvas"
-                >
-                  Déconnexion
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="bg-custom-login-btn rounded px-5 py-2 mt-3 fs-4 text-black"
-                  onClick={handleLogin}
-                  data-bs-dismiss="offcanvas"
-                >
-                  Connexion
-                </button>
-              )}
-
-              {/* <div className="d-flex flex-column h-100 w-100" style={{ overflowY: "auto", overflowX: "hidden" }}>
           <div
             className="d-flex align-items-center justify-content-center p-3 border-bottom border-white-10"
-            style={{ minHeight: collapsed ? "78px" : "150px", transition: "min-height 0.3s ease" }}
+            style={{
+              minHeight: collapsed ? "78px" : "150px",
+              transition: "min-height 0.3s ease",
+            }}
           >
             <div
-              className="d-flex justify-content-center align-items-center w-100 cursor-pointer"
+              className="d-flex justify-content-center align-items-center w-100"
               onClick={() => {
                 setMobileOpen(false);
                 navigate("/");
               }}
+              style={{ cursor: "pointer" }}
             >
               <img
                 src={logoSrc}
                 alt="SmartRoom"
                 className="sidebar-logo"
-              /> */}
+                style={{ cursor: "pointer" }}
+              />
             </div>
           </div>
 
@@ -378,21 +288,80 @@ export default function Menu() {
               Connexion
             </button>
           ) : (
-            <div className="d-flex align-items-center gap-3">
-              <span className="text-white-50 small d-none d-sm-inline">
-                Utilisateur :
-              </span>
-              <span className="text-white fw-bold d-none d-sm-inline me-2">
-                {user?.firstName} {user?.lastName}
-              </span>
-              <button
-                type="button"
-                className="btn btn-outline-logout rounded-pill px-4 py-2"
-                onClick={handleLogout}
+            <div className="position-relative">
+              <div
+                className="d-flex align-items-center gap-2 cursor-pointer px-2 py-1.5 rounded-pill hover-user-badge"
+                onClick={toggleDropdown}
+                title="Mon compte"
+                style={{ transition: "all 0.2s ease", userSelect: "none" }}
               >
-                <LogoutIcon sx={{ fontSize: "1.2rem", marginRight: "6px" }} />
-                Déconnexion
-              </button>
+                <div
+                  className="d-flex align-items-center justify-content-center text-white fw-bold rounded-circle shadow-sm"
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    backgroundColor: "#10b981",
+                    fontSize: "1rem",
+                    border: "2px solid rgba(255, 255, 255, 0.15)",
+                  }}
+                >
+                  {user?.firstName?.charAt(0).toUpperCase() || "U"}
+                </div>
+                <span className="text-white fw-semibold d-none d-sm-inline me-1">
+                  {user?.firstName} {user?.lastName}
+                </span>
+                <ExpandMoreIcon
+                  sx={{
+                    fontSize: "1.2rem",
+                    color: "rgba(255, 255, 255, 0.6)",
+                    transition: "transform 0.2s ease",
+                    transform: dropdownOpen ? "rotate(180deg)" : "none",
+                  }}
+                />
+              </div>
+
+              {dropdownOpen && (
+                <div
+                  className="position-absolute end-0 mt-2 bg-slate border rounded-3 shadow-lg p-1.5 animate-fade-in"
+                  style={{
+                    width: "180px",
+                    backgroundColor: "#0f172a",
+                    borderColor: "rgba(255, 255, 255, 0.08)",
+                    zIndex: 2000,
+                  }}
+                >
+                  <div
+                    onClick={() => {
+                      if (user?.role === "admin") {
+                        navigate("/adminSettings");
+                      } else {
+                        navigate("/userSettings");
+                      }
+                    }}
+                    className="d-flex align-items-center gap-2 text-white-50 p-2 rounded-2 cursor-pointer hover-emerald-bg"
+                    style={{ transition: "all 0.2s ease", cursor: "pointer" }}
+                  >
+                    <SettingsIcon sx={{ fontSize: "1.1rem" }} />
+                    <span className="fw-medium" style={{ fontSize: "0.9rem" }}>
+                      Paramètres
+                    </span>
+                  </div>
+                  <div
+                    onClick={handleLogout}
+                    className="d-flex align-items-center gap-2 text-white-50 p-2 rounded-2 cursor-pointer hover-danger-bg mt-1"
+                    style={{
+                      transition: "all 0.2s ease",
+                      color: "#f87171",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <LogoutIcon sx={{ fontSize: "1.1rem" }} />
+                    <span className="fw-bold" style={{ fontSize: "0.9rem" }}>
+                      Déconnexion
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -406,6 +375,17 @@ export default function Menu() {
       )}
 
       <style>{`
+        .hover-user-badge:hover {
+          background-color: rgba(255, 255, 255, 0.05);
+        }
+        .hover-emerald-bg:hover {
+          background-color: rgba(16, 185, 129, 0.1) !important;
+          color: #4ade80 !important;
+        }
+        .hover-danger-bg:hover {
+          background-color: rgba(239, 68, 68, 0.1) !important;
+          color: #f87171 !important;
+        }
         .animate-toast {
           animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
