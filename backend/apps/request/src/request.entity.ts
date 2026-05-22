@@ -1,27 +1,27 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from "typeorm";
+	Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	CreateDateColumn,
+} from 'typeorm'
 
-@Entity("request")
+@Entity('request')
 export class Request {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number
 
-  @Column({ type: "varchar", length: 20 })
-  type: "incident" | "request";
+	@Column({ type: 'varchar', length: 20 })
+	type: 'incident' | 'request'
 
-  @Column({ type: "text" })
-  description: string;
+	@Column({ type: 'text' })
+	description: string
 
-  @Column({ type: "int" })
-  status: number;
+	@Column({ type: 'int' })
+	status: number
 
-  @CreateDateColumn({ name: "creation_date" })
-  creationDate: Date;
+	@CreateDateColumn({ name: 'creation_date' })
+	creationDate: Date
 
-  @Column({ name: "user_id" })
-  userId: number;
+	@Column({ name: 'user_id' })
+	userId: number
 }

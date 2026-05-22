@@ -1,16 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
-@Entity("parameter")
+@Entity('parameter')
 export class Parameter {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number
 
-  @Column({ type: "varchar", length: 150 })
-  name: string;
+	@Column({ type: 'varchar', length: 150 })
+	name: string
 
-  @Column({ type: "text" })
-  value: string;
+	@Column({ type: 'text' })
+	value: string
 
-  @Column({ name: "user_id" })
-  userId: number;
+	@Column({ name: 'user_id' })
+	userId: number
 }

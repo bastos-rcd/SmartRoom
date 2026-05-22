@@ -1,16 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
-@Entity("building")
+@Entity('building')
 export class Building {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number
 
-  @Column({ name: "name" })
-  name: string;
+	@Column({ name: 'name' })
+	name: string
 
-  @Column({ name: "address" })
-  address: string;
+	@Column({ name: 'address' })
+	address: string
 
-  @Column({ name: "nb_floors" })
-  nbFloors: number;
+	@Column({ name: 'nb_floors' })
+	nbFloors: number
 }
