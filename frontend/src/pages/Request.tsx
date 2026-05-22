@@ -132,7 +132,7 @@ export default function Request() {
       id: 2,
       type: "request",
       description:
-        "Demande d'ajout d'un projecteur dans la salle de conférence principale.",
+        "Demande d'ajout d'un projecteur dans la salle de conférence principale. Cela permettrait d'améliorer les présentations et les réunions d'équipe. Merci de prendre en considération cette demande pour améliorer notre environnement de travail.",
       status: 1,
       creationDate: new Date("2024-06-02T14:45:00"),
       userId: 1,
@@ -338,10 +338,20 @@ export default function Request() {
                     className="col-12 col-md-6 col-lg-4 d-flex"
                     key={request.id}
                   >
-                    <RequestCard
-                      {...request}
-                      type={request.type as "incident" | "request"}
-                    />
+                    {activeTab === "current" ? (
+                      <RequestCard
+                        {...request}
+                        showIcons={activeTab === "current"}
+                        onDelete={(id) => {}}
+                        onValidate={(id) => {}}
+                        type={request.type as "incident" | "request"}
+                      />
+                    ) : (
+                      <RequestCard
+                        {...request}
+                        type={request.type as "incident" | "request"}
+                      />
+                    )}
                   </div>
                 ))}
               </div>

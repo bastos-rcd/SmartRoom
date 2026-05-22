@@ -99,6 +99,12 @@ export default function UserCard(props: UserCardProps) {
                 <div className="modal-body">
                   <div className="modal-footer d-flex justify-content-center border-0">
                     <button
+                      className="btn btn-secondary rounded-pill fs-4 px-5 py-2"
+                      onClick={handleBlock}
+                    >
+                      Fermer
+                    </button>
+                    <button
                       className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
                       onClick={handleConfirmBlock}
                     >
@@ -135,6 +141,12 @@ export default function UserCard(props: UserCardProps) {
                 </div>
                 <div className="modal-body">
                   <div className="modal-footer d-flex justify-content-center border-0">
+                    <button
+                      className="btn btn-secondary rounded-pill fs-4 px-5 py-2"
+                      onClick={handleDelete}
+                    >
+                      Fermer
+                    </button>
                     <button
                       className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
                       onClick={handleConfirmDelete}

@@ -3,9 +3,37 @@ import { userService } from "../services/user.service";
 import type { Request } from "../types/request";
 import type { User } from "../types/user";
 import { formatDate } from "@fullcalendar/core/index.js";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DoneIcon from "@mui/icons-material/Done";
 
-export default function RequestCard(props: Request) {
+type RequestCardProps = Request & {
+  onDelete?: (id: number) => void;
+  onValidate?: (id: number) => void;
+  showIcons?: boolean;
+};
+
+export default function RequestCard(props: RequestCardProps) {
   const [user, setUser] = useState<User | null>(null);
+  const [isValidated, setIsValidated] = useState<boolean>(false);
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
+
+  const handleValidate = () => {
+    setIsValidated(!isValidated);
+  };
+
+  const handleDelete = () => {
+    setIsDeleted(!isDeleted);
+  };
+
+  const handleConfirmValidate = () => {
+    props.onValidate?.(props.id);
+    setIsValidated(false);
+  };
+
+  const handleConfirmDelete = () => {
+    props.onDelete?.(props.id);
+    setIsDeleted(false);
+  };
 
   useEffect(() => {
     userService.getUserById(props.userId).then(setUser);
@@ -14,11 +42,24 @@ export default function RequestCard(props: Request) {
   return (
     <div className="card h-100 w-100 border border-light-subtle rounded-4 shadow-sm overflow-hidden">
       {/* Card Header */}
-      <div className="card-header custom-bg text-white p-3 border-0">
+      <div className="d-flex justify-content-between align-items-center ard-header custom-bg text-white p-3 border-0">
         <h4 className="card-title h5 fw-bold mb-1">
           Demande de : {user?.firstName} {user?.lastName}
         </h4>
-        <div className="text-white-50 small fw-medium"></div>
+        {props.showIcons && (
+          <div className="d-flex gap-3">
+            <DoneIcon
+              className="btn-icon-validate"
+              style={{ cursor: "pointer" }}
+              onClick={handleValidate}
+            />
+            <DeleteIcon
+              className="btn-icon-delete"
+              style={{ cursor: "pointer" }}
+              onClick={handleDelete}
+            />
+          </div>
+        )}
       </div>
 
       {/* Card Body */}
@@ -50,6 +91,92 @@ export default function RequestCard(props: Request) {
           </div>
         </div>
       </div>
+      {isValidated && (
+        <>
+          <div className="modal-backdrop fade show"></div>
+          <div
+            className="modal fade show"
+            id="exampleModal"
+            tabIndex={-1}
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+            style={{ display: "block" }}
+            onClick={() => setIsValidated(false)}
+          >
+            <div
+              className="modal-dialog modal-dialog-centered"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="modal-content border-0">
+                <div className="modal-header d-flex justify-content-center border-0">
+                  <h1 className="modal-title fs-5">
+                    Voulez-vous valider cette demande ?
+                  </h1>
+                </div>
+                <div className="modal-body">
+                  <div className="modal-footer d-flex justify-content-center border-0">
+                    <button
+                      className="btn btn-secondary rounded-pill fs-4 px-5 py-2"
+                      onClick={handleValidate}
+                    >
+                      Fermer
+                    </button>
+                    <button
+                      className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
+                      onClick={handleConfirmValidate}
+                    >
+                      Valider
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      {isDeleted && (
+        <>
+          <div className="modal-backdrop fade show"></div>
+          <div
+            className="modal fade show"
+            id="exampleModal"
+            tabIndex={-1}
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+            style={{ display: "block" }}
+            onClick={() => setIsDeleted(false)}
+          >
+            <div
+              className="modal-dialog modal-dialog-centered"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="modal-content border-0">
+                <div className="modal-header d-flex justify-content-center border-0">
+                  <h1 className="modal-title fs-5">
+                    Voulez-vous vraiment supprimer cette demande ?
+                  </h1>
+                </div>
+                <div className="modal-body">
+                  <div className="modal-footer d-flex justify-content-center border-0">
+                    <button
+                      className="btn btn-secondary rounded-pill fs-4 px-5 py-2"
+                      onClick={handleDelete}
+                    >
+                      Fermer
+                    </button>
+                    <button
+                      className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
+                      onClick={handleConfirmDelete}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
