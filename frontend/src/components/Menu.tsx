@@ -342,9 +342,7 @@ export default function Menu() {
                     style={{ transition: "all 0.2s ease", cursor: "pointer" }}
                   >
                     <SettingsIcon sx={{ fontSize: "1.1rem" }} />
-                    <span className="fw-medium" style={{ fontSize: "0.9rem" }}>
-                      Paramètres
-                    </span>
+                    <span className="fw-medium" style={{ fontSize: "0.9rem" }}>Paramètres</span>
                   </div>
                   <div
                     onClick={handleLogout}

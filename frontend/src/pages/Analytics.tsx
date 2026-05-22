@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
+import { authService } from "../services/auth.service";
 import { eventService } from "../services/event.service";
 import { roomService } from "../services/room.service";
 import { buildingService } from "../services/building.service";
@@ -11,6 +13,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import BusinessIcon from "@mui/icons-material/Business";
 
 export default function Analytics() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   const [stats, setStats] = useState({
@@ -35,6 +38,17 @@ export default function Analytics() {
     const loadAnalyticsData = async () => {
       setLoading(true);
       try {
+        if (!authService.isAuthenticated()) {
+          navigate("/login");
+          return;
+        }
+
+        const currentUser = await authService.getUser();
+        if (currentUser.role !== "admin") {
+          navigate("/");
+          return;
+        }
+
         const [eList, rList, bList] = await Promise.all([
           eventService.getEvents(),
           roomService.getRooms(),
@@ -53,7 +67,6 @@ export default function Analytics() {
           (e) => e.status === "cancelled",
         ).length;
 
-        // 2. Room density calculations
         const roomCounts: Record<number, number> = {};
         totalEvents.forEach((e) => {
           if (e.status !== "cancelled") {
@@ -73,7 +86,6 @@ export default function Analytics() {
         const popularRoom = totalRooms.find((r) => r.id === popularId);
         const popularRoomName = popularRoom ? popularRoom.name : "Aucune";
 
-        // 3. Peak hours (Morning: start < 12:00, Afternoon: start >= 12:00)
         let morningCount = 0;
         let afternoonCount = 0;
         totalEvents.forEach((e) => {
@@ -89,14 +101,12 @@ export default function Analytics() {
           }
         });
 
-        // 4. Room Booking Utilization Rate
         const uniquelyBookedRooms = Object.keys(roomCounts).length;
         const utilizationRate =
           totalRooms.length > 0
             ? Math.round((uniquelyBookedRooms / totalRooms.length) * 100)
             : 0;
 
-        // Save Summary States
         setStats({
           total: totalEvents.length,
           confirmed,
@@ -108,18 +118,16 @@ export default function Analytics() {
           afternoonCount,
         });
 
-        // 5. Room breakdown lists (Sorted descending)
         const roomBreakdown = totalRooms
           .map((r) => ({
             roomName: r.name,
             count: roomCounts[r.id] || 0,
           }))
           .sort((a, b) => b.count - a.count)
-          .slice(0, 5); // Limit to top 5 rooms
+          .slice(0, 5);
 
         setRoomStats(roomBreakdown);
 
-        // 6. Building breakdown lists
         const buildingCounts: Record<number, number> = {};
         totalEvents.forEach((e) => {
           const roomObj = totalRooms.find((r) => r.id === e.roomId);
@@ -137,13 +145,18 @@ export default function Analytics() {
         setBuildingStats(buildingBreakdown);
       } catch (err) {
         console.error("Failed to compile reservation analytics", err);
+        if (!authService.isAuthenticated()) {
+          navigate("/login");
+        } else {
+          navigate("/");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     loadAnalyticsData();
-  }, []);
+  }, [navigate]);
 
   // Compute helper percentages
   const confirmedPct =
@@ -163,14 +176,8 @@ export default function Analytics() {
       <Menu />
 
       <div className="container-fluid py-4 px-3 px-md-5">
-        {/* Banner header */}
         <div className="mb-4 text-center text-md-start">
-          <h1 className="display-6 text-dark fw-bold mb-1">
-            Analyses & Statistiques
-          </h1>
-          <p className="text-secondary mb-0">
-            Mesures d'utilisation et taux de réservation des espaces de travail
-          </p>
+          <h1 className="display-6 text-dark fw-bold mb-1">Analyses & Statistiques</h1>
         </div>
 
         {loading ? (
@@ -184,9 +191,7 @@ export default function Analytics() {
           </div>
         ) : (
           <>
-            {/* ROW 1: Summary Metric Cards */}
             <div className="row g-3 mb-4">
-              {/* Card 1: Total Reservations */}
               <div className="col-12 col-sm-6 col-xl-3">
                 <div className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
                   <div className="d-flex align-items-center gap-3">
@@ -206,7 +211,6 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Card 2: Space Utilization Rate */}
               <div className="col-12 col-sm-6 col-xl-3">
                 <div className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
                   <div className="d-flex align-items-center gap-3">
@@ -228,7 +232,6 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Card 3: Most popular Room */}
               <div className="col-12 col-sm-6 col-xl-3">
                 <div className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
                   <div className="d-flex align-items-center gap-3">
@@ -253,7 +256,6 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Card 4: Busiest Hour Segment */}
               <div className="col-12 col-sm-6 col-xl-3">
                 <div className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100">
                   <div className="d-flex align-items-center gap-3">
@@ -279,16 +281,13 @@ export default function Analytics() {
               </div>
             </div>
 
-            {/* ROW 2: Custom Charts Grid */}
             <div className="row g-4 mt-2">
-              {/* Box 1: Status Split Stacked Progress and peak hours */}
               <div className="col-12 col-lg-6">
                 <div className="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
                   <h5 className="fw-bold text-dark mb-3">
                     Répartition des Réservations
                   </h5>
 
-                  {/* Status Stacked bar */}
                   <div className="mb-4">
                     <label className="small text-secondary fw-bold text-uppercase mb-2 d-block">
                       États des bookings
@@ -317,7 +316,6 @@ export default function Analytics() {
                       )}
                     </div>
 
-                    {/* Chart Legend */}
                     <div className="d-flex justify-content-around mt-3 flex-wrap gap-2 text-center">
                       <div className="small">
                         <span
@@ -346,7 +344,6 @@ export default function Analytics() {
                     </div>
                   </div>
 
-                  {/* Peak booking hours split progress */}
                   <hr className="text-black-50 my-4" />
 
                   <div>
@@ -399,7 +396,6 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Box 2: Visual CSS Bar Chart for Busiest Rooms */}
               <div className="col-12 col-lg-6">
                 <div className="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
                   <h5 className="fw-bold text-dark mb-1">
@@ -427,11 +423,7 @@ export default function Analytics() {
                         );
 
                         return (
-                          <div
-                            key={r.roomName}
-                            className="d-flex align-items-center gap-3"
-                          >
-                            {/* Rank circle */}
+                          <div key={r.roomName} className="d-flex align-items-center gap-3">
                             <div
                               className="rounded-circle bg-slate text-white d-flex align-items-center justify-content-center fw-bold"
                               style={{
@@ -443,7 +435,6 @@ export default function Analytics() {
                             >
                               {idx + 1}
                             </div>
-                            {/* Name & bar */}
                             <div className="flex-grow-1">
                               <div className="d-flex justify-content-between mb-1 small">
                                 <span className="fw-bold text-dark">
@@ -475,7 +466,6 @@ export default function Analytics() {
                 </div>
               </div>
 
-              {/* Box 3: Reservations by Building comparison */}
               <div className="col-12">
                 <div className="card border-0 shadow-sm rounded-4 bg-white p-4">
                   <h5 className="fw-bold text-dark mb-1">

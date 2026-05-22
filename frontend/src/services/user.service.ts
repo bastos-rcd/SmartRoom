@@ -8,4 +8,9 @@ export const userService = {
 
     return response.data;
   },
+
+  async updateUser(id: number, userData: Partial<User>): Promise<User> {
+    const response = await API.put(`/users/${id}`, userData);
+    return response.data;
+  },
 };
