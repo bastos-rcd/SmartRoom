@@ -130,6 +130,11 @@ export default function Menu() {
             path: "/reservations",
             icon: <ApartmentIcon sx={{ fontSize: "1.5rem" }} />,
           },
+          {
+            title: "Mes demandes",
+            path: "/requests",
+            icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
+          },
         ]
       : []),
     ...(user?.role === "admin"
@@ -151,11 +156,6 @@ export default function Menu() {
           },
         ]
       : []),
-    {
-      title: "Mes demandes",
-      path: "/requests",
-      icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
-    },
   ];
   const handleNavigation = (item: (typeof menuItems)[0]) => {
     setMobileOpen(false);
