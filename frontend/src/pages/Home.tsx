@@ -11,6 +11,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 import Menu from "../components/Menu";
 import { eventService } from "../services/event.service";
+import { roomService } from "../services/room.service";
 import { buildingService } from "../services/building.service";
 import { equipmentService } from "../services/equipment.service";
 import { authService } from "../services/auth.service";
@@ -19,7 +20,6 @@ import type { Event } from "../types/event";
 import type { Room } from "../types/room";
 import type { Building } from "../types/building";
 import { useNavigate } from "react-router-dom";
-import { roomService } from "../services/room.service";
 
 export default function Home() {
   const navigate = useNavigate();

@@ -9,6 +9,7 @@ import UserManagement from "./pages/UserManagment";
 import MyAdmin from "./pages/MyAdmin";
 import Analytics from "./pages/Analytics";
 import Request from "./pages/Request";
+import UserSettings from "./pages/UserSettings";
 
 export default function AppRouter() {
   return (
@@ -22,6 +23,7 @@ export default function AppRouter() {
       <Route path="/admin" element={<MyAdmin />} />
       <Route path="/analytics" element={<Analytics />} />
       <Route path="/requests" element={<Request />} />
+      <Route path="/userSettings" element={<UserSettings />} />
     </Routes>
   );
 }

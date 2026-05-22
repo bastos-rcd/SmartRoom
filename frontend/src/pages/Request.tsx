@@ -168,7 +168,7 @@ export default function Request() {
         )}
         <div>
           {user?.role !== "admin" ? (
-            <div className="container-fluid" style={{ maxWidth: "800px" }}>
+            <div className="container-fluid mx-auto" style={{ maxWidth: "800px" }}>
               <div className="tab-content animate-fade-in">
                 <div className="bg-white rounded-4 shadow-sm border border-light-subtle p-4 p-md-5">
                   <div className="border-bottom pb-3 mb-4">

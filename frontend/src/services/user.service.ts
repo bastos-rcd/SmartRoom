@@ -13,10 +13,12 @@ export const userService = {
 
     return response.data;
   },
-  async updateUser(id: number, user: User): Promise<void> {
-    await API.put("/users/" + id, user);
-  },
   async deleteUser(id: number): Promise<void> {
-    await API.delete("/users/" + id);
+    await API.delete(`/users/${id}`);
+  },
+
+  async updateUser(id: number, userData: Partial<User>): Promise<User> {
+    const response = await API.put(`/users/${id}`, userData);
+    return response.data;
   },
 };

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import { buildingService } from "../services/building.service";
 import { roomService } from "../services/room.service";
@@ -12,14 +13,15 @@ import BusinessIcon from "@mui/icons-material/Business";
 import AddIcon from "@mui/icons-material/Add";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import BuildIcon from "@mui/icons-material/Build";
+import { authService } from "../services/auth.service";
 
 export default function ManageRooms() {
-  // Data lists
+  const navigate = useNavigate();
+
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [equipments, setEquipments] = useState<Equipment[]>([]);
 
-  // Loaders & feedback
   const [loading, setLoading] = useState(true);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -32,7 +34,6 @@ export default function ManageRooms() {
     {},
   );
 
-  // Forms states
   const [buildingForm, setBuildingForm] = useState({
     name: "",
     address: "",
@@ -53,7 +54,6 @@ export default function ManageRooms() {
     roomId: "",
   });
 
-  // Fetch all data
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -66,7 +66,6 @@ export default function ManageRooms() {
       setRooms(rList || []);
       setEquipments(eList || []);
 
-      // Auto-expand the first building if any
       if (bList && bList.length > 0) {
         setExpandedBuildings((prev) => ({ ...prev, [bList[0].id]: true }));
       }
@@ -81,10 +80,33 @@ export default function ManageRooms() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const initAdmin = async () => {
+      try {
+        if (!authService.isAuthenticated()) {
+          navigate("/login");
+          return;
+        }
 
-  // Form Submissions
+        const currentUser = await authService.getUser();
+        if (currentUser.role !== "admin") {
+          navigate("/");
+          return;
+        }
+
+        await fetchData();
+      } catch (err) {
+        console.error(err);
+        if (!authService.isAuthenticated()) {
+          navigate("/login");
+        } else {
+          navigate("/");
+        }
+      }
+    };
+
+    initAdmin();
+  }, [navigate]);
+
   const handleAddBuilding = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!buildingForm.name.trim() || !buildingForm.address.trim()) {
@@ -120,7 +142,7 @@ export default function ManageRooms() {
         name: roomForm.name,
         capacity: Number(roomForm.capacity),
         floor: Number(roomForm.floor),
-        state: 1, // Active by default
+        state: 1,
         location: roomForm.location,
         buildingId: Number(roomForm.buildingId),
       });
@@ -129,7 +151,7 @@ export default function ManageRooms() {
         capacity: 10,
         floor: 1,
         location: "",
-        buildingId: roomForm.buildingId, // keep active building selected for convenience
+        buildingId: roomForm.buildingId,
       });
       setSuccessMsg("Salle affiliée avec succès !");
       setErrorMsg("");
@@ -153,13 +175,13 @@ export default function ManageRooms() {
       await equipmentService.createEquipment({
         name: equipmentForm.name,
         type: equipmentForm.type,
-        available: 1, // Available by default
+        available: 1,
         roomId: Number(equipmentForm.roomId),
       });
       setEquipmentForm({
         name: "",
         type: "informatique",
-        roomId: equipmentForm.roomId, // keep active room selected
+        roomId: equipmentForm.roomId,
       });
       setSuccessMsg("Équipement assigné avec succès !");
       setErrorMsg("");
@@ -170,7 +192,6 @@ export default function ManageRooms() {
     }
   };
 
-  // Toggle helpers
   const toggleBuilding = (id: number) => {
     setExpandedBuildings((prev) => ({ ...prev, [id]: !prev[id] }));
   };
@@ -179,7 +200,6 @@ export default function ManageRooms() {
     setExpandedRooms((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Alert self-dismiss timer
   useEffect(() => {
     if (successMsg || errorMsg) {
       const timer = setTimeout(() => {
@@ -195,7 +215,6 @@ export default function ManageRooms() {
       <Menu />
 
       <div className="container-fluid py-4 px-3 px-md-5">
-        {/* Banner Title */}
         <div className="mb-4 text-center text-md-start">
           <h1 className="display-6 text-dark fw-bold mb-1">My Admin</h1>
           <p className="text-secondary mb-0">
@@ -203,7 +222,6 @@ export default function ManageRooms() {
           </p>
         </div>
 
-        {/* Global Notifications */}
         {successMsg && (
           <div
             className="alert alert-success border-0 shadow-sm rounded-3 py-3 mb-4"
@@ -222,7 +240,6 @@ export default function ManageRooms() {
         )}
 
         <div className="row g-4 mt-2">
-          {/* LEFT: Live Interactive Tree View */}
           <div className="col-12 col-lg-6">
             <div className="card border-0 shadow-sm rounded-4 h-100 bg-white">
               <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0">
@@ -287,7 +304,6 @@ export default function ManageRooms() {
                             </span>
                           </div>
 
-                          {/* Affiliated Rooms Tree List */}
                           {isBExpanded && (
                             <div className="ps-3 mt-3 border-start border-2 border-success border-opacity-25 d-flex flex-column gap-2">
                               {bRooms.length === 0 ? (
@@ -341,7 +357,6 @@ export default function ManageRooms() {
                                         </span>
                                       </div>
 
-                                      {/* Room Equipments tree list */}
                                       {isRExpanded && (
                                         <div className="ps-3 mt-2 border-start border-dashed d-flex flex-wrap gap-1.5 pt-1.5">
                                           {rEquips.length === 0 ? (
@@ -392,9 +407,7 @@ export default function ManageRooms() {
             </div>
           </div>
 
-          {/* RIGHT: High-End Creation Forms */}
           <div className="col-12 col-lg-6 d-flex flex-column gap-4">
-            {/* Form 1: Add Building */}
             <div className="card border-0 shadow-sm rounded-4 bg-white">
               <div className="card-header bg-slate text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
                 <AddIcon />{" "}
@@ -467,7 +480,6 @@ export default function ManageRooms() {
               </div>
             </div>
 
-            {/* Form 2: Affiliate Room */}
             <div className="card border-0 shadow-sm rounded-4 bg-white">
               <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
                 <AddIcon /> <h5 className="mb-0 fw-bold">Affilier une Salle</h5>
@@ -577,7 +589,6 @@ export default function ManageRooms() {
               </div>
             </div>
 
-            {/* Form 3: Add Equipment */}
             <div className="card border-0 shadow-sm rounded-4 bg-white">
               <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
                 <AddIcon />{" "}
