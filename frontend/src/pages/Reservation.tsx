@@ -26,7 +26,6 @@ export default function Reservation() {
 				const events = eventsData.filter(
 					(event: Event) => event.userId === user.id,
 				)
-				console.log(events)
 
 				const data = events.map(async (event: Event) => {
 					const room = await roomService.getRoomById(event.roomId)

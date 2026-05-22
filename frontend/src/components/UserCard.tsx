@@ -16,8 +16,6 @@ export default function UserCard(props: UserCardProps) {
 	const [isDeleted, setIsDeleted] = useState<boolean>(false)
 
 	const handleBlock = () => {
-		console.log(props.status)
-
 		setIsBlocked(!isBlocked)
 	}
 
