@@ -13,6 +13,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 import AddIcon from "@mui/icons-material/Add";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import BuildIcon from "@mui/icons-material/Build";
+import { authService } from "../services/auth.service";
 
 export default function ManageRooms() {
   const navigate = useNavigate();
