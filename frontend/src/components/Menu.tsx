@@ -330,11 +330,7 @@ export default function Menu() {
                 >
                   <div
                     onClick={() => {
-                      if (user?.role === "admin") {
-                        navigate("/adminSettings");
-                      } else {
-                        navigate("/userSettings");
-                      }
+                      navigate("/settings");
                     }}
                     className="d-flex align-items-center gap-2 text-white-50 p-2 rounded-2 cursor-pointer hover-emerald-bg"
                     style={{ transition: "all 0.2s ease", cursor: "pointer" }}

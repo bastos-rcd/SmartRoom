@@ -409,7 +409,7 @@ export default function ManageRooms() {
 
           <div className="col-12 col-lg-6 d-flex flex-column gap-4">
             <div className="card border-0 shadow-sm rounded-4 bg-white">
-              <div className="card-header bg-slate text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
+              <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
                 <AddIcon />{" "}
                 <h5 className="mb-0 fw-bold">Ajouter un Bâtiment</h5>
               </div>

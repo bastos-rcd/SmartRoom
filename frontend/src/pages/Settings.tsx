@@ -10,7 +10,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Menu from "../components/Menu";
 
-export default function UserSettings() {
+export default function Settings() {
   const navigate = useNavigate();
 
   const [user, setUser] = useState<User | null>(null);

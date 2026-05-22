@@ -3,6 +3,6 @@ export interface Request {
   type: "incident" | "request";
   description: string;
   status: number;
-  creationDate: Date;
+  creationDate: string;
   userId: number;
 }

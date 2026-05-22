@@ -8,6 +8,7 @@ import Menu from "../components/Menu";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import type { Request } from "../types/request";
 import RequestCard from "../components/RequestCard";
+import { requestService } from "../services/request.service";
 
 export default function Request() {
   const navigate = useNavigate();
@@ -26,6 +27,26 @@ export default function Request() {
 
   const [successToast, setSuccessToast] = useState("");
   const [errorToast, setErrorToast] = useState("");
+
+  const [requests, setRequests] = useState<Request[]>([]);
+
+  useEffect(() => {
+    const initData = async () => {
+      try {
+        const reqs = await requestService.getAllRequests();
+        setRequests(reqs);
+      } catch (err) {
+        console.error(err);
+        showError("Erreur lors du chargement des demandes.");
+      }
+    };
+
+    initData();
+  }, []);
+
+  const filteredRequests = requests.filter((item) =>
+    activeTab === "current" ? item.status === 1 : item.status === 0,
+  );
 
   const showSuccess = (msg: string) => {
     setSuccessToast(msg);
@@ -72,7 +93,7 @@ export default function Request() {
     initData();
   }, [navigate]);
 
-  const handleSaveInfo = async (e: React.FormEvent) => {
+  const handleSaveInfo = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!user) return;
 
@@ -88,10 +109,15 @@ export default function Request() {
 
     setFormSaving(true);
     try {
-      const updateData: Partial<Request> = {
+      const updateData: Omit<Request, "id"> = {
         type: request?.type || "request",
         description: request?.description || "",
+        status: 1,
+        creationDate: new Date().toISOString(),
+        userId: user.id,
       };
+
+      await requestService.createRequest(updateData);
 
       showSuccess("Demande envoyée avec succès!");
     } catch (err) {
@@ -99,6 +125,31 @@ export default function Request() {
       showError("Erreur lors de l'envoi de la demande.");
     } finally {
       setFormSaving(false);
+    }
+  };
+
+  const handleValidateRequest = async (req: Request) => {
+    try {
+      await requestService.updateRequest(req.id, {
+        ...req,
+        status: 0,
+      });
+      showSuccess("Demande validée avec succès!");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      showError("Erreur lors de la validation de la demande.");
+    }
+  };
+
+  const handleDeleteRequest = async (id: number) => {
+    try {
+      await requestService.deleteRequest(id);
+      showSuccess("Demande supprimée avec succès!");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      showError("Erreur lors de la suppression de la demande.");
     }
   };
 
@@ -119,39 +170,6 @@ export default function Request() {
     );
   }
 
-  const data: Request[] = [
-    {
-      id: 1,
-      type: "incident",
-      description: "Problème de connexion au Wi-Fi dans la salle de réunion.",
-      status: 0,
-      creationDate: new Date("2024-06-01T10:30:00"),
-      userId: 2,
-    },
-    {
-      id: 2,
-      type: "request",
-      description:
-        "Demande d'ajout d'un projecteur dans la salle de conférence principale. Cela permettrait d'améliorer les présentations et les réunions d'équipe. Merci de prendre en considération cette demande pour améliorer notre environnement de travail.",
-      status: 1,
-      creationDate: new Date("2024-06-02T14:45:00"),
-      userId: 1,
-    },
-    {
-      id: 3,
-      type: "incident",
-      description:
-        "La climatisation ne fonctionne pas correctement dans la salle de formation.",
-      status: 1,
-      creationDate: new Date("2024-06-03T09:15:00"),
-      userId: 2,
-    },
-  ];
-
-  const filteredRequests = data.filter((item) =>
-    activeTab === "current" ? item.status === 1 : item.status === 0,
-  );
-
   return (
     <>
       <Menu />
@@ -168,7 +186,10 @@ export default function Request() {
         )}
         <div>
           {user?.role !== "admin" ? (
-            <div className="container-fluid mx-auto" style={{ maxWidth: "800px" }}>
+            <div
+              className="container-fluid mx-auto"
+              style={{ maxWidth: "800px" }}
+            >
               <div className="tab-content animate-fade-in">
                 <div className="bg-white rounded-4 shadow-sm border border-light-subtle p-4 p-md-5">
                   <div className="border-bottom pb-3 mb-4">
@@ -342,8 +363,8 @@ export default function Request() {
                       <RequestCard
                         {...request}
                         showIcons={activeTab === "current"}
-                        onDelete={(id) => {}}
-                        onValidate={(id) => {}}
+                        onDelete={() => handleDeleteRequest(request.id)}
+                        onValidate={() => handleValidateRequest(request)}
                         type={request.type as "incident" | "request"}
                       />
                     ) : (

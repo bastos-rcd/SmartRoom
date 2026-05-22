@@ -7,8 +7,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 
 type RequestCardProps = Request & {
-  onDelete?: (id: number) => void;
-  onValidate?: (id: number) => void;
+  onDelete?: () => void;
+  onValidate?: () => void;
   showIcons?: boolean;
 };
 
@@ -26,12 +26,12 @@ export default function RequestCard(props: RequestCardProps) {
   };
 
   const handleConfirmValidate = () => {
-    props.onValidate?.(props.id);
+    props.onValidate?.();
     setIsValidated(false);
   };
 
   const handleConfirmDelete = () => {
-    props.onDelete?.(props.id);
+    props.onDelete?.();
     setIsDeleted(false);
   };
 
