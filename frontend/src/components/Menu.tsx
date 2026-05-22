@@ -135,51 +135,27 @@ export default function Menu() {
     ...(user?.role === "admin"
       ? [
           {
-            title: "Réserver",
-            path: "/rooms",
-            icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
-          },
-          {
-            title: "Mes réservations",
-            path: "/reservations",
-            icon: <ApartmentIcon sx={{ fontSize: "1.5rem" }} />,
-          },
-          {
             title: "Gestion des utilisateurs",
             path: "/users",
             icon: <SupervisorAccountIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+          {
+            title: "My Admin",
+            path: "/admin",
+            icon: <AdminPanelSettingsIcon sx={{ fontSize: "1.5rem" }} />,
           },
           {
             title: "Analyses",
             path: "/analytics",
             icon: <BarChartIcon sx={{ fontSize: "1.5rem" }} />,
           },
-          ...(user?.role === "admin"
-            ? [
-                {
-                  title: "Gestion des utilisateurs",
-                  path: "/users",
-                  icon: <SupervisorAccountIcon sx={{ fontSize: "1.5rem" }} />,
-                },
-                {
-                  title: "My Admin",
-                  path: "/admin",
-                  icon: <AdminPanelSettingsIcon sx={{ fontSize: "1.5rem" }} />,
-                },
-                {
-                  title: "Analyses",
-                  path: "/analytics",
-                  icon: <BarChartIcon sx={{ fontSize: "1.5rem" }} />,
-                },
-              ]
-            : []),
-          {
-            title: "Mes demandes",
-            path: "/requests",
-            icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
-          },
         ]
       : []),
+    {
+      title: "Mes demandes",
+      path: "/requests",
+      icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
+    },
   ];
   const handleNavigation = (item: (typeof menuItems)[0]) => {
     setMobileOpen(false);
