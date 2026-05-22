@@ -8,4 +8,10 @@ export const eventService = {
 
     return response.data;
   },
+
+  async createEvent(event: Omit<Event, "id">): Promise<Event> {
+    const response = await API.post("/reservations", event);
+
+    return response.data;
+  },
 };
