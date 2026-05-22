@@ -57,7 +57,7 @@ export default function Menu() {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-        })
+        }),
       );
     };
     updateClock();
@@ -116,34 +116,47 @@ export default function Menu() {
       path: "/",
       icon: <HomeIcon sx={{ fontSize: "1.5rem" }} />,
     },
-    {
-      title: "Réserver",
-      path: "/rooms",
-      icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
-    },
+    ...(logged
+      ? [
+          {
+            title: "Réserver",
+            path: "/rooms",
+            icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+          {
+            title: "Mes réservations",
+            path: "/reservations",
+            icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+        ]
+      : []),
     ...(user?.role === "admin"
       ? [
-        {
-          title: "My Admin",
-          path: "/admin",
-          icon: <AdminPanelSettingsIcon sx={{ fontSize: "1.5rem" }} />,
-        },
-        {
-          title: "Analyses",
-          path: "/analytics",
-          icon: <BarChartIcon sx={{ fontSize: "1.5rem" }} />,
-        },
-      ]
+          {
+            title: "My Admin",
+            path: "/admin",
+            icon: <AdminPanelSettingsIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+          {
+            title: "Analyses",
+            path: "/analytics",
+            icon: <BarChartIcon sx={{ fontSize: "1.5rem" }} />,
+          },
+        ]
       : []),
-    {
-      title: "Messagerie",
-      path: "/messages",
-      icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
-      isPlaceholder: true,
-    },
+    ...(logged
+      ? [
+          {
+            title: "Messagerie",
+            path: "/messages",
+            icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
+            isPlaceholder: true,
+          },
+        ]
+      : []),
   ];
 
-  const handleNavigation = (item: typeof menuItems[0]) => {
+  const handleNavigation = (item: (typeof menuItems)[0]) => {
     if (item.isPlaceholder) {
       return;
     }
@@ -161,7 +174,10 @@ export default function Menu() {
     <>
       <div
         className={`menu-sidebar ${mobileOpen ? "mobile-open" : ""}`}
-        style={{ width: isMobile ? "280px" : (collapsed ? "78px" : "280px"), overflow: "visible" }}
+        style={{
+          width: isMobile ? "280px" : collapsed ? "78px" : "280px",
+          overflow: "visible",
+        }}
       >
         {!isMobile && (
           <button
@@ -177,10 +193,16 @@ export default function Menu() {
           </button>
         )}
 
-        <div className="d-flex flex-column h-100 w-100" style={{ overflowY: "auto", overflowX: "hidden" }}>
+        <div
+          className="d-flex flex-column h-100 w-100"
+          style={{ overflowY: "auto", overflowX: "hidden" }}
+        >
           <div
             className="d-flex align-items-center justify-content-center p-3 border-bottom border-white-10"
-            style={{ minHeight: collapsed ? "78px" : "150px", transition: "min-height 0.3s ease" }}
+            style={{
+              minHeight: collapsed ? "78px" : "150px",
+              transition: "min-height 0.3s ease",
+            }}
           >
             <div
               className="d-flex justify-content-center align-items-center w-100"
@@ -210,12 +232,11 @@ export default function Menu() {
                     className={`sidebar-link ${isActive ? "active" : ""}`}
                     title={collapsed ? item.title : ""}
                   >
-                    <span className="sidebar-link-icon">
-                      {item.icon}
-                    </span>
+                    <span className="sidebar-link-icon">{item.icon}</span>
                     <span
-                      className={`sidebar-link-text ${collapsed && !isMobile ? "sidebar-collapsed-text" : ""
-                        }`}
+                      className={`sidebar-link-text ${
+                        collapsed && !isMobile ? "sidebar-collapsed-text" : ""
+                      }`}
                     >
                       {item.title}
                     </span>
@@ -253,7 +274,10 @@ export default function Menu() {
           </div>
         </div>
 
-        <div className="d-flex align-items-center justify-content-end gap-3" style={{ minWidth: "60px" }}>
+        <div
+          className="d-flex align-items-center justify-content-end gap-3"
+          style={{ minWidth: "60px" }}
+        >
           {!logged ? (
             <button
               type="button"
@@ -323,10 +347,16 @@ export default function Menu() {
                   <div
                     onClick={handleLogout}
                     className="d-flex align-items-center gap-2 text-white-50 p-2 rounded-2 cursor-pointer hover-danger-bg mt-1"
-                    style={{ transition: "all 0.2s ease", color: "#f87171", cursor: "pointer" }}
+                    style={{
+                      transition: "all 0.2s ease",
+                      color: "#f87171",
+                      cursor: "pointer",
+                    }}
                   >
                     <LogoutIcon sx={{ fontSize: "1.1rem" }} />
-                    <span className="fw-bold" style={{ fontSize: "0.9rem" }}>Déconnexion</span>
+                    <span className="fw-bold" style={{ fontSize: "0.9rem" }}>
+                      Déconnexion
+                    </span>
                   </div>
                 </div>
               )}

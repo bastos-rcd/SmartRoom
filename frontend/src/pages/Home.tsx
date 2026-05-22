@@ -11,9 +11,9 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 import Menu from "../components/Menu";
 import { eventService } from "../services/event.service";
-import { roomService } from "../services/roomService";
-import { buildingService } from "../services/buildingService";
-import { equipmentService } from "../services/equipmentService";
+import { roomService } from "../services/room.service";
+import { buildingService } from "../services/building.service";
+import { equipmentService } from "../services/equipment.service";
 import { authService } from "../services/auth.service";
 
 import type { Event } from "../types/event";
@@ -22,7 +22,7 @@ import type { Building } from "../types/building";
 
 export default function Home() {
   const [calendarView, setCalendarView] = useState(
-    window.innerWidth < 768 ? "timeGridDay" : "timeGridWeek"
+    window.innerWidth < 768 ? "timeGridDay" : "timeGridWeek",
   );
   const [events, setEvents] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -31,14 +31,30 @@ export default function Home() {
   const [rooms, setRooms] = useState<Room[]>([]);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [activeModal, setActiveModal] = useState<"building" | "room" | "equipment" | null>(null);
+  const [activeModal, setActiveModal] = useState<
+    "building" | "room" | "equipment" | null
+  >(null);
 
   const [successToast, setSuccessToast] = useState("");
   const [errorToast, setErrorToast] = useState("");
 
-  const [buildingForm, setBuildingForm] = useState({ name: "", address: "", nbFloors: 1 });
-  const [roomForm, setRoomForm] = useState({ name: "", capacity: 10, floor: 1, location: "", buildingId: "" });
-  const [equipmentForm, setEquipmentForm] = useState({ name: "", type: "informatique", roomId: "" });
+  const [buildingForm, setBuildingForm] = useState({
+    name: "",
+    address: "",
+    nbFloors: 1,
+  });
+  const [roomForm, setRoomForm] = useState({
+    name: "",
+    capacity: 10,
+    floor: 1,
+    location: "",
+    buildingId: "",
+  });
+  const [equipmentForm, setEquipmentForm] = useState({
+    name: "",
+    type: "informatique",
+    roomId: "",
+  });
 
   useEffect(() => {
     const handleResize = () => {
@@ -62,10 +78,10 @@ export default function Home() {
           start: event.startDate,
           end: event.endDate,
           backgroundColor:
-            event.type === "confirmed"
-              ? "#10b981"
-              : event.type === "cancelled"
-                ? "#ef4444"
+            event.status === "confirmed"
+              ? "#4ade80"
+              : event.status === "cancelled"
+                ? "#f87171"
                 : "#60a5fa",
         };
       });
@@ -144,7 +160,13 @@ export default function Home() {
         location: roomForm.location,
         buildingId: Number(roomForm.buildingId),
       });
-      setRoomForm({ name: "", capacity: 10, floor: 1, location: "", buildingId: "" });
+      setRoomForm({
+        name: "",
+        capacity: 10,
+        floor: 1,
+        location: "",
+        buildingId: "",
+      });
       showSuccess("Salle affiliée avec succès !");
       closeModal();
     } catch {
@@ -188,10 +210,11 @@ export default function Home() {
       <Menu />
 
       <div className="container-fluid py-4 px-2 px-sm-3 px-md-5 position-relative">
-
         <div className="d-flex flex-column gap-3 mb-4 custom-title-wrapper">
           <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <h2 className="fs-3 fs-md-2 text-dark fw-bold m-0">Calendrier des Réservations</h2>
+            <h2 className="fs-3 fs-md-2 text-dark fw-bold m-0">
+              Calendrier des Réservations
+            </h2>
 
             {isAdmin && (
               <div className="position-relative w-100 w-sm-auto">
@@ -199,14 +222,22 @@ export default function Home() {
                   type="button"
                   className="btn btn-dark text-white rounded-pill px-4 py-2.5 d-flex align-items-center justify-content-center gap-2 border-0 shadow-sm w-100 w-sm-auto"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  style={{ backgroundColor: "#0e172a", fontSize: "0.9rem", fontWeight: 600 }}
+                  style={{
+                    backgroundColor: "#0e172a",
+                    fontSize: "0.9rem",
+                    fontWeight: 600,
+                  }}
                 >
                   Actions Administrateur
                 </button>
                 {dropdownOpen && (
                   <div
                     className="position-absolute end-0 mt-2 shadow border-0 rounded-3 p-2 bg-white text-dark"
-                    style={{ zIndex: 1050, minWidth: "220px", width: window.innerWidth < 576 ? "100%" : "auto" }}
+                    style={{
+                      zIndex: 1050,
+                      minWidth: "220px",
+                      width: window.innerWidth < 576 ? "100%" : "auto",
+                    }}
                   >
                     <button
                       className="dropdown-item rounded text-start w-100 border-0 bg-transparent py-2 px-3 small d-flex align-items-center gap-2"
@@ -243,8 +274,17 @@ export default function Home() {
         </div>
 
         <div className="bg-white p-2 p-sm-3 rounded-4 shadow-sm border border-light-subtle overflow-hidden custom-calendar-card">
-          <div className="fc-responsive-container" style={{ width: "100%", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-            <div style={{ minWidth: window.innerWidth < 768 ? "850px" : "auto" }}>
+          <div
+            className="fc-responsive-container"
+            style={{
+              width: "100%",
+              overflowX: "auto",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
+            <div
+              style={{ minWidth: window.innerWidth < 768 ? "850px" : "auto" }}
+            >
               <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 key={calendarView}
@@ -275,7 +315,11 @@ export default function Home() {
         <div
           className="modal show d-block"
           tabIndex={-1}
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.55)", backdropFilter: "blur(4px)", zIndex: 1060 }}
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.55)",
+            backdropFilter: "blur(4px)",
+            zIndex: 1060,
+          }}
         >
           <div className="modal-dialog modal-dialog-centered px-2">
             <div className="modal-content border-0 rounded-4 shadow-lg p-2 p-sm-3 bg-white">
@@ -285,47 +329,78 @@ export default function Home() {
                   {activeModal === "room" && "Nouvelle Salle Affiliée"}
                   {activeModal === "equipment" && "Nouvel Équipement"}
                 </h5>
-                <button type="button" className="btn-close" onClick={closeModal}></button>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={closeModal}
+                ></button>
               </div>
 
               <div className="modal-body py-2">
                 {activeModal === "building" && (
-                  <form onSubmit={handleAddBuildingSubmit} className="d-flex flex-column gap-3">
+                  <form
+                    onSubmit={handleAddBuildingSubmit}
+                    className="d-flex flex-column gap-3"
+                  >
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Nom du Bâtiment</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Nom du Bâtiment
+                      </label>
                       <input
                         type="text"
                         className="form-control rounded-3"
                         placeholder="e.g. Bâtiment Central"
                         value={buildingForm.name}
-                        onChange={(e) => setBuildingForm({ ...buildingForm, name: e.target.value })}
+                        onChange={(e) =>
+                          setBuildingForm({
+                            ...buildingForm,
+                            name: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Nombre d'Étages</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Nombre d'Étages
+                      </label>
                       <input
                         type="number"
                         min={1}
                         className="form-control rounded-3"
                         value={buildingForm.nbFloors}
-                        onChange={(e) => setBuildingForm({ ...buildingForm, nbFloors: Number(e.target.value) })}
+                        onChange={(e) =>
+                          setBuildingForm({
+                            ...buildingForm,
+                            nbFloors: Number(e.target.value),
+                          })
+                        }
                         required
                       />
                     </div>
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Adresse</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Adresse
+                      </label>
                       <input
                         type="text"
                         className="form-control rounded-3"
                         placeholder="e.g. Avenue des Sciences, Toulouse"
                         value={buildingForm.address}
-                        onChange={(e) => setBuildingForm({ ...buildingForm, address: e.target.value })}
+                        onChange={(e) =>
+                          setBuildingForm({
+                            ...buildingForm,
+                            address: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
                     <div className="text-end mt-2">
-                      <button type="submit" className="btn btn-emerald rounded-pill px-4 w-100 w-sm-auto">
+                      <button
+                        type="submit"
+                        className="btn btn-emerald rounded-pill px-4 w-100 w-sm-auto"
+                      >
                         + Créer le Bâtiment
                       </button>
                     </div>
@@ -333,67 +408,104 @@ export default function Home() {
                 )}
 
                 {activeModal === "room" && (
-                  <form onSubmit={handleAddRoomSubmit} className="d-flex flex-column gap-3">
+                  <form
+                    onSubmit={handleAddRoomSubmit}
+                    className="d-flex flex-column gap-3"
+                  >
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Nom de la Salle</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Nom de la Salle
+                      </label>
                       <input
                         type="text"
                         className="form-control rounded-3"
                         placeholder="e.g. Salle B1"
                         value={roomForm.name}
-                        onChange={(e) => setRoomForm({ ...roomForm, name: e.target.value })}
+                        onChange={(e) =>
+                          setRoomForm({ ...roomForm, name: e.target.value })
+                        }
                         required
                       />
                     </div>
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Bâtiment Affilié</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Bâtiment Affilié
+                      </label>
                       <select
                         className="form-select rounded-3"
                         value={roomForm.buildingId}
-                        onChange={(e) => setRoomForm({ ...roomForm, buildingId: e.target.value })}
+                        onChange={(e) =>
+                          setRoomForm({
+                            ...roomForm,
+                            buildingId: e.target.value,
+                          })
+                        }
                         required
                       >
                         <option value="">-- Choisir le bâtiment --</option>
                         {buildings.map((b) => (
-                          <option key={b.id} value={b.id}>{b.name}</option>
+                          <option key={b.id} value={b.id}>
+                            {b.name}
+                          </option>
                         ))}
                       </select>
                     </div>
                     <div className="row g-2">
                       <div className="col-6">
-                        <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Capacité</label>
+                        <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                          Capacité
+                        </label>
                         <input
                           type="number"
                           min={1}
                           className="form-control rounded-3"
                           value={roomForm.capacity}
-                          onChange={(e) => setRoomForm({ ...roomForm, capacity: Number(e.target.value) })}
+                          onChange={(e) =>
+                            setRoomForm({
+                              ...roomForm,
+                              capacity: Number(e.target.value),
+                            })
+                          }
                           required
                         />
                       </div>
                       <div className="col-6">
-                        <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Étage</label>
+                        <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                          Étage
+                        </label>
                         <input
                           type="number"
                           className="form-control rounded-3"
                           value={roomForm.floor}
-                          onChange={(e) => setRoomForm({ ...roomForm, floor: Number(e.target.value) })}
+                          onChange={(e) =>
+                            setRoomForm({
+                              ...roomForm,
+                              floor: Number(e.target.value),
+                            })
+                          }
                           required
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Localisation interne</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Localisation interne
+                      </label>
                       <input
                         type="text"
                         className="form-control rounded-3"
                         placeholder="e.g. Aile Gauche"
                         value={roomForm.location}
-                        onChange={(e) => setRoomForm({ ...roomForm, location: e.target.value })}
+                        onChange={(e) =>
+                          setRoomForm({ ...roomForm, location: e.target.value })
+                        }
                       />
                     </div>
                     <div className="text-end mt-2">
-                      <button type="submit" className="btn btn-emerald rounded-pill px-4 w-100 w-sm-auto">
+                      <button
+                        type="submit"
+                        className="btn btn-emerald rounded-pill px-4 w-100 w-sm-auto"
+                      >
                         + Affilier la Salle
                       </button>
                     </div>
@@ -401,24 +513,41 @@ export default function Home() {
                 )}
 
                 {activeModal === "equipment" && (
-                  <form onSubmit={handleAddEquipmentSubmit} className="d-flex flex-column gap-3">
+                  <form
+                    onSubmit={handleAddEquipmentSubmit}
+                    className="d-flex flex-column gap-3"
+                  >
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Nom de l'Équipement</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Nom de l'Équipement
+                      </label>
                       <input
                         type="text"
                         className="form-control rounded-3"
                         placeholder="e.g. Rétroprojecteur"
                         value={equipmentForm.name}
-                        onChange={(e) => setEquipmentForm({ ...equipmentForm, name: e.target.value })}
+                        onChange={(e) =>
+                          setEquipmentForm({
+                            ...equipmentForm,
+                            name: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Type d'Équipement</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Type d'Équipement
+                      </label>
                       <select
                         className="form-select rounded-3"
                         value={equipmentForm.type}
-                        onChange={(e) => setEquipmentForm({ ...equipmentForm, type: e.target.value })}
+                        onChange={(e) =>
+                          setEquipmentForm({
+                            ...equipmentForm,
+                            type: e.target.value,
+                          })
+                        }
                         required
                       >
                         <option value="informatique">Informatique</option>
@@ -428,24 +557,38 @@ export default function Home() {
                       </select>
                     </div>
                     <div>
-                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">Salle Affiliée</label>
+                      <label className="form-label small fw-bold text-secondary text-uppercase mb-1">
+                        Salle Affiliée
+                      </label>
                       <select
                         className="form-select rounded-3"
                         value={equipmentForm.roomId}
-                        onChange={(e) => setEquipmentForm({ ...equipmentForm, roomId: e.target.value })}
+                        onChange={(e) =>
+                          setEquipmentForm({
+                            ...equipmentForm,
+                            roomId: e.target.value,
+                          })
+                        }
                         required
                       >
                         <option value="">-- Choisir la salle --</option>
                         {rooms.map((r) => {
-                          const bName = buildings.find((b) => b.id === r.buildingId)?.name || "";
+                          const bName =
+                            buildings.find((b) => b.id === r.buildingId)
+                              ?.name || "";
                           return (
-                            <option key={r.id} value={r.id}>{r.name} ({bName})</option>
+                            <option key={r.id} value={r.id}>
+                              {r.name} ({bName})
+                            </option>
                           );
                         })}
                       </select>
                     </div>
                     <div className="text-end mt-2">
-                      <button type="submit" className="btn btn-emerald rounded-pill px-4 w-100 w-sm-auto">
+                      <button
+                        type="submit"
+                        className="btn btn-emerald rounded-pill px-4 w-100 w-sm-auto"
+                      >
                         + Assigner l'Équipement
                       </button>
                     </div>
@@ -460,11 +603,22 @@ export default function Home() {
       {successToast && (
         <div
           className="position-fixed bottom-0 end-0 m-4 p-3 rounded-3 text-white shadow-lg d-flex align-items-center gap-3 border border-success-subtle animate-toast"
-          style={{ backgroundColor: "rgba(15, 23, 42, 0.95)", backdropFilter: "blur(8px)", zIndex: 9999, minWidth: "280px", maxWidth: "calc(100vw - 32px)" }}
+          style={{
+            backgroundColor: "rgba(15, 23, 42, 0.95)",
+            backdropFilter: "blur(8px)",
+            zIndex: 9999,
+            minWidth: "280px",
+            maxWidth: "calc(100vw - 32px)",
+          }}
         >
           <CheckCircleIcon sx={{ color: "#4ade80", fontSize: "1.8rem" }} />
           <div>
-            <h6 className="m-0 fw-semibold text-success" style={{ color: "#4ade80" }}>Succès</h6>
+            <h6
+              className="m-0 fw-semibold text-success"
+              style={{ color: "#4ade80" }}
+            >
+              Succès
+            </h6>
             <small className="text-white-50">{successToast}</small>
           </div>
         </div>
@@ -473,11 +627,22 @@ export default function Home() {
       {errorToast && (
         <div
           className="position-fixed bottom-0 end-0 m-4 p-3 rounded-3 text-white shadow-lg d-flex align-items-center gap-3 border border-danger-subtle animate-toast"
-          style={{ backgroundColor: "rgba(15, 23, 42, 0.95)", backdropFilter: "blur(8px)", zIndex: 9999, minWidth: "280px", maxWidth: "calc(100vw - 32px)" }}
+          style={{
+            backgroundColor: "rgba(15, 23, 42, 0.95)",
+            backdropFilter: "blur(8px)",
+            zIndex: 9999,
+            minWidth: "280px",
+            maxWidth: "calc(100vw - 32px)",
+          }}
         >
           <ErrorIcon sx={{ color: "#f87171", fontSize: "1.8rem" }} />
           <div>
-            <h6 className="m-0 fw-semibold text-danger" style={{ color: "#f87171" }}>Erreur</h6>
+            <h6
+              className="m-0 fw-semibold text-danger"
+              style={{ color: "#f87171" }}
+            >
+              Erreur
+            </h6>
             <small className="text-white-50">{errorToast}</small>
           </div>
         </div>

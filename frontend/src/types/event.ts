@@ -1,9 +1,8 @@
 export interface Event {
   id: number;
-  startDate: Date;
-  endDate: Date;
-  type: "confirmed" | "cancelled" | "modified";
-  status: number;
+  startDate: string;
+  endDate: string;
+  status: "confirmed" | "cancelled";
   comment: string;
   userId: number;
   roomId: number;

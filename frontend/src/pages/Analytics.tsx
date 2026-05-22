@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import { authService } from "../services/auth.service";
 import { eventService } from "../services/event.service";
-import { roomService } from "../services/roomService";
-import { buildingService } from "../services/buildingService";
+import { roomService } from "../services/room.service";
+import { buildingService } from "../services/building.service";
 
 import BarChartIcon from "@mui/icons-material/BarChart";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -20,7 +20,6 @@ export default function Analytics() {
     total: 0,
     confirmed: 0,
     cancelled: 0,
-    modified: 0,
     utilizationRate: 0,
     popularRoomName: "N/A",
     popularRoomCount: 0,
@@ -28,8 +27,12 @@ export default function Analytics() {
     afternoonCount: 0,
   });
 
-  const [roomStats, setRoomStats] = useState<{ roomName: string; count: number }[]>([]);
-  const [buildingStats, setBuildingStats] = useState<{ bName: string; count: number }[]>([]);
+  const [roomStats, setRoomStats] = useState<
+    { roomName: string; count: number }[]
+  >([]);
+  const [buildingStats, setBuildingStats] = useState<
+    { bName: string; count: number }[]
+  >([]);
 
   useEffect(() => {
     const loadAnalyticsData = async () => {
@@ -56,13 +59,17 @@ export default function Analytics() {
         const totalRooms = rList || [];
         const totalBuildings = bList || [];
 
-        const confirmed = totalEvents.filter((e) => e.type === "confirmed").length;
-        const cancelled = totalEvents.filter((e) => e.type === "cancelled").length;
-        const modified = totalEvents.filter((e) => e.type === "modified").length;
+        // 1. Status Splits
+        const confirmed = totalEvents.filter(
+          (e) => e.status === "confirmed",
+        ).length;
+        const cancelled = totalEvents.filter(
+          (e) => e.status === "cancelled",
+        ).length;
 
         const roomCounts: Record<number, number> = {};
         totalEvents.forEach((e) => {
-          if (e.type !== "cancelled") {
+          if (e.status !== "cancelled") {
             roomCounts[e.roomId] = (roomCounts[e.roomId] || 0) + 1;
           }
         });
@@ -83,7 +90,9 @@ export default function Analytics() {
         let afternoonCount = 0;
         totalEvents.forEach((e) => {
           if (e.startDate) {
-            const startHour = new Date(e.startDate.toString().replace(" ", "T")).getHours();
+            const startHour = new Date(
+              e.startDate.toString().replace(" ", "T"),
+            ).getHours();
             if (startHour < 12) {
               morningCount++;
             } else {
@@ -93,15 +102,15 @@ export default function Analytics() {
         });
 
         const uniquelyBookedRooms = Object.keys(roomCounts).length;
-        const utilizationRate = totalRooms.length > 0
-          ? Math.round((uniquelyBookedRooms / totalRooms.length) * 100)
-          : 0;
+        const utilizationRate =
+          totalRooms.length > 0
+            ? Math.round((uniquelyBookedRooms / totalRooms.length) * 100)
+            : 0;
 
         setStats({
           total: totalEvents.length,
           confirmed,
           cancelled,
-          modified,
           utilizationRate,
           popularRoomName,
           popularRoomCount: maxBookings,
@@ -122,8 +131,9 @@ export default function Analytics() {
         const buildingCounts: Record<number, number> = {};
         totalEvents.forEach((e) => {
           const roomObj = totalRooms.find((r) => r.id === e.roomId);
-          if (roomObj && e.type !== "cancelled") {
-            buildingCounts[roomObj.buildingId] = (buildingCounts[roomObj.buildingId] || 0) + 1;
+          if (roomObj && e.status !== "cancelled") {
+            buildingCounts[roomObj.buildingId] =
+              (buildingCounts[roomObj.buildingId] || 0) + 1;
           }
         });
 
@@ -148,12 +158,18 @@ export default function Analytics() {
     loadAnalyticsData();
   }, [navigate]);
 
-  const confirmedPct = stats.total > 0 ? Math.round((stats.confirmed / stats.total) * 100) : 0;
-  const modifiedPct = stats.total > 0 ? Math.round((stats.modified / stats.total) * 100) : 0;
-  const cancelledPct = stats.total > 0 ? Math.round((stats.cancelled / stats.total) * 100) : 0;
+  // Compute helper percentages
+  const confirmedPct =
+    stats.total > 0 ? Math.round((stats.confirmed / stats.total) * 100) : 0;
+  const cancelledPct =
+    stats.total > 0 ? Math.round((stats.cancelled / stats.total) * 100) : 0;
 
-  const morningPct = stats.total > 0 ? Math.round((stats.morningCount / stats.total) * 100) : 0;
-  const afternoonPct = stats.total > 0 ? Math.round((stats.afternoonCount / stats.total) * 100) : 0;
+  const morningPct =
+    stats.total > 0 ? Math.round((stats.morningCount / stats.total) * 100) : 0;
+  const afternoonPct =
+    stats.total > 0
+      ? Math.round((stats.afternoonCount / stats.total) * 100)
+      : 0;
 
   return (
     <>
@@ -169,7 +185,9 @@ export default function Analytics() {
             <div className="spinner-border text-success" role="status">
               <span className="visually-hidden">Calcul des données...</span>
             </div>
-            <p className="text-muted mt-3 small">Compilation des statistiques de réservation...</p>
+            <p className="text-muted mt-3 small">
+              Compilation des statistiques de réservation...
+            </p>
           </div>
         ) : (
           <>
@@ -181,9 +199,13 @@ export default function Analytics() {
                       <CalendarMonthIcon sx={{ fontSize: "2rem" }} />
                     </div>
                     <div>
-                      <span className="small text-secondary fw-bold text-uppercase d-block mb-1">Réservations</span>
+                      <span className="small text-secondary fw-bold text-uppercase d-block mb-1">
+                        Réservations
+                      </span>
                       <h3 className="fw-bold text-dark mb-0">{stats.total}</h3>
-                      <small className="text-success fw-semibold">{stats.confirmed} confirmées</small>
+                      <small className="text-success fw-semibold">
+                        {stats.confirmed} confirmées
+                      </small>
                     </div>
                   </div>
                 </div>
@@ -196,9 +218,15 @@ export default function Analytics() {
                       <BarChartIcon sx={{ fontSize: "2rem" }} />
                     </div>
                     <div>
-                      <span className="small text-secondary fw-bold text-uppercase d-block mb-1">Taux d'occupation</span>
-                      <h3 className="fw-bold text-dark mb-0">{stats.utilizationRate}%</h3>
-                      <small className="text-secondary fw-semibold">salles réservées au moins une fois</small>
+                      <span className="small text-secondary fw-bold text-uppercase d-block mb-1">
+                        Taux d'occupation
+                      </span>
+                      <h3 className="fw-bold text-dark mb-0">
+                        {stats.utilizationRate}%
+                      </h3>
+                      <small className="text-secondary fw-semibold">
+                        salles réservées au moins une fois
+                      </small>
                     </div>
                   </div>
                 </div>
@@ -211,8 +239,13 @@ export default function Analytics() {
                       <MeetingRoomIcon sx={{ fontSize: "2rem" }} />
                     </div>
                     <div>
-                      <span className="small text-secondary fw-bold text-uppercase d-block mb-1">Espace Favori</span>
-                      <h4 className="fw-bold text-dark mb-0 text-truncate" style={{ maxWidth: "160px" }}>
+                      <span className="small text-secondary fw-bold text-uppercase d-block mb-1">
+                        Espace Favori
+                      </span>
+                      <h4
+                        className="fw-bold text-dark mb-0 text-truncate"
+                        style={{ maxWidth: "160px" }}
+                      >
                         {stats.popularRoomName}
                       </h4>
                       <small className="text-secondary fw-semibold">
@@ -230,12 +263,17 @@ export default function Analytics() {
                       <AccessTimeIcon sx={{ fontSize: "2rem" }} />
                     </div>
                     <div>
-                      <span className="small text-secondary fw-bold text-uppercase d-block mb-1">Période d'Affluence</span>
+                      <span className="small text-secondary fw-bold text-uppercase d-block mb-1">
+                        Période d'Affluence
+                      </span>
                       <h3 className="fw-bold text-dark mb-0">
-                        {stats.afternoonCount >= stats.morningCount ? "Après-midi" : "Matin"}
+                        {stats.afternoonCount >= stats.morningCount
+                          ? "Après-midi"
+                          : "Matin"}
                       </h3>
                       <small className="text-secondary fw-semibold">
-                        Busiest: {Math.max(morningPct, afternoonPct)}% des créneaux
+                        Busiest: {Math.max(morningPct, afternoonPct)}% des
+                        créneaux
                       </small>
                     </div>
                   </div>
@@ -246,13 +284,18 @@ export default function Analytics() {
             <div className="row g-4 mt-2">
               <div className="col-12 col-lg-6">
                 <div className="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
-                  <h5 className="fw-bold text-dark mb-3">Répartition des Réservations</h5>
+                  <h5 className="fw-bold text-dark mb-3">
+                    Répartition des Réservations
+                  </h5>
 
                   <div className="mb-4">
                     <label className="small text-secondary fw-bold text-uppercase mb-2 d-block">
                       États des bookings
                     </label>
-                    <div className="progress rounded-pill shadow-inner" style={{ height: "30px" }}>
+                    <div
+                      className="progress rounded-pill shadow-inner"
+                      style={{ height: "30px" }}
+                    >
                       {stats.confirmed > 0 && (
                         <div
                           className="progress-bar bg-success fw-bold text-white d-flex align-items-center justify-content-center fs-7"
@@ -260,15 +303,6 @@ export default function Analytics() {
                           title={`Confirmé: ${stats.confirmed}`}
                         >
                           {confirmedPct}%
-                        </div>
-                      )}
-                      {stats.modified > 0 && (
-                        <div
-                          className="progress-bar bg-info fw-bold text-white d-flex align-items-center justify-content-center fs-7"
-                          style={{ width: `${modifiedPct}%` }}
-                          title={`Modifié: ${stats.modified}`}
-                        >
-                          {modifiedPct}%
                         </div>
                       )}
                       {stats.cancelled > 0 && (
@@ -284,16 +318,28 @@ export default function Analytics() {
 
                     <div className="d-flex justify-content-around mt-3 flex-wrap gap-2 text-center">
                       <div className="small">
-                        <span className="badge bg-success rounded-circle me-1" style={{ width: "10px", height: "10px", display: "inline-block" }}></span>
-                        <strong className="text-dark">Confirmées :</strong> {stats.confirmed} ({confirmedPct}%)
+                        <span
+                          className="badge bg-success rounded-circle me-1"
+                          style={{
+                            width: "10px",
+                            height: "10px",
+                            display: "inline-block",
+                          }}
+                        ></span>
+                        <strong className="text-dark">Confirmées :</strong>{" "}
+                        {stats.confirmed} ({confirmedPct}%)
                       </div>
                       <div className="small">
-                        <span className="badge bg-info rounded-circle me-1" style={{ width: "10px", height: "10px", display: "inline-block" }}></span>
-                        <strong className="text-dark">Modifiées :</strong> {stats.modified} ({modifiedPct}%)
-                      </div>
-                      <div className="small">
-                        <span className="badge bg-danger rounded-circle me-1" style={{ width: "10px", height: "10px", display: "inline-block" }}></span>
-                        <strong className="text-dark">Annulées :</strong> {stats.cancelled} ({cancelledPct}%)
+                        <span
+                          className="badge bg-danger rounded-circle me-1"
+                          style={{
+                            width: "10px",
+                            height: "10px",
+                            display: "inline-block",
+                          }}
+                        ></span>
+                        <strong className="text-dark">Annulées :</strong>{" "}
+                        {stats.cancelled} ({cancelledPct}%)
                       </div>
                     </div>
                   </div>
@@ -301,25 +347,48 @@ export default function Analytics() {
                   <hr className="text-black-50 my-4" />
 
                   <div>
-                    <h5 className="fw-bold text-dark mb-3">Plage Horaire la Plus Sollicitée</h5>
+                    <h5 className="fw-bold text-dark mb-3">
+                      Plage Horaire la Plus Sollicitée
+                    </h5>
                     <div className="d-flex flex-column gap-3">
                       <div>
                         <div className="d-flex justify-content-between mb-1 small">
-                          <span className="fw-semibold text-secondary">Matin (7h - 12h)</span>
-                          <span className="fw-bold text-dark">{stats.morningCount} réservations ({morningPct}%)</span>
+                          <span className="fw-semibold text-secondary">
+                            Matin (7h - 12h)
+                          </span>
+                          <span className="fw-bold text-dark">
+                            {stats.morningCount} réservations ({morningPct}%)
+                          </span>
                         </div>
-                        <div className="progress rounded-pill" style={{ height: "10px" }}>
-                          <div className="progress-bar bg-primary" style={{ width: `${morningPct}%` }}></div>
+                        <div
+                          className="progress rounded-pill"
+                          style={{ height: "10px" }}
+                        >
+                          <div
+                            className="progress-bar bg-primary"
+                            style={{ width: `${morningPct}%` }}
+                          ></div>
                         </div>
                       </div>
 
                       <div>
                         <div className="d-flex justify-content-between mb-1 small">
-                          <span className="fw-semibold text-secondary">Après-midi (12h - 20h)</span>
-                          <span className="fw-bold text-dark">{stats.afternoonCount} réservations ({afternoonPct}%)</span>
+                          <span className="fw-semibold text-secondary">
+                            Après-midi (12h - 20h)
+                          </span>
+                          <span className="fw-bold text-dark">
+                            {stats.afternoonCount} réservations ({afternoonPct}
+                            %)
+                          </span>
                         </div>
-                        <div className="progress rounded-pill" style={{ height: "10px" }}>
-                          <div className="progress-bar bg-info" style={{ width: `${afternoonPct}%` }}></div>
+                        <div
+                          className="progress rounded-pill"
+                          style={{ height: "10px" }}
+                        >
+                          <div
+                            className="progress-bar bg-info"
+                            style={{ width: `${afternoonPct}%` }}
+                          ></div>
                         </div>
                       </div>
                     </div>
@@ -329,38 +398,62 @@ export default function Analytics() {
 
               <div className="col-12 col-lg-6">
                 <div className="card border-0 shadow-sm rounded-4 bg-white p-4 h-100">
-                  <h5 className="fw-bold text-dark mb-1">Top 5 des Salles les Plus Réservées</h5>
-                  <p className="small text-secondary mb-4">Volume total d'heures et de réservations validées</p>
+                  <h5 className="fw-bold text-dark mb-1">
+                    Top 5 des Salles les Plus Réservées
+                  </h5>
+                  <p className="small text-secondary mb-4">
+                    Volume total d'heures et de réservations validées
+                  </p>
 
                   {roomStats.length === 0 ? (
                     <div className="text-center py-5 border border-dashed rounded-4 my-auto">
-                      <p className="text-muted mb-0 small">Aucune réservation active pour le moment.</p>
+                      <p className="text-muted mb-0 small">
+                        Aucune réservation active pour le moment.
+                      </p>
                     </div>
                   ) : (
                     <div className="d-flex flex-column gap-3 my-auto">
                       {roomStats.map((r, idx) => {
-                        const maxCount = Math.max(...roomStats.map((item) => item.count), 1);
-                        const progressPct = Math.round((r.count / maxCount) * 100);
+                        const maxCount = Math.max(
+                          ...roomStats.map((item) => item.count),
+                          1,
+                        );
+                        const progressPct = Math.round(
+                          (r.count / maxCount) * 100,
+                        );
 
                         return (
                           <div key={r.roomName} className="d-flex align-items-center gap-3">
                             <div
                               className="rounded-circle bg-slate text-white d-flex align-items-center justify-content-center fw-bold"
-                              style={{ width: "32px", height: "32px", flexShrink: 0, fontSize: "0.85rem" }}
+                              style={{
+                                width: "32px",
+                                height: "32px",
+                                flexShrink: 0,
+                                fontSize: "0.85rem",
+                              }}
                             >
                               {idx + 1}
                             </div>
                             <div className="flex-grow-1">
                               <div className="d-flex justify-content-between mb-1 small">
-                                <span className="fw-bold text-dark">{r.roomName}</span>
-                                <span className="fw-semibold text-secondary">{r.count} réservations</span>
+                                <span className="fw-bold text-dark">
+                                  {r.roomName}
+                                </span>
+                                <span className="fw-semibold text-secondary">
+                                  {r.count} réservations
+                                </span>
                               </div>
-                              <div className="progress rounded-pill" style={{ height: "12px" }}>
+                              <div
+                                className="progress rounded-pill"
+                                style={{ height: "12px" }}
+                              >
                                 <div
                                   className="progress-bar"
                                   style={{
                                     width: `${progressPct}%`,
-                                    background: "linear-gradient(90deg, #10b981 0%, #059669 100%)",
+                                    background:
+                                      "linear-gradient(90deg, #10b981 0%, #059669 100%)",
                                   }}
                                 ></div>
                               </div>
@@ -375,23 +468,32 @@ export default function Analytics() {
 
               <div className="col-12">
                 <div className="card border-0 shadow-sm rounded-4 bg-white p-4">
-                  <h5 className="fw-bold text-dark mb-1">Réservations par Bâtiment</h5>
-                  <p className="small text-secondary mb-4">Densité d'occupation par infrastructure de l'entreprise</p>
+                  <h5 className="fw-bold text-dark mb-1">
+                    Réservations par Bâtiment
+                  </h5>
+                  <p className="small text-secondary mb-4">
+                    Densité d'occupation par infrastructure de l'entreprise
+                  </p>
 
                   <div className="row g-3">
                     {buildingStats.map((b) => {
                       const totalBookings = stats.total - stats.cancelled;
-                      const buildingPct = totalBookings > 0
-                        ? Math.round((b.count / totalBookings) * 100)
-                        : 0;
+                      const buildingPct =
+                        totalBookings > 0
+                          ? Math.round((b.count / totalBookings) * 100)
+                          : 0;
 
                       return (
                         <div key={b.bName} className="col-12 col-md-6 col-lg-4">
                           <div className="border border-light-subtle rounded-3 p-3 bg-light bg-opacity-25 h-100">
                             <div className="d-flex align-items-center justify-content-between mb-2">
                               <div className="d-flex align-items-center gap-2">
-                                <BusinessIcon sx={{ color: "#10b981", fontSize: "1.5rem" }} />
-                                <h6 className="fw-bold text-dark mb-0">{b.bName}</h6>
+                                <BusinessIcon
+                                  sx={{ color: "#10b981", fontSize: "1.5rem" }}
+                                />
+                                <h6 className="fw-bold text-dark mb-0">
+                                  {b.bName}
+                                </h6>
                               </div>
                               <span className="badge bg-slate rounded-pill text-white fw-bold">
                                 {b.count} bookings
@@ -399,14 +501,19 @@ export default function Analytics() {
                             </div>
                             <div className="d-flex align-items-center gap-3">
                               <div className="flex-grow-1">
-                                <div className="progress rounded-pill" style={{ height: "8px" }}>
+                                <div
+                                  className="progress rounded-pill"
+                                  style={{ height: "8px" }}
+                                >
                                   <div
                                     className="progress-bar bg-success"
                                     style={{ width: `${buildingPct}%` }}
                                   ></div>
                                 </div>
                               </div>
-                              <span className="small fw-bold text-secondary">{buildingPct}%</span>
+                              <span className="small fw-bold text-secondary">
+                                {buildingPct}%
+                              </span>
                             </div>
                           </div>
                         </div>

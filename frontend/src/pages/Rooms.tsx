@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import { authService } from "../services/auth.service";
-import { roomService } from "../services/roomService";
-import { buildingService } from "../services/buildingService";
-import { equipmentService } from "../services/equipmentService";
+import { roomService } from "../services/room.service";
+import { buildingService } from "../services/building.service";
+import { equipmentService } from "../services/equipment.service";
 import { eventService } from "../services/event.service";
 
 import type { User as UserType } from "../types/user";
@@ -33,7 +33,10 @@ export default function Rooms() {
 
   const [expandedRoom, setExpandedRoom] = useState<number | null>(null);
 
-  const [successToast, setSuccessToast] = useState<{ visible: boolean; roomName: string } | null>(null);
+  const [successToast, setSuccessToast] = useState<{
+    visible: boolean;
+    roomName: string;
+  } | null>(null);
 
   useEffect(() => {
     const initRooms = async () => {
@@ -80,14 +83,23 @@ export default function Rooms() {
   const filteredRooms = rooms.filter((room) => {
     const bld = buildings.find((b) => b.id === room.buildingId);
     const bldName = bld ? bld.name : "";
-    const matchesBuilding = filterBuilding === "" || bldName.toLowerCase() === filterBuilding.toLowerCase();
+    const matchesBuilding =
+      filterBuilding === "" ||
+      bldName.toLowerCase() === filterBuilding.toLowerCase();
     return matchesBuilding;
   });
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center min-vh-100" style={{ backgroundColor: "#f8fafc" }}>
-        <div className="spinner-border text-emerald" role="status" style={{ width: "3rem", height: "3rem", color: "#10b981" }}>
+      <div
+        className="d-flex justify-content-center align-items-center min-vh-100"
+        style={{ backgroundColor: "#f8fafc" }}
+      >
+        <div
+          className="spinner-border text-emerald"
+          role="status"
+          style={{ width: "3rem", height: "3rem", color: "#10b981" }}
+        >
           <span className="visually-hidden">Chargement...</span>
         </div>
       </div>
@@ -104,9 +116,20 @@ export default function Rooms() {
         </div>
 
         <div className="d-flex justify-content-center mb-4">
-          <div className="bg-white border shadow-sm d-flex flex-column flex-md-row align-items-stretch align-items-md-center p-3 p-md-2 search-filter-pill" style={{ maxWidth: "600px", width: "100%" }}>
-            <div className="flex-grow-1 px-3 py-2 py-md-1 d-flex flex-column text-start" style={{ minWidth: "150px" }}>
-              <label className="text-secondary fw-bold small text-uppercase mb-0" style={{ fontSize: "0.7rem", letterSpacing: "0.5px" }}>Bâtiment</label>
+          <div
+            className="bg-white border shadow-sm d-flex flex-column flex-md-row align-items-stretch align-items-md-center p-3 p-md-2 search-filter-pill"
+            style={{ maxWidth: "600px", width: "100%" }}
+          >
+            <div
+              className="flex-grow-1 px-3 py-2 py-md-1 d-flex flex-column text-start"
+              style={{ minWidth: "150px" }}
+            >
+              <label
+                className="text-secondary fw-bold small text-uppercase mb-0"
+                style={{ fontSize: "0.7rem", letterSpacing: "0.5px" }}
+              >
+                Bâtiment
+              </label>
               <select
                 className="form-select border-0 p-0 bg-transparent text-dark fw-semibold shadow-none"
                 style={{ fontSize: "0.9rem" }}
@@ -122,11 +145,22 @@ export default function Rooms() {
               </select>
             </div>
 
-            <div className="vr d-none d-md-block mx-2" style={{ height: "30px", backgroundColor: "#e2e8f0" }}></div>
+            <div
+              className="vr d-none d-md-block mx-2"
+              style={{ height: "30px", backgroundColor: "#e2e8f0" }}
+            ></div>
             <hr className="d-md-none my-2 text-black-50" />
 
-            <div className="flex-grow-1 px-3 py-2 py-md-1 d-flex flex-column text-start" style={{ minWidth: "150px" }}>
-              <label className="text-secondary fw-bold small text-uppercase mb-0" style={{ fontSize: "0.7rem", letterSpacing: "0.5px" }}>Date souhaitée</label>
+            <div
+              className="flex-grow-1 px-3 py-2 py-md-1 d-flex flex-column text-start"
+              style={{ minWidth: "150px" }}
+            >
+              <label
+                className="text-secondary fw-bold small text-uppercase mb-0"
+                style={{ fontSize: "0.7rem", letterSpacing: "0.5px" }}
+              >
+                Date souhaitée
+              </label>
               <input
                 type="date"
                 className="form-control border-0 p-0 bg-transparent text-dark fw-semibold shadow-none"
@@ -138,13 +172,23 @@ export default function Rooms() {
 
             <button
               className="btn btn-success rounded-pill rounded-md-circle p-2 d-flex align-items-center justify-content-center mt-3 mt-md-0 ms-md-2"
-              style={{ minHeight: "44px", backgroundColor: "#22c55e", borderColor: "#22c55e" }}
+              style={{
+                minHeight: "44px",
+                backgroundColor: "#22c55e",
+                borderColor: "#22c55e",
+              }}
               onClick={handleSearch}
               title="Lancer la recherche"
             >
-              <SearchIcon sx={{ fontSize: "1.4rem", color: "#ffffff" }} className="me-2 d-md-none" />
+              <SearchIcon
+                sx={{ fontSize: "1.4rem", color: "#ffffff" }}
+                className="me-2 d-md-none"
+              />
               <span className="d-md-none fw-bold text-white">Rechercher</span>
-              <SearchIcon sx={{ fontSize: "1.4rem", color: "#ffffff" }} className="d-none d-md-inline" />
+              <SearchIcon
+                sx={{ fontSize: "1.4rem", color: "#ffffff" }}
+                className="d-none d-md-inline"
+              />
             </button>
           </div>
         </div>
@@ -152,7 +196,11 @@ export default function Rooms() {
         {(filterBuilding || filterDate) && (
           <div className="d-flex justify-content-center mb-3">
             <span className="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2 rounded-pill fs-6">
-              Filtres actifs : {filterBuilding && `Bâtiment : ${filterBuilding}`} {filterBuilding && filterDate && " | "} {filterDate && `Date : ${new Date(filterDate).toLocaleDateString("fr-FR")}`}
+              Filtres actifs :{" "}
+              {filterBuilding && `Bâtiment : ${filterBuilding}`}{" "}
+              {filterBuilding && filterDate && " | "}{" "}
+              {filterDate &&
+                `Date : ${new Date(filterDate).toLocaleDateString("fr-FR")}`}
               <button
                 className="btn-close ms-2 fs-7"
                 style={{ fontSize: "0.8rem", verticalAlign: "middle" }}
@@ -172,7 +220,9 @@ export default function Rooms() {
             <div className="d-flex flex-column gap-3">
               {filteredRooms.length === 0 ? (
                 <div className="text-center p-5 bg-white border rounded-4 shadow-sm">
-                  <p className="fs-4 text-secondary mb-0">Aucune salle ne correspond à vos critères de recherche</p>
+                  <p className="fs-4 text-secondary mb-0">
+                    Aucune salle ne correspond à vos critères de recherche
+                  </p>
                 </div>
               ) : (
                 filteredRooms.map((room) => {
@@ -181,30 +231,42 @@ export default function Rooms() {
                   const roomBuildingName = bld ? bld.name : "Bâtiment inconnu";
 
                   return (
-                    <div className="card border rounded-4 shadow-sm overflow-hidden bg-white" key={room.id}>
+                    <div
+                      className="card border rounded-4 shadow-sm overflow-hidden bg-white"
+                      key={room.id}
+                    >
                       <div
                         className="card-header bg-white p-3 d-flex align-items-center justify-content-between cursor-pointer border-0"
                         onClick={() => toggleExpand(room.id)}
                         style={{ cursor: "pointer" }}
                       >
                         <div className="text-start">
-                          <h3 className="h5 fw-bold text-dark mb-1">{room.name}</h3>
+                          <h3 className="h5 fw-bold text-dark mb-1">
+                            {room.name}
+                          </h3>
                           <span className="text-secondary small fw-medium d-block d-sm-inline">
                             {roomBuildingName} • Étage {room.floor}
                           </span>
                         </div>
                         <div className="d-flex align-items-center gap-3">
-                          <span className="badge bg-light text-dark border rounded-pill px-3 py-2 fw-bold" style={{ fontSize: "0.85rem" }}>
+                          <span
+                            className="badge bg-light text-dark border rounded-pill px-3 py-2 fw-bold"
+                            style={{ fontSize: "0.85rem" }}
+                          >
                             {room.capacity} pers
                           </span>
                           <span
                             className="text-secondary"
                             style={{
-                              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-                              transition: "transform 0.2s ease"
+                              transform: isExpanded
+                                ? "rotate(180deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.2s ease",
                             }}
                           >
-                            <KeyboardArrowDownIcon sx={{ fontSize: "1.8rem" }} />
+                            <KeyboardArrowDownIcon
+                              sx={{ fontSize: "1.8rem" }}
+                            />
                           </span>
                         </div>
                       </div>
@@ -214,10 +276,15 @@ export default function Rooms() {
                           <RoomDetailRow
                             room={room}
                             buildingName={roomBuildingName}
-                            equipments={equipments.filter((eq) => eq.roomId === room.id)}
+                            equipments={equipments.filter(
+                              (eq) => eq.roomId === room.id,
+                            )}
                             currentUser={user}
                             onReserveSuccess={(name) => {
-                              setSuccessToast({ visible: true, roomName: name });
+                              setSuccessToast({
+                                visible: true,
+                                roomName: name,
+                              });
                               setExpandedRoom(null);
                               setTimeout(() => setSuccessToast(null), 5000);
                             }}
@@ -247,8 +314,15 @@ export default function Rooms() {
             <EventAvailableIcon sx={{ fontSize: "2rem" }} />
           </span>
           <div>
-            <h6 className="m-0 fw-semibold text-success" style={{ color: "#4ade80" }}>Réservation Confirmée</h6>
-            <small className="text-white-50">La {successToast.roomName} a été réservée avec succès !</small>
+            <h6
+              className="m-0 fw-semibold text-success"
+              style={{ color: "#4ade80" }}
+            >
+              Réservation Confirmée
+            </h6>
+            <small className="text-white-50">
+              La {successToast.roomName} a été réservée avec succès !
+            </small>
           </div>
         </div>
       )}
@@ -264,7 +338,13 @@ interface RoomDetailRowProps {
   onReserveSuccess: (roomName: string) => void;
 }
 
-function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveSuccess }: RoomDetailRowProps) {
+function RoomDetailRow({
+  room,
+  buildingName,
+  equipments,
+  currentUser,
+  onReserveSuccess,
+}: RoomDetailRowProps) {
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -279,10 +359,6 @@ function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveS
       setReserveError("Veuillez remplir tous les champs de date et d'heure.");
       return;
     }
-    if (!currentUser) {
-      setReserveError("Vous devez être connecté pour réserver.");
-      return;
-    }
 
     setSubmitting(true);
     setReserveError("");
@@ -291,12 +367,11 @@ function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveS
       const endDateTimeStr = `${endDate}T${endTime}:00`;
 
       await eventService.createEvent({
-        startDate: new Date(startDateTimeStr),
-        endDate: new Date(endDateTimeStr),
-        type: "confirmed",
-        status: 1,
+        startDate: startDateTimeStr,
+        endDate: endDateTimeStr,
+        status: "confirmed",
         comment: comment.trim(),
-        userId: currentUser.id,
+        userId: currentUser!.id,
         roomId: room.id,
       });
 
@@ -316,9 +391,20 @@ function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveS
           <div>
             <h5 className="text-dark fw-bold fs-5 mb-2">Caractéristiques</h5>
             <div className="d-flex flex-column gap-2 text-secondary fs-6">
-              <div>Emplacement: <strong className="text-dark">{buildingName}</strong></div>
-              <div>Étage: <strong className="text-dark">Niveau {room.floor}</strong></div>
-              <div>Capacité max: <strong className="text-dark">{room.capacity} places assises</strong></div>
+              <div>
+                Emplacement:{" "}
+                <strong className="text-dark">{buildingName}</strong>
+              </div>
+              <div>
+                Étage:{" "}
+                <strong className="text-dark">Niveau {room.floor}</strong>
+              </div>
+              <div>
+                Capacité max:{" "}
+                <strong className="text-dark">
+                  {room.capacity} places assises
+                </strong>
+              </div>
             </div>
           </div>
 
@@ -326,7 +412,9 @@ function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveS
             <h5 className="text-dark fw-bold fs-5 mb-2">Équipements inclus</h5>
             <div className="d-flex flex-wrap gap-2">
               {equipments.length === 0 ? (
-                <span className="text-muted small">Aucun équipement disponible.</span>
+                <span className="text-muted small">
+                  Aucun équipement disponible.
+                </span>
               ) : (
                 equipments.map((eq) => (
                   <span
@@ -343,11 +431,16 @@ function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveS
         </div>
 
         <div className="col-12 col-md-7">
-          <h5 className="text-dark fw-bold fs-5 mb-3">Réserver cet espace rapidement</h5>
+          <h5 className="text-dark fw-bold fs-5 mb-3">
+            Réserver cet espace rapidement
+          </h5>
+
           <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-            <div className="row g-2">
+            <div className="col g-2">
               <div className="col-12 col-sm-6">
-                <label className="form-label text-secondary fw-semibold fs-7 mb-1">Date & Heure de début</label>
+                <label className="form-label text-secondary fw-semibold fs-7 mb-1">
+                  Date & Heure de début
+                </label>
                 <div className="d-flex gap-2">
                   <input
                     type="date"
@@ -363,8 +456,11 @@ function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveS
                   />
                 </div>
               </div>
+
               <div className="col-12 col-sm-6">
-                <label className="form-label text-secondary fw-semibold fs-7 mb-1">Date & Heure de fin</label>
+                <label className="form-label text-secondary fw-semibold fs-7 mb-1">
+                  Date & Heure de fin
+                </label>
                 <div className="d-flex gap-2">
                   <input
                     type="date"
@@ -383,7 +479,9 @@ function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveS
             </div>
 
             <div className="w-100">
-              <label className="form-label text-secondary fw-semibold fs-7 mb-1">Commentaire / Objet de la réunion (Optionnel)</label>
+              <label className="form-label text-secondary fw-semibold fs-7 mb-1">
+                Commentaire / Objet de la réunion (Optionnel)
+              </label>
               <input
                 type="text"
                 placeholder="Ex. Réunion d'équipe hebdomadaire"
@@ -394,9 +492,7 @@ function RoomDetailRow({ room, buildingName, equipments, currentUser, onReserveS
             </div>
 
             {reserveError && (
-              <div className="text-danger fw-semibold fs-6">
-                {reserveError}
-              </div>
+              <div className="text-danger fw-semibold fs-6">{reserveError}</div>
             )}
 
             <div className="d-flex justify-content-end mt-2">

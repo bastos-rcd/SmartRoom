@@ -43,12 +43,19 @@ export default function Signin() {
   }, []);
 
   return (
-    <div className="min-vh-100 d-flex flex-column justify-content-center align-items-center p-3 position-relative" style={{ backgroundColor: "#0e172a" }}>
+    <div
+      className="min-vh-100 d-flex flex-column justify-content-center align-items-center p-3 position-relative"
+      style={{ backgroundColor: "#0e172a" }}
+    >
       <div className="position-absolute" style={{ top: "24px", left: "24px" }}>
         <button
           type="button"
           className="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center"
-          style={{ width: "48px", height: "48px", transition: "all 0.25s ease" }}
+          style={{
+            width: "48px",
+            height: "48px",
+            transition: "all 0.25s ease",
+          }}
           onClick={() => navigate("/login")}
           title="Retour à la connexion"
         >
@@ -56,10 +63,20 @@ export default function Signin() {
         </button>
       </div>
 
-      <div className="card border-0 shadow-lg rounded-4 p-4 p-sm-5 d-flex flex-column gap-2" style={{ maxWidth: "440px", width: "100%", backgroundColor: "rgba(30, 41, 59, 0.75)", backdropFilter: "blur(16px)" }}>
+      <div
+        className="card border-0 shadow-lg rounded-4 p-4 p-sm-5 d-flex flex-column gap-2"
+        style={{
+          maxWidth: "440px",
+          width: "100%",
+          backgroundColor: "rgba(30, 41, 59, 0.75)",
+          backdropFilter: "blur(16px)",
+        }}
+      >
         <div className="text-center mb-3">
           <h1 className="text-white display-4 mb-1 fw-bold">SmartRoom</h1>
-          <h5 className="text-white-50 fw-light fs-6">Créer un nouveau compte</h5>
+          <h5 className="text-white-50 fw-light fs-6">
+            Créer un nouveau compte
+          </h5>
         </div>
 
         <div className="row g-2 mb-2">
@@ -172,7 +189,11 @@ export default function Signin() {
         <div className="mt-3 pt-3 border-top border-white border-opacity-10 text-center">
           <div className="fs-6 text-white-50">
             Vous avez déjà un compte ?{" "}
-            <Link to="/login" className="text-success text-decoration-none fw-semibold ms-1" style={{ color: "#4ade80" }}>
+            <Link
+              to="/login"
+              className="text-success text-decoration-none fw-semibold ms-1"
+              style={{ color: "#4ade80" }}
+            >
               Connectez-vous
             </Link>
           </div>
