@@ -132,6 +132,7 @@ export default function Rooms() {
               </label>
               <select
                 className="form-select border-0 p-0 bg-transparent text-dark fw-semibold shadow-none"
+                aria-label="Select building"
                 style={{ fontSize: "0.9rem" }}
                 value={searchBuilding}
                 onChange={(e) => setSearchBuilding(e.target.value)}
@@ -163,6 +164,7 @@ export default function Rooms() {
               </label>
               <input
                 type="date"
+                aria-label="Select date"
                 className="form-control border-0 p-0 bg-transparent text-dark fw-semibold shadow-none"
                 style={{ fontSize: "0.9rem" }}
                 value={searchDate}
@@ -203,6 +205,8 @@ export default function Rooms() {
                 `Date : ${new Date(filterDate).toLocaleDateString("fr-FR")}`}
               <button
                 className="btn-close ms-2 fs-7"
+                type="button"
+                aria-label="Close"
                 style={{ fontSize: "0.8rem", verticalAlign: "middle" }}
                 onClick={() => {
                   setSearchBuilding("");
@@ -444,12 +448,14 @@ function RoomDetailRow({
                 <div className="d-flex gap-2">
                   <input
                     type="date"
+                    aria-label="Select start date"
                     className="form-control bg-white"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                   />
                   <input
                     type="time"
+                    aria-label="Select start time"
                     className="form-control bg-white"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
@@ -464,12 +470,14 @@ function RoomDetailRow({
                 <div className="d-flex gap-2">
                   <input
                     type="date"
+                    aria-label="Select end date"
                     className="form-control bg-white"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                   />
                   <input
                     type="time"
+                    aria-label="Select end time"
                     className="form-control bg-white"
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}

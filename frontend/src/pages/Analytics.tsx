@@ -177,7 +177,9 @@ export default function Analytics() {
 
       <div className="container-fluid py-4 px-3 px-md-5">
         <div className="mb-4 text-center text-md-start">
-          <h1 className="display-6 text-dark fw-bold mb-1">Analyses & Statistiques</h1>
+          <h1 className="display-6 text-dark fw-bold mb-1">
+            Analyses & Statistiques
+          </h1>
         </div>
 
         {loading ? (
@@ -423,7 +425,10 @@ export default function Analytics() {
                         );
 
                         return (
-                          <div key={r.roomName} className="d-flex align-items-center gap-3">
+                          <div
+                            key={r.roomName}
+                            className="d-flex align-items-center gap-3"
+                          >
                             <div
                               className="rounded-circle bg-slate text-white d-flex align-items-center justify-content-center fw-bold"
                               style={{

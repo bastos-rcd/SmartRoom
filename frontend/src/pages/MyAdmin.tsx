@@ -242,7 +242,7 @@ export default function ManageRooms() {
         <div className="row g-4 mt-2">
           <div className="col-12 col-lg-6">
             <div className="card border-0 shadow-sm rounded-4 h-100 bg-white">
-              <div className="card-header bg-slate text-white p-3 rounded-top-4 border-0">
+              <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0">
                 <h5 className="mb-0 fw-bold d-flex align-items-center gap-2">
                   <BusinessIcon /> Structure de l'Établissement
                 </h5>
@@ -281,7 +281,8 @@ export default function ManageRooms() {
                         >
                           {/* Building Row Header */}
                           <div
-                            className="d-flex align-items-center justify-content-between cursor-pointer user-select-none"
+                            className="d-flex align-items-center justify-content-between user-select-none"
+                            style={{ cursor: "pointer" }}
                             onClick={() => toggleBuilding(b.id)}
                           >
                             <div className="d-flex align-items-center gap-2">
@@ -323,7 +324,8 @@ export default function ManageRooms() {
                                     >
                                       {/* Room Row Header */}
                                       <div
-                                        className="d-flex align-items-center justify-content-between cursor-pointer"
+                                        className="d-flex align-items-center justify-content-between m-2"
+                                        style={{ cursor: "pointer" }}
                                         onClick={() => toggleRoom(r.id)}
                                       >
                                         <div className="d-flex align-items-center gap-2">
@@ -341,13 +343,14 @@ export default function ManageRooms() {
                                               className="text-secondary d-block"
                                               style={{ fontSize: "0.75rem" }}
                                             >
-                                              Capacité : {r.capacity}p • Étage{" "}
-                                              {r.floor} • {r.location}
+                                              Capacité : {r.capacity}p •{" "}
+                                              {`${r.floor === 0 ? "RDC" : `Étage ${r.floor}`}`}{" "}
+                                              • {r.location}
                                             </small>
                                           </div>
                                         </div>
                                         <span
-                                          className="badge bg-light text-secondary border rounded-pill"
+                                          className="badge bg-light text-secondary border rounded-pill m-2"
                                           style={{ fontSize: "0.7rem" }}
                                         >
                                           {rEquips.length} éq.
@@ -367,7 +370,7 @@ export default function ManageRooms() {
                                             rEquips.map((eq) => (
                                               <span
                                                 key={eq.id}
-                                                className="badge bg-light text-dark border border-light-subtle rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1"
+                                                className="badge bg-light text-dark border border-light-subtle rounded-pill px-2.5 py-1.5 d-inline-flex align-items-center gap-1 m-2"
                                                 style={{ fontSize: "0.72rem" }}
                                               >
                                                 <BuildIcon
@@ -406,7 +409,7 @@ export default function ManageRooms() {
 
           <div className="col-12 col-lg-6 d-flex flex-column gap-4">
             <div className="card border-0 shadow-sm rounded-4 bg-white">
-              <div className="card-header bg-slate text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
+              <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
                 <AddIcon />{" "}
                 <h5 className="mb-0 fw-bold">Ajouter un Bâtiment</h5>
               </div>
@@ -435,6 +438,7 @@ export default function ManageRooms() {
                     </label>
                     <input
                       type="number"
+                      aria-label="Nombre d'étages"
                       min={1}
                       className="form-control rounded-3"
                       value={buildingForm.nbFloors}
@@ -453,6 +457,7 @@ export default function ManageRooms() {
                     <input
                       type="text"
                       className="form-control rounded-3"
+                      aria-label="Adresse du bâtiment"
                       placeholder="e.g. 12 rue des Innoveurs, Toulouse"
                       value={buildingForm.address}
                       onChange={(e) =>
@@ -476,7 +481,7 @@ export default function ManageRooms() {
             </div>
 
             <div className="card border-0 shadow-sm rounded-4 bg-white">
-              <div className="card-header bg-slate text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
+              <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
                 <AddIcon /> <h5 className="mb-0 fw-bold">Affilier une Salle</h5>
               </div>
               <div className="card-body p-4">
@@ -488,6 +493,7 @@ export default function ManageRooms() {
                     <input
                       type="text"
                       className="form-control rounded-3"
+                      aria-label="Nom de la salle"
                       placeholder="e.g. Salle Conseil"
                       value={roomForm.name}
                       onChange={(e) =>
@@ -500,6 +506,7 @@ export default function ManageRooms() {
                       Bâtiment Affilié
                     </label>
                     <select
+                      aria-label="Bâtiment affilié"
                       className="form-select rounded-3"
                       value={roomForm.buildingId}
                       onChange={(e) =>
@@ -520,6 +527,7 @@ export default function ManageRooms() {
                     </label>
                     <input
                       type="number"
+                      aria-label="Capacité en nombre de places"
                       min={1}
                       className="form-control rounded-3"
                       value={roomForm.capacity}
@@ -537,6 +545,7 @@ export default function ManageRooms() {
                     </label>
                     <input
                       type="number"
+                      aria-label="Numéro de l'étage"
                       className="form-control rounded-3"
                       value={roomForm.floor}
                       onChange={(e) =>
@@ -545,6 +554,12 @@ export default function ManageRooms() {
                           floor: Number(e.target.value),
                         })
                       }
+                      max={
+                        buildings.find(
+                          (b) => b.id === Number(roomForm.buildingId),
+                        )?.nbFloors || 1
+                      }
+                      min={0}
                     />
                   </div>
                   <div className="col-12 col-md-4">
@@ -553,6 +568,7 @@ export default function ManageRooms() {
                     </label>
                     <input
                       type="text"
+                      aria-label="Localisation interne de la salle"
                       className="form-control rounded-3"
                       placeholder="e.g. Aile Est"
                       value={roomForm.location}
@@ -574,7 +590,7 @@ export default function ManageRooms() {
             </div>
 
             <div className="card border-0 shadow-sm rounded-4 bg-white">
-              <div className="card-header bg-slate text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
+              <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
                 <AddIcon />{" "}
                 <h5 className="mb-0 fw-bold">Assigner un Équipement</h5>
               </div>
@@ -586,6 +602,7 @@ export default function ManageRooms() {
                     </label>
                     <input
                       type="text"
+                      aria-label="Nom de l'équipement"
                       className="form-control rounded-3"
                       placeholder="e.g. Tableau Blanc"
                       value={equipmentForm.name}
@@ -603,6 +620,7 @@ export default function ManageRooms() {
                     </label>
                     <select
                       className="form-select rounded-3"
+                      aria-label="Type de l'équipement"
                       value={equipmentForm.type}
                       onChange={(e) =>
                         setEquipmentForm({
@@ -623,6 +641,7 @@ export default function ManageRooms() {
                     </label>
                     <select
                       className="form-select rounded-3"
+                      aria-label="Salle affiliée"
                       value={equipmentForm.roomId}
                       onChange={(e) =>
                         setEquipmentForm({

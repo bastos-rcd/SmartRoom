@@ -8,6 +8,14 @@ export const userService = {
 
     return response.data;
   },
+  async getAllUsers(): Promise<User[]> {
+    const response = await API.get("/users");
+
+    return response.data;
+  },
+  async deleteUser(id: number): Promise<void> {
+    await API.delete(`/users/${id}`);
+  },
 
   async updateUser(id: number, userData: Partial<User>): Promise<User> {
     const response = await API.put(`/users/${id}`, userData);

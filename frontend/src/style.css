@@ -354,6 +354,46 @@ body.has-sidebar {
   background-color: rgba(16, 185, 129, 0.2) !important;
 }
 
+.custom-switch.form-check-input {
+  background-color: #000 !important;
+  border-color: #000 !important;
+  border-radius: 6px !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3crect width='6' height='6' x='-3' y='-3' rx='1.5' fill='%23eff9f0'/%3e%3c/svg%3e") !important;
+}
+
+.custom-switch.form-check-input:checked {
+  background-color: #eff9f0 !important;
+  border-color: #0e172a !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3crect width='6' height='6' x='-3' y='-3' rx='1.5' fill='black'/%3e%3c/svg%3e") !important;
+}
+
+.custom-switch.form-check-input:focus {
+  box-shadow: none !important;
+  border-color: #000 !important;
+}
+
+.custom-bg {
+  background-color: #0e172a !important;
+}
+
+.btn-icon-block,
+.btn-icon-delete,
+.btn-icon-validate {
+  color: #4a5568;
+}
+
+.btn-icon-block:hover {
+  color: #dd6b20;
+}
+
+.btn-icon-delete:hover {
+  color: #e53e3e;
+}
+
+.btn-icon-validate:hover {
+  color: #38a169;
+}
+
 .fc .fc-theme-standard th {
   background-color: #f8fafc !important;
   padding: 10px 0 !important;
@@ -388,4 +428,35 @@ body.has-sidebar {
   .search-filter-pill {
     border-radius: 50rem;
   }
+}
+
+.custom-switch.form-check-input {
+  background-color: #000 !important;
+  border-color: #000 !important;
+  border-radius: 6px !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3crect width='6' height='6' x='-3' y='-3' rx='1.5' fill='%23eff9f0'/%3e%3c/svg%3e") !important;
+}
+
+.custom-switch.form-check-input:checked {
+  background-color: #eff9f0 !important;
+  border-color: #0e172a !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3crect width='6' height='6' x='-3' y='-3' rx='1.5' fill='black'/%3e%3c/svg%3e") !important;
+}
+
+.custom-switch.form-check-input:focus {
+  box-shadow: none !important;
+  border-color: #000 !important;
+}
+
+.btn-icon-block,
+.btn-icon-delete {
+  color: #4a5568;
+}
+
+.btn-icon-block:hover {
+  color: #dd6b20;
+}
+
+.btn-icon-delete:hover {
+  color: #e53e3e;
 }

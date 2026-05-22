@@ -15,6 +15,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -126,12 +128,17 @@ export default function Menu() {
           {
             title: "Mes réservations",
             path: "/reservations",
-            icon: <CalendarMonthIcon sx={{ fontSize: "1.5rem" }} />,
+            icon: <ApartmentIcon sx={{ fontSize: "1.5rem" }} />,
           },
         ]
       : []),
     ...(user?.role === "admin"
       ? [
+          {
+            title: "Gestion des utilisateurs",
+            path: "/users",
+            icon: <SupervisorAccountIcon sx={{ fontSize: "1.5rem" }} />,
+          },
           {
             title: "My Admin",
             path: "/admin",
@@ -144,22 +151,13 @@ export default function Menu() {
           },
         ]
       : []),
-    ...(logged
-      ? [
-          {
-            title: "Messagerie",
-            path: "/messages",
-            icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
-            isPlaceholder: true,
-          },
-        ]
-      : []),
+    {
+      title: "Mes demandes",
+      path: "/requests",
+      icon: <ChatIcon sx={{ fontSize: "1.5rem" }} />,
+    },
   ];
-
   const handleNavigation = (item: (typeof menuItems)[0]) => {
-    if (item.isPlaceholder) {
-      return;
-    }
     setMobileOpen(false);
     navigate(item.path);
   };
@@ -332,17 +330,15 @@ export default function Menu() {
                 >
                   <div
                     onClick={() => {
-                      if (user?.role === "admin") {
-                        navigate("/adminSettings");
-                      } else {
-                        navigate("/userSettings");
-                      }
+                      navigate("/settings");
                     }}
                     className="d-flex align-items-center gap-2 text-white-50 p-2 rounded-2 cursor-pointer hover-emerald-bg"
                     style={{ transition: "all 0.2s ease", cursor: "pointer" }}
                   >
                     <SettingsIcon sx={{ fontSize: "1.1rem" }} />
-                    <span className="fw-medium" style={{ fontSize: "0.9rem" }}>Paramètres</span>
+                    <span className="fw-medium" style={{ fontSize: "0.9rem" }}>
+                      Paramètres
+                    </span>
                   </div>
                   <div
                     onClick={handleLogout}

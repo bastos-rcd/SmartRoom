@@ -19,8 +19,10 @@ import { authService } from "../services/auth.service";
 import type { Event } from "../types/event";
 import type { Room } from "../types/room";
 import type { Building } from "../types/building";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [calendarView, setCalendarView] = useState(
     window.innerWidth < 768 ? "timeGridDay" : "timeGridWeek",
   );
@@ -37,7 +39,6 @@ export default function Home() {
 
   const [successToast, setSuccessToast] = useState("");
   const [errorToast, setErrorToast] = useState("");
-
   const [buildingForm, setBuildingForm] = useState({
     name: "",
     address: "",
@@ -105,7 +106,6 @@ export default function Home() {
 
   useEffect(() => {
     loadCalendarEvents();
-
     if (authService.isAuthenticated()) {
       authService.getUser().then((user) => {
         if (user && user.role === "admin") {
@@ -215,9 +215,24 @@ export default function Home() {
             <h2 className="fs-3 fs-md-2 text-dark fw-bold m-0">
               Calendrier des Réservations
             </h2>
-
+            {!isAdmin && authService.isAuthenticated() && (
+              <div className="position-relative w-sm-auto">
+                <button
+                  type="button"
+                  className="btn btn-dark text-white rounded-pill px-4 py-2.5 d-flex align-items-center justify-content-center gap-2 border-0 shadow-sm w-100 w-sm-auto"
+                  onClick={() => navigate("/requests")}
+                  style={{
+                    backgroundColor: "#0e172a",
+                    fontSize: "0.9rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  Faire une demande
+                </button>
+              </div>
+            )}
             {isAdmin && (
-              <div className="position-relative w-100 w-sm-auto">
+              <div className="position-relative w-sm-auto">
                 <button
                   type="button"
                   className="btn btn-dark text-white rounded-pill px-4 py-2.5 d-flex align-items-center justify-content-center gap-2 border-0 shadow-sm w-100 w-sm-auto"
@@ -272,7 +287,6 @@ export default function Home() {
             )}
           </div>
         </div>
-
         <div className="bg-white p-2 p-sm-3 rounded-4 shadow-sm border border-light-subtle overflow-hidden custom-calendar-card">
           <div
             className="fc-responsive-container"
@@ -310,7 +324,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
       {activeModal && (
         <div
           className="modal show d-block"
@@ -332,10 +345,10 @@ export default function Home() {
                 <button
                   type="button"
                   className="btn-close"
+                  aria-label="Close"
                   onClick={closeModal}
                 ></button>
               </div>
-
               <div className="modal-body py-2">
                 {activeModal === "building" && (
                   <form
@@ -366,6 +379,7 @@ export default function Home() {
                       </label>
                       <input
                         type="number"
+                        aria-label="Nombre d'étages du bâtiment"
                         min={1}
                         className="form-control rounded-3"
                         value={buildingForm.nbFloors}
@@ -406,7 +420,6 @@ export default function Home() {
                     </div>
                   </form>
                 )}
-
                 {activeModal === "room" && (
                   <form
                     onSubmit={handleAddRoomSubmit}
@@ -419,6 +432,7 @@ export default function Home() {
                       <input
                         type="text"
                         className="form-control rounded-3"
+                        aria-label="Nom de la salle à affilier"
                         placeholder="e.g. Salle B1"
                         value={roomForm.name}
                         onChange={(e) =>
@@ -433,6 +447,7 @@ export default function Home() {
                       </label>
                       <select
                         className="form-select rounded-3"
+                        aria-label="Bâtiment à affilier"
                         value={roomForm.buildingId}
                         onChange={(e) =>
                           setRoomForm({
@@ -459,6 +474,7 @@ export default function Home() {
                           type="number"
                           min={1}
                           className="form-control rounded-3"
+                          aria-label="Capacité de la salle"
                           value={roomForm.capacity}
                           onChange={(e) =>
                             setRoomForm({
@@ -476,6 +492,7 @@ export default function Home() {
                         <input
                           type="number"
                           className="form-control rounded-3"
+                          aria-label="Étage de la salle"
                           value={roomForm.floor}
                           onChange={(e) =>
                             setRoomForm({
@@ -511,7 +528,6 @@ export default function Home() {
                     </div>
                   </form>
                 )}
-
                 {activeModal === "equipment" && (
                   <form
                     onSubmit={handleAddEquipmentSubmit}
@@ -541,6 +557,7 @@ export default function Home() {
                       </label>
                       <select
                         className="form-select rounded-3"
+                        aria-label="Type de l'équipement"
                         value={equipmentForm.type}
                         onChange={(e) =>
                           setEquipmentForm({
@@ -562,6 +579,7 @@ export default function Home() {
                       </label>
                       <select
                         className="form-select rounded-3"
+                        aria-label="Salle affilée"
                         value={equipmentForm.roomId}
                         onChange={(e) =>
                           setEquipmentForm({
@@ -599,7 +617,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
       {successToast && (
         <div
           className="position-fixed bottom-0 end-0 m-4 p-3 rounded-3 text-white shadow-lg d-flex align-items-center gap-3 border border-success-subtle animate-toast"
@@ -623,7 +640,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
       {errorToast && (
         <div
           className="position-fixed bottom-0 end-0 m-4 p-3 rounded-3 text-white shadow-lg d-flex align-items-center gap-3 border border-danger-subtle animate-toast"
@@ -647,7 +663,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
       <style>{`
         @media (max-width: 767px) {
           .custom-title-wrapper {
