@@ -1,11 +1,12 @@
 import { useState } from "react";
 import BlockIcon from "@mui/icons-material/Block";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import type { User } from "../types/user";
+import { userService } from "../services/user.service";
 
 type UserCardProps = User & {
-  onDelete: () => void;
-  onBlock: () => void;
+  onAction: () => void;
 };
 
 export default function UserCard(props: UserCardProps) {
@@ -15,6 +16,8 @@ export default function UserCard(props: UserCardProps) {
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
   const handleBlock = () => {
+    console.log(props.status);
+
     setIsBlocked(!isBlocked);
   };
 
@@ -23,13 +26,40 @@ export default function UserCard(props: UserCardProps) {
   };
 
   const handleConfirmBlock = () => {
-    props.onBlock();
-    setIsBlocked(false);
+    userService
+      .updateUser(props.id, {
+        firstName: props.firstName,
+        lastName: props.lastName,
+        email: props.email,
+        status: props.status === 0 ? 1 : 0,
+      })
+      .then(() => {
+        props.onAction();
+        setIsBlocked(false);
+      });
   };
 
   const handleConfirmDelete = () => {
-    props.onDelete();
-    setIsDeleted(false);
+    userService.deleteUser(props.id).then(() => {
+      props.onAction();
+      setIsDeleted(false);
+    });
+  };
+
+  const handleAdmin = () => {
+    setIsAdminState(!isAdminState);
+
+    userService
+      .updateUser(props.id, {
+        firstName: props.firstName,
+        lastName: props.lastName,
+        email: props.email,
+        status: props.status,
+        role: isAdminState ? "user" : "admin",
+      })
+      .then(() => {
+        props.onAction();
+      });
   };
 
   return (
@@ -45,11 +75,19 @@ export default function UserCard(props: UserCardProps) {
       </div>
       <div className="d-flex flex-column align-items-center justify-content-center gap-2 p-3">
         <div className="m-0 d-flex gap-2">
-          <BlockIcon
-            className="fs-3 btn-icon-block"
-            style={{ cursor: "pointer" }}
-            onClick={handleBlock}
-          />
+          {props.status === 0 ? (
+            <CheckCircleIcon
+              className="fs-3 btn-icon-validate"
+              style={{ cursor: "pointer" }}
+              onClick={handleBlock}
+            />
+          ) : (
+            <BlockIcon
+              className="fs-3 btn-icon-block"
+              style={{ cursor: "pointer" }}
+              onClick={handleBlock}
+            />
+          )}
           <DeleteIcon
             className="fs-3 btn-icon-delete"
             style={{ cursor: "pointer" }}
@@ -69,7 +107,7 @@ export default function UserCard(props: UserCardProps) {
             role="switch"
             value=""
             checked={isAdminState}
-            onChange={() => setIsAdminState(!isAdminState)}
+            onChange={handleAdmin}
             id="checkNativeSwitch"
           />
         </div>
@@ -93,7 +131,9 @@ export default function UserCard(props: UserCardProps) {
               <div className="modal-content border-0">
                 <div className="modal-header d-flex justify-content-center border-0">
                   <h1 className="modal-title fs-5">
-                    Voulez-vous vraiment désactiver cet utilisateur ?
+                    Voulez-vous vraiment{" "}
+                    {props.status === 0 ? "activer" : "désactiver"} cet
+                    utilisateur ?
                   </h1>
                 </div>
                 <div className="modal-body">
@@ -108,7 +148,7 @@ export default function UserCard(props: UserCardProps) {
                       className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
                       onClick={handleConfirmBlock}
                     >
-                      Désactiver
+                      {props.status === 0 ? "Activer" : "Désactiver"}
                     </button>
                   </div>
                 </div>
