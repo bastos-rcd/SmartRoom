@@ -15,14 +15,8 @@ export const roomService = {
     return response.data;
   },
 
-  async getRooms(): Promise<Room[]> {
-    const response = await API.get("/rooms");
-    return response.data;
-  },
-
   async createRoom(room: Omit<Room, "id">): Promise<Room> {
     const response = await API.post("/rooms", room);
     return response.data;
   },
 };
-

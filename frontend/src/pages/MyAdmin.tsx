@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Menu from "../components/Menu";
-import { buildingService } from "../services/buildingService";
-import { roomService } from "../services/roomService";
-import { equipmentService } from "../services/equipmentService";
+import { buildingService } from "../services/building.service";
+import { roomService } from "../services/room.service";
+import { equipmentService } from "../services/equipment.service";
 
 import type { Building } from "../types/building";
 import type { Room } from "../types/room";
@@ -395,8 +395,8 @@ export default function ManageRooms() {
           {/* RIGHT: High-End Creation Forms */}
           <div className="col-12 col-lg-6 d-flex flex-column gap-4">
             {/* Form 1: Add Building */}
-            <div className="card border-0  shadow-sm rounded-4 bg-white">
-              <div className="card-header custom-bg text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
+            <div className="card border-0 shadow-sm rounded-4 bg-white">
+              <div className="card-header bg-slate text-white p-3 rounded-top-4 border-0 d-flex align-items-center gap-2">
                 <AddIcon />{" "}
                 <h5 className="mb-0 fw-bold">Ajouter un Bâtiment</h5>
               </div>
