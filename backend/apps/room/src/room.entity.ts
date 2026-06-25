@@ -1,25 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
-@Entity("room")
+@Entity('room')
 export class Room {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number
 
-  @Column({ name: "name" })
-  name: string;
+	@Column({ name: 'name' })
+	name: string
 
-  @Column({ name: "capacity" })
-  capacity: number;
+	@Column({ name: 'capacity' })
+	capacity: number
 
-  @Column({ name: "floor" })
-  floor: number;
+	@Column({ name: 'floor' })
+	floor: number
 
-  @Column({ name: "state" })
-  state: number;
+	@Column({ name: 'state' })
+	state: number
 
-  @Column({ name: "location" })
-  location: string;
+	@Column({ name: 'location' })
+	location: string
 
-  @Column({ name: "building_id" })
-  buildingId: number;
+	@Column({ name: 'building_id' })
+	buildingId: number
 }

@@ -1,22 +1,22 @@
-import API from "./api";
+import API from './api'
 
-import type { Room } from "../types/room";
+import type { Room } from '../types/room'
 
 export const roomService = {
-  async getRooms(): Promise<Room[]> {
-    const response = await API.get(`/rooms`);
+	async getRooms(): Promise<Room[]> {
+		const response = await API.get(`/rooms`)
 
-    return response.data;
-  },
+		return response.data
+	},
 
-  async getRoomById(id: number): Promise<Room> {
-    const response = await API.get(`/rooms/${id}`);
+	async getRoomById(id: number): Promise<Room> {
+		const response = await API.get(`/rooms/${id}`)
 
-    return response.data;
-  },
+		return response.data
+	},
 
-  async createRoom(room: Omit<Room, "id">): Promise<Room> {
-    const response = await API.post("/rooms", room);
-    return response.data;
-  },
-};
+	async createRoom(room: Omit<Room, 'id'>): Promise<Room> {
+		const response = await API.post('/rooms', room)
+		return response.data
+	},
+}

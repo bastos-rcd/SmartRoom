@@ -1,29 +1,29 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
-@Entity("reservation")
+@Entity('reservation')
 export class Reservation {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number
 
-  @Column({ name: "start_date" })
-  startDate: Date;
+	@Column({ name: 'start_date' })
+	startDate: Date
 
-  @Column({ name: "end_date" })
-  endDate: Date;
+	@Column({ name: 'end_date' })
+	endDate: Date
 
-  @Column({
-    type: "varchar",
-    length: 20,
-    default: "confirmed",
-  })
-  status: "confirmed" | "cancelled" | "modified";
+	@Column({
+		type: 'varchar',
+		length: 20,
+		default: 'confirmed',
+	})
+	status: 'confirmed' | 'cancelled' | 'modified'
 
-  @Column({ type: "text" })
-  comment: string;
+	@Column({ type: 'text' })
+	comment: string
 
-  @Column({ name: "user_id" })
-  userId: number;
+	@Column({ name: 'user_id' })
+	userId: number
 
-  @Column({ name: "room_id" })
-  roomId: number;
+	@Column({ name: 'room_id' })
+	roomId: number
 }

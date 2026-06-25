@@ -63,7 +63,7 @@ CREATE TABLE "reservation" (
 );
 
 INSERT INTO "reservation" (start_date, end_date, status, comment, user_id, room_id)
-VALUES ('2026-01-01 10:00', '2026-01-01 12:00', 'confirmed', 'Réunion hebdomadaire', 1, 1);
+VALUES ('2026-06-25 10:00', '2026-06-25 12:00', 'confirmed', 'Réunion hebdomadaire', 1, 1);
 
 CREATE TABLE "request" (
     id SERIAL PRIMARY KEY,

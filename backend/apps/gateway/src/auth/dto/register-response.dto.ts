@@ -1,21 +1,21 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger'
 
 export class RegisterResponseDto {
-  @ApiProperty({ example: "John" })
-  firstName: string;
+	@ApiProperty({ example: 'John' })
+	firstName: string
 
-  @ApiProperty({ example: "Doe" })
-  lastName: string;
+	@ApiProperty({ example: 'Doe' })
+	lastName: string
 
-  @ApiProperty({ example: "[EMAIL_ADDRESS]" })
-  email: string;
+	@ApiProperty({ example: '[EMAIL_ADDRESS]' })
+	email: string
 
-  @ApiProperty({ example: "********" })
-  password: string;
+	@ApiProperty({ example: '********' })
+	password: string
 
-  @ApiProperty({ example: "user" })
-  role: string;
+	@ApiProperty({ example: 'user' })
+	role: string
 
-  @ApiProperty({ example: 1 })
-  status: number;
+	@ApiProperty({ example: 1 })
+	status: number
 }
