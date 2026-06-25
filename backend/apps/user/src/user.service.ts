@@ -43,6 +43,7 @@ export class UserService {
 	}
 
 	async update(user: User): Promise<User> {
+		const saltRounds = 10
 		const existingUser = await this.userRepository.findOne({
 			where: { id: user.id },
 		})
@@ -59,16 +60,17 @@ export class UserService {
 		) {
 			throw new Error('No changes detected')
 		}
+
 		user.firstName = user.firstName
 		user.lastName = user.lastName
 		user.email = user.email
-		user.password = user.password
+		user.password = await bcrypt.hash(user.password, saltRounds)
 		user.role = user.role
 		user.status = user.status
 		return await this.userRepository.save(user)
 	}
 
-	async delete(id: number): Promise<void> {
+	async delete(id: number): Promise<boolean> {
 		const user = await this.userRepository.findOne({
 			where: { id },
 		})
@@ -76,6 +78,7 @@ export class UserService {
 		if (!user) {
 			throw new Error('User not found')
 		}
-		await this.userRepository.delete(id)
+		await this.userRepository.delete(user.id)
+		return true
 	}
 }

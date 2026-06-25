@@ -130,7 +130,7 @@ export class RequestController {
 		status: 200,
 		description: 'Le ticket a été supprimé avec succès.',
 	})
-	delete(@Param('id') id: number): Observable<void> {
+	delete(@Param('id') id: number): Observable<boolean> {
 		return this.requestClient.send(RequestMessages.DELETE_REQUEST, Number(id))
 	}
 }

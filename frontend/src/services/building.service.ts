@@ -20,4 +20,8 @@ export const buildingService = {
 
 		return response.data
 	},
+
+	async deleteBuilding(id: number) {
+		await API.delete(`/buildings/${id}`)
+	},
 }

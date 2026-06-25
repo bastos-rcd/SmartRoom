@@ -150,7 +150,7 @@ export class EquipmentController {
 		status: 403,
 		description: 'Accès interdit (Rôle ADMIN requis).',
 	})
-	delete(@Param('id') id: number): Observable<void> {
+	delete(@Param('id') id: number): Observable<boolean> {
 		return this.equipmentClient.send(
 			EquipmentMessages.DELETE_EQUIPMENT,
 			Number(id),

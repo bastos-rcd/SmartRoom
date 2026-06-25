@@ -49,7 +49,7 @@ export class RoomService {
 		return await this.roomRepository.save(room)
 	}
 
-	async delete(id: number): Promise<void> {
+	async delete(id: number): Promise<boolean> {
 		const existingRoom = await this.roomRepository.findOne({
 			where: { id },
 		})
@@ -57,5 +57,6 @@ export class RoomService {
 			throw new Error('Room not found')
 		}
 		await this.roomRepository.delete(id)
+		return true
 	}
 }

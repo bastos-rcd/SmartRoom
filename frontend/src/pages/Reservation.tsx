@@ -32,6 +32,7 @@ export default function Reservation() {
 					const equipments = await equipmentService.getEquipments()
 
 					return {
+						id: event.id,
 						name: room.name,
 						capacity: room.capacity,
 						floor: room.floor,
@@ -51,18 +52,6 @@ export default function Reservation() {
 		})
 	}, [])
 
-	// const data = [
-	//   {
-	//     name: "Salle 1",
-	//     capacity: 10,
-	//     floor: 1,
-	//     location: "Bâtiment A",
-	//     equipment: ["Vidéo-projecteur", "Tableau blanc", "Audio"],
-	//     startDate: "2026-05-30 18:00",
-	//     endDate: "2026-05-30 19:00",
-	//   },
-	// ];
-
 	const filteredData = data.filter((room) => {
 		const now = new Date()
 		const endDate = new Date(room.endDate)
@@ -78,12 +67,10 @@ export default function Reservation() {
 			<Menu />
 
 			<div className="container-fluid py-4 px-3 px-md-5">
-				{/* Page Header */}
 				<div className="text-center mb-4">
 					<h1 className="display-5 text-dark fw-bold mb-2">Mes réservations</h1>
 				</div>
 
-				{/* Premium Pills Tab Switcher */}
 				<div className="d-flex justify-content-center mb-5">
 					<div className="nav nav-pills bg-light border border-light-subtle rounded-pill p-1">
 						<button
@@ -111,7 +98,6 @@ export default function Reservation() {
 					</div>
 				</div>
 
-				{/* Reservations Grid List */}
 				<div className="row justify-content-center">
 					<div className="col-12 col-xl-11">
 						{filteredData.length === 0 ? (

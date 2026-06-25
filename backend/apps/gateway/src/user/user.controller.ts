@@ -155,7 +155,7 @@ export class UserController {
 		status: 403,
 		description: 'Accès interdit (Rôle ADMIN requis).',
 	})
-	delete(@Param('id') id: number): Observable<void> {
+	delete(@Param('id') id: number): Observable<boolean> {
 		return this.userClient.send(UserMessages.DELETE_USER, Number(id))
 	}
 }

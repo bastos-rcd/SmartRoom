@@ -58,7 +58,7 @@ export class ReservationService {
 		return await this.reservationRepository.save(reservation)
 	}
 
-	async delete(id: number): Promise<void> {
+	async delete(id: number): Promise<boolean> {
 		const existingReservation = await this.reservationRepository.findOne({
 			where: { id },
 		})
@@ -66,5 +66,6 @@ export class ReservationService {
 			throw new Error('Reservation not found')
 		}
 		await this.reservationRepository.delete(id)
+		return true
 	}
 }

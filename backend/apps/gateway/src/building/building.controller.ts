@@ -138,7 +138,7 @@ export class BuildingController {
 		status: 403,
 		description: 'Accès interdit (Rôle ADMIN requis).',
 	})
-	delete(@Param('id') id: number): Observable<void> {
+	delete(@Param('id') id: number): Observable<boolean> {
 		return this.buildingClient.send(
 			BuildingMessages.DELETE_BUILDING,
 			Number(id),

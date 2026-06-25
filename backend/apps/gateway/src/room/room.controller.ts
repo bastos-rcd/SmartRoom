@@ -140,7 +140,7 @@ export class RoomController {
 		status: 403,
 		description: 'Accès interdit (Rôle ADMIN requis).',
 	})
-	delete(@Param('id') id: number): Observable<void> {
+	delete(@Param('id') id: number): Observable<boolean> {
 		return this.roomClient.send(RoomMessages.DELETE_ROOM, Number(id))
 	}
 }

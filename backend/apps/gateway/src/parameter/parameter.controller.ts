@@ -140,7 +140,7 @@ export class ParameterController {
 		status: 200,
 		description: 'Le paramètre a été supprimé de la base de données.',
 	})
-	delete(@Param('id') id: number): Observable<void> {
+	delete(@Param('id') id: number): Observable<boolean> {
 		return this.parameterClient.send(
 			ParameterMessages.DELETE_PARAMETER,
 			Number(id),

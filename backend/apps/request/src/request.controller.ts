@@ -30,7 +30,10 @@ export class RequestController {
 	}
 
 	@MessagePattern(RequestMessages.DELETE_REQUEST)
-	async delete(id: number): Promise<void> {
-		return this.requestService.delete(id)
+	async delete(id: number): Promise<boolean> {
+		return this.requestService
+			.delete(id)
+			.then(() => true)
+			.catch(() => false)
 	}
 }
