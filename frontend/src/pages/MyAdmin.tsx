@@ -11,12 +11,25 @@ import type { Equipment } from '../types/equipment'
 
 import BusinessIcon from '@mui/icons-material/Business'
 import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
 import BuildIcon from '@mui/icons-material/Build'
 import { authService } from '../services/auth.service'
 
 export default function ManageRooms() {
 	const navigate = useNavigate()
+
+	const [deleteBuilding, setDeleteBuilding] = useState<boolean>(false)
+	const [deleteRoom, setDeleteRoom] = useState<boolean>(false)
+	const [deleteEquipment, setDeleteEquipment] = useState<boolean>(false)
+
+	const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
+		null,
+	)
+	const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
+	const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(
+		null,
+	)
 
 	const [buildings, setBuildings] = useState<Building[]>([])
 	const [rooms, setRooms] = useState<Room[]>([])
@@ -200,6 +213,66 @@ export default function ManageRooms() {
 		setExpandedRooms((prev) => ({ ...prev, [id]: !prev[id] }))
 	}
 
+	const handleDeleteBuilding = () => {
+		setDeleteBuilding(!deleteBuilding)
+	}
+
+	const handleDeleteRoom = () => {
+		setDeleteRoom(!deleteRoom)
+	}
+
+	const handleDeleteEquipment = () => {
+		setDeleteEquipment(!deleteEquipment)
+	}
+
+	const handleConfirmDeleteBuilding = () => {
+		if (!selectedBuilding) return
+		buildingService
+			.deleteBuilding(selectedBuilding.id)
+			.then(() => {
+				setDeleteBuilding(false)
+				setSelectedBuilding(null)
+				window.location.reload()
+			})
+			.catch((err) => {
+				console.log(err)
+				setSelectedBuilding(null)
+				window.location.reload()
+			})
+	}
+
+	const handleConfirmDeleteRoom = () => {
+		if (!selectedRoom) return
+		roomService
+			.deleteRoom(selectedRoom.id)
+			.then(() => {
+				setDeleteRoom(false)
+				setSelectedRoom(null)
+				window.location.reload()
+			})
+			.catch((err) => {
+				console.log(err)
+				setSelectedRoom(null)
+				window.location.reload()
+			})
+	}
+
+	const handleConfirmDeleteEquipment = () => {
+		if (!selectedEquipment) return
+		equipmentService
+			.deleteEquipment(selectedEquipment.id)
+			.then(() => {
+				setDeleteEquipment(false)
+				setSelectedEquipment(null)
+				window.location.reload()
+			})
+			.catch((err) => {
+				console.log(err)
+				setSelectedEquipment(null)
+				window.location.reload()
+			})
+	}
+
 	useEffect(() => {
 		if (successMsg || errorMsg) {
 			const timer = setTimeout(() => {
@@ -302,6 +375,17 @@ export default function ManageRooms() {
 															{bRooms.length}{' '}
 															{bRooms.length > 1 ? 'salles' : 'salle'}
 														</span>
+														<DeleteIcon
+															className="btn-icon-delete ms-1"
+															sx={{
+																fontSize: '1.2rem',
+																cursor: 'pointer',
+															}}
+															onClick={() => {
+																handleDeleteBuilding()
+																setSelectedBuilding(b)
+															}}
+														/>
 													</div>
 
 													{isBExpanded && (
@@ -349,12 +433,25 @@ export default function ManageRooms() {
 																						</small>
 																					</div>
 																				</div>
-																				<span
-																					className="badge bg-light text-secondary border rounded-pill m-2"
-																					style={{ fontSize: '0.7rem' }}
-																				>
-																					{rEquips.length} éq.
-																				</span>
+																				<div>
+																					<span
+																						className="badge bg-light text-secondary border rounded-pill m-2"
+																						style={{ fontSize: '0.7rem' }}
+																					>
+																						{rEquips.length} éq.
+																					</span>
+																					<DeleteIcon
+																						className="btn-icon-delete ms-1"
+																						sx={{
+																							fontSize: '1.2rem',
+																							cursor: 'pointer',
+																						}}
+																						onClick={() => {
+																							handleDeleteRoom()
+																							setSelectedRoom(r)
+																						}}
+																					/>
+																				</div>
 																			</div>
 
 																			{isRExpanded && (
@@ -387,6 +484,17 @@ export default function ManageRooms() {
 																								>
 																									({eq.type})
 																								</small>
+																								<DeleteIcon
+																									className="btn-icon-delete ms-2"
+																									sx={{
+																										fontSize: '0.9rem',
+																										cursor: 'pointer',
+																									}}
+																									onClick={() => {
+																										handleDeleteEquipment()
+																										setSelectedEquipment(eq)
+																									}}
+																								/>
 																							</span>
 																						))
 																					)}
@@ -676,6 +784,135 @@ export default function ManageRooms() {
 						</div>
 					</div>
 				</div>
+				{deleteBuilding && (
+					<>
+						<div className="modal-backdrop fade show"></div>
+						<div
+							className="modal fade show"
+							id="exampleModal"
+							tabIndex={-1}
+							aria-labelledby="exampleModalLabel"
+							aria-hidden="true"
+							style={{ display: 'block' }}
+							onClick={() => setDeleteBuilding(false)}
+						>
+							<div
+								className="modal-dialog modal-dialog-centered"
+								onClick={(e) => e.stopPropagation()}
+							>
+								<div className="modal-content border-0">
+									<div className="modal-header d-flex justify-content-center border-0">
+										<h1 className="modal-title fs-5">
+											Voulez-vous vraiment supprimer ce bâtiment ?
+										</h1>
+									</div>
+									<div className="modal-body">
+										<div className="modal-footer d-flex justify-content-center border-0">
+											<button
+												className="btn btn-secondary rounded-pill fs-4 px-5 py-2"
+												onClick={handleDeleteBuilding}
+											>
+												Fermer
+											</button>
+											<button
+												className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
+												onClick={handleConfirmDeleteBuilding}
+											>
+												Supprimer
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</>
+				)}
+				{deleteRoom && (
+					<>
+						<div className="modal-backdrop fade show"></div>
+						<div
+							className="modal fade show"
+							id="exampleModal"
+							tabIndex={-1}
+							aria-labelledby="exampleModalLabel"
+							aria-hidden="true"
+							style={{ display: 'block' }}
+							onClick={() => setDeleteRoom(false)}
+						>
+							<div
+								className="modal-dialog modal-dialog-centered"
+								onClick={(e) => e.stopPropagation()}
+							>
+								<div className="modal-content border-0">
+									<div className="modal-header d-flex justify-content-center border-0">
+										<h1 className="modal-title fs-5">
+											Voulez-vous vraiment supprimer cette salle ?
+										</h1>
+									</div>
+									<div className="modal-body">
+										<div className="modal-footer d-flex justify-content-center border-0">
+											<button
+												className="btn btn-secondary rounded-pill fs-4 px-5 py-2"
+												onClick={handleDeleteRoom}
+											>
+												Fermer
+											</button>
+											<button
+												className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
+												onClick={handleConfirmDeleteRoom}
+											>
+												Supprimer
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</>
+				)}
+				{deleteEquipment && (
+					<>
+						<div className="modal-backdrop fade show"></div>
+						<div
+							className="modal fade show"
+							id="exampleModal"
+							tabIndex={-1}
+							aria-labelledby="exampleModalLabel"
+							aria-hidden="true"
+							style={{ display: 'block' }}
+							onClick={() => setDeleteEquipment(false)}
+						>
+							<div
+								className="modal-dialog modal-dialog-centered"
+								onClick={(e) => e.stopPropagation()}
+							>
+								<div className="modal-content border-0">
+									<div className="modal-header d-flex justify-content-center border-0">
+										<h1 className="modal-title fs-5">
+											Voulez-vous vraiment supprimer cette équipement ?
+										</h1>
+									</div>
+									<div className="modal-body">
+										<div className="modal-footer d-flex justify-content-center border-0">
+											<button
+												className="btn btn-secondary rounded-pill fs-4 px-5 py-2"
+												onClick={handleDeleteEquipment}
+											>
+												Fermer
+											</button>
+											<button
+												className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
+												onClick={handleConfirmDeleteEquipment}
+											>
+												Supprimer
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</>
+				)}
 			</div>
 		</>
 	)

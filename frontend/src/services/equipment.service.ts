@@ -14,4 +14,8 @@ export const equipmentService = {
 
 		return response.data
 	},
+
+	async deleteEquipment(id: number) {
+		await API.delete(`/equipments/${id}`)
+	},
 }
