@@ -1,4 +1,9 @@
-type RoomProps = {
+import DeleteIcon from '@mui/icons-material/Delete'
+import { useState } from 'react'
+import { eventService } from '../services/event.service'
+import type { Event } from '../types/event'
+
+type RoomProps = Event & {
 	name: string
 	capacity: number
 	floor: number
@@ -9,6 +14,24 @@ type RoomProps = {
 }
 
 export default function RoomCard(props: RoomProps) {
+	const [isDeleted, setIsDeleted] = useState<boolean>(false)
+
+	const handleDelete = () => {
+		setIsDeleted(!isDeleted)
+	}
+
+	const handleConfirmDelete = () => {
+		eventService
+			.deleteEvent(props.id)
+			.then(() => {
+				setIsDeleted(false)
+				window.location.reload()
+			})
+			.catch((err) => {
+				console.log(err)
+				window.location.reload()
+			})
+	}
 	const start = props.startDate
 		? new Date(props.startDate.replace(' ', 'T'))
 		: null
@@ -34,17 +57,23 @@ export default function RoomCard(props: RoomProps) {
 
 	return (
 		<div className="card h-100 border border-light-subtle rounded-4 shadow-sm overflow-hidden reservation-card">
-			{/* Card Header */}
-			<div className="card-header bg-slate text-black p-3 border-0">
-				<h4 className="card-title h5 fw-bold mb-1">{props.name}</h4>
-				<div className="text-black-50 small fw-medium">
-					{props.location} • Étage {props.floor}
+			<div className="d-flex justify-content-between align-items-center ard-header bg-slate text-black p-3 border-0">
+				<div>
+					<h4 className="card-title h5 fw-bold mb-1">{props.name}</h4>
+					<div className="text-black-50 small fw-medium">
+						{props.location} • Étage {props.floor}
+					</div>
+				</div>
+				<div>
+					<DeleteIcon
+						className="fs-3 btn-icon-delete"
+						style={{ cursor: 'pointer' }}
+						onClick={handleDelete}
+					/>
 				</div>
 			</div>
 
-			{/* Card Body */}
 			<div className="card-body p-4 d-flex flex-column gap-3">
-				{/* Dynamic Period Badge */}
 				{start && end && (
 					<div className="bg-light border border-light-subtle rounded-3 p-3">
 						<div
@@ -60,7 +89,6 @@ export default function RoomCard(props: RoomProps) {
 					</div>
 				)}
 
-				{/* Details Grid */}
 				<div className="d-flex flex-column gap-2">
 					<div className="small text-secondary">
 						<strong className="text-dark">Capacité :</strong> {props.capacity}{' '}
@@ -68,6 +96,49 @@ export default function RoomCard(props: RoomProps) {
 					</div>
 				</div>
 			</div>
+			{isDeleted && (
+				<>
+					<div className="modal-backdrop fade show"></div>
+					<div
+						className="modal fade show"
+						id="exampleModal"
+						tabIndex={-1}
+						aria-labelledby="exampleModalLabel"
+						aria-hidden="true"
+						style={{ display: 'block' }}
+						onClick={() => setIsDeleted(false)}
+					>
+						<div
+							className="modal-dialog modal-dialog-centered"
+							onClick={(e) => e.stopPropagation()}
+						>
+							<div className="modal-content border-0">
+								<div className="modal-header d-flex justify-content-center border-0">
+									<h1 className="modal-title fs-5">
+										Voulez-vous vraiment supprimer cette réservation ?
+									</h1>
+								</div>
+								<div className="modal-body">
+									<div className="modal-footer d-flex justify-content-center border-0">
+										<button
+											className="btn btn-secondary rounded-pill fs-4 px-5 py-2"
+											onClick={handleDelete}
+										>
+											Fermer
+										</button>
+										<button
+											className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
+											onClick={handleConfirmDelete}
+										>
+											Supprimer
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</>
+			)}
 		</div>
 	)
 }
