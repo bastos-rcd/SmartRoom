@@ -13,6 +13,7 @@ import BusinessIcon from '@mui/icons-material/Business'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
+import EditIcon from '@mui/icons-material/Edit'
 import BuildIcon from '@mui/icons-material/Build'
 import { authService } from '../services/auth.service'
 
@@ -22,6 +23,9 @@ export default function ManageRooms() {
 	const [deleteBuilding, setDeleteBuilding] = useState<boolean>(false)
 	const [deleteRoom, setDeleteRoom] = useState<boolean>(false)
 	const [deleteEquipment, setDeleteEquipment] = useState<boolean>(false)
+
+	const [editBuilding, setEditBuilding] = useState<boolean>(false)
+	const [editRoom, setEditRoom] = useState<boolean>(false)
 
 	const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(
 		null,
@@ -53,7 +57,21 @@ export default function ManageRooms() {
 		nbFloors: 1,
 	})
 
+	const [editBuildingForm, setEditBuildingForm] = useState({
+		name: '',
+		address: '',
+		nbFloors: 1,
+	})
+
 	const [roomForm, setRoomForm] = useState({
+		name: '',
+		capacity: 10,
+		floor: 1,
+		location: '',
+		buildingId: '',
+	})
+
+	const [editRoomForm, setEditRoomForm] = useState({
 		name: '',
 		capacity: 10,
 		floor: 1,
@@ -205,6 +223,62 @@ export default function ManageRooms() {
 		}
 	}
 
+	const handleConfirmEditBuilding = async (e: React.FormEvent) => {
+		e.preventDefault()
+
+		if (!selectedBuilding?.id) return
+
+		try {
+			await buildingService.updateBuilding(
+				selectedBuilding.id,
+				editBuildingForm.name,
+				editBuildingForm.address,
+				Number(editBuildingForm.nbFloors),
+			)
+			setEditBuildingForm({ name: '', address: '', nbFloors: 1 })
+			setSuccessMsg('Bâtiment modifié avec succès !')
+			setEditBuilding(false)
+			setErrorMsg('')
+			fetchData()
+			window.location.reload()
+		} catch (err) {
+			console.error(err)
+			setErrorMsg('Impossible de modifier le bâtiment.')
+		}
+	}
+
+	const handleConfirmEditRoom = async (e: React.FormEvent) => {
+		e.preventDefault()
+
+		if (!selectedRoom?.id) return
+
+		try {
+			await roomService.updateRoom(
+				selectedRoom.id,
+				editRoomForm.name,
+				Number(editRoomForm.capacity),
+				Number(editRoomForm.floor),
+				editRoomForm.location,
+				Number(editRoomForm.buildingId),
+			)
+			setEditRoomForm({
+				name: '',
+				capacity: 10,
+				floor: 1,
+				location: '',
+				buildingId: editRoomForm.buildingId,
+			})
+			setSuccessMsg('Salle modifiée avec succès !')
+			setEditRoom(false)
+			setErrorMsg('')
+			fetchData()
+			window.location.reload()
+		} catch (err) {
+			console.error(err)
+			setErrorMsg('Impossible de modifier la salle.')
+		}
+	}
+
 	const toggleBuilding = (id: number) => {
 		setExpandedBuildings((prev) => ({ ...prev, [id]: !prev[id] }))
 	}
@@ -217,8 +291,16 @@ export default function ManageRooms() {
 		setDeleteBuilding(!deleteBuilding)
 	}
 
+	const handleEditBuilding = () => {
+		setEditBuilding(!editBuilding)
+	}
+
 	const handleDeleteRoom = () => {
 		setDeleteRoom(!deleteRoom)
+	}
+
+	const handleEditRoom = () => {
+		setEditRoom(!editRoom)
 	}
 
 	const handleDeleteEquipment = () => {
@@ -375,17 +457,31 @@ export default function ManageRooms() {
 															{bRooms.length}{' '}
 															{bRooms.length > 1 ? 'salles' : 'salle'}
 														</span>
-														<DeleteIcon
-															className="btn-icon-delete ms-1"
-															sx={{
-																fontSize: '1.2rem',
-																cursor: 'pointer',
-															}}
-															onClick={() => {
-																handleDeleteBuilding()
-																setSelectedBuilding(b)
-															}}
-														/>
+														<div>
+															<EditIcon
+																className="btn-icon-validate ms-1"
+																sx={{
+																	fontSize: '1.2rem',
+																	cursor: 'pointer',
+																}}
+																onClick={() => {
+																	handleEditBuilding()
+																	setSelectedBuilding(b)
+																	setEditBuildingForm(b)
+																}}
+															/>
+															<DeleteIcon
+																className="btn-icon-delete ms-1"
+																sx={{
+																	fontSize: '1.2rem',
+																	cursor: 'pointer',
+																}}
+																onClick={() => {
+																	handleDeleteBuilding()
+																	setSelectedBuilding(b)
+																}}
+															/>
+														</div>
 													</div>
 
 													{isBExpanded && (
@@ -440,6 +536,25 @@ export default function ManageRooms() {
 																					>
 																						{rEquips.length} éq.
 																					</span>
+																					<EditIcon
+																						className="btn-icon-validate ms-1"
+																						sx={{
+																							fontSize: '1.2rem',
+																							cursor: 'pointer',
+																						}}
+																						onClick={() => {
+																							handleEditRoom()
+																							setSelectedRoom(r)
+																							setEditRoomForm({
+																								name: r.name,
+																								capacity: r.capacity,
+																								floor: r.floor,
+																								location: r.location,
+																								buildingId:
+																									r.buildingId.toString(),
+																							})
+																						}}
+																					/>
 																					<DeleteIcon
 																						className="btn-icon-delete ms-1"
 																						sx={{
@@ -784,6 +899,246 @@ export default function ManageRooms() {
 						</div>
 					</div>
 				</div>
+				{editBuilding && (
+					<>
+						<div className="modal-backdrop fade show"></div>
+						<div
+							className="modal fade show"
+							id="exampleModal"
+							tabIndex={-1}
+							aria-labelledby="exampleModalLabel"
+							aria-hidden="true"
+							style={{ display: 'block' }}
+							onClick={() => setEditBuilding(false)}
+						>
+							<div
+								className="modal-dialog modal-dialog-centered"
+								onClick={(e) => e.stopPropagation()}
+							>
+								<div className="modal-content border-0">
+									<div className="modal-body">
+										<form onSubmit={handleAddBuilding} className="row g-3">
+											<div className="col-12 col-md-6">
+												<label className="form-label small fw-bold text-secondary text-uppercase">
+													Nom du Bâtiment
+												</label>
+												<input
+													type="text"
+													className="form-control rounded-3"
+													placeholder="e.g. Siège Social"
+													value={editBuildingForm.name}
+													onChange={(e) =>
+														setEditBuildingForm({
+															...editBuildingForm,
+															name: e.target.value,
+														})
+													}
+												/>
+											</div>
+											<div className="col-12 col-md-6">
+												<label className="form-label small fw-bold text-secondary text-uppercase">
+													Nombre d'Étages
+												</label>
+												<input
+													type="number"
+													aria-label="Nombre d'étages"
+													min={1}
+													className="form-control rounded-3"
+													value={editBuildingForm.nbFloors}
+													onChange={(e) =>
+														setEditBuildingForm({
+															...editBuildingForm,
+															nbFloors: Number(e.target.value),
+														})
+													}
+												/>
+											</div>
+											<div className="col-12">
+												<label className="form-label small fw-bold text-secondary text-uppercase">
+													Adresse
+												</label>
+												<input
+													type="text"
+													className="form-control rounded-3"
+													aria-label="Adresse du bâtiment"
+													placeholder="e.g. 12 rue des Innoveurs, Toulouse"
+													value={editBuildingForm.address}
+													onChange={(e) =>
+														setEditBuildingForm({
+															...editBuildingForm,
+															address: e.target.value,
+														})
+													}
+												/>
+											</div>
+											<div className="modal-body">
+												<div className="modal-footer d-flex justify-content-between border-0">
+													<button
+														className="btn btn-secondary rounded-pill fs-4 px-3 py-2"
+														onClick={handleEditBuilding}
+													>
+														Annuler
+													</button>
+													<button
+														className="btn btn-emerald rounded-pill fs-4 px-3 py-2"
+														onClick={handleConfirmEditBuilding}
+													>
+														Modifier le bâtiment
+													</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</>
+				)}
+				{editRoom && (
+					<>
+						<div className="modal-backdrop fade show"></div>
+						<div
+							className="modal fade show"
+							id="exampleModal"
+							tabIndex={-1}
+							aria-labelledby="exampleModalLabel"
+							aria-hidden="true"
+							style={{ display: 'block' }}
+							onClick={() => setEditRoom(false)}
+						>
+							<div
+								className="modal-dialog modal-dialog-centered"
+								onClick={(e) => e.stopPropagation()}
+							>
+								<div className="modal-content border-0">
+									<div className="modal-body">
+										<form onSubmit={handleConfirmEditRoom} className="row g-3">
+											<div className="col-12 col-md-6">
+												<label className="form-label small fw-bold text-secondary text-uppercase">
+													Nom de la Salle
+												</label>
+												<input
+													type="text"
+													className="form-control rounded-3"
+													aria-label="Nom de la salle"
+													placeholder="e.g. Salle Conseil"
+													value={editRoomForm.name}
+													onChange={(e) =>
+														setEditRoomForm({
+															...editRoomForm,
+															name: e.target.value,
+														})
+													}
+												/>
+											</div>
+											<div className="col-12 col-md-6">
+												<label className="form-label small fw-bold text-secondary text-uppercase">
+													Bâtiment Affilié
+												</label>
+												<select
+													aria-label="Bâtiment affilié"
+													className="form-select rounded-3"
+													value={editRoomForm.buildingId}
+													onChange={(e) =>
+														setEditRoomForm({
+															...editRoomForm,
+															buildingId: e.target.value,
+														})
+													}
+												>
+													<option value="">-- Choisir un bâtiment --</option>
+													{buildings.map((b) => (
+														<option key={b.id} value={b.id}>
+															{b.name}
+														</option>
+													))}
+												</select>
+											</div>
+											<div className="d-flex justify-content-center gap-5">
+												<div className="col-12 col-md-4">
+													<label className="form-label small fw-bold text-secondary text-uppercase">
+														Capacité (places)
+													</label>
+													<input
+														type="number"
+														aria-label="Capacité en nombre de places"
+														min={1}
+														className="form-control rounded-3"
+														value={editRoomForm.capacity}
+														onChange={(e) =>
+															setEditRoomForm({
+																...editRoomForm,
+																capacity: Number(e.target.value),
+															})
+														}
+													/>
+												</div>
+												<div className="col-12 col-md-4">
+													<label className="form-label small fw-bold text-secondary text-uppercase">
+														Étage
+													</label>
+													<input
+														type="number"
+														aria-label="Numéro de l'étage"
+														className="form-control rounded-3"
+														value={editRoomForm.floor}
+														onChange={(e) =>
+															setEditRoomForm({
+																...editRoomForm,
+																floor: Number(e.target.value),
+															})
+														}
+														max={
+															buildings.find(
+																(b) => b.id === Number(editRoomForm.buildingId),
+															)?.nbFloors || 1
+														}
+														min={0}
+													/>
+												</div>
+											</div>
+
+											<div className="">
+												<label className="form-label small fw-bold text-secondary text-uppercase">
+													Localisation interne
+												</label>
+												<input
+													type="text"
+													aria-label="Localisation interne de la salle"
+													className="form-control rounded-3"
+													placeholder="e.g. Aile Est"
+													value={editRoomForm.location}
+													onChange={(e) =>
+														setEditRoomForm({
+															...editRoomForm,
+															location: e.target.value,
+														})
+													}
+												/>
+											</div>
+											<div className="modal-body">
+												<div className="modal-footer d-flex justify-content-between border-0">
+													<button
+														className="btn btn-secondary rounded-pill fs-4 px-3 py-2"
+														onClick={handleEditRoom}
+													>
+														Annuler
+													</button>
+													<button
+														className="btn btn-emerald rounded-pill fs-4 px-3 py-2"
+														onClick={handleConfirmEditRoom}
+													>
+														Modifier la salle
+													</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</>
+				)}
 				{deleteBuilding && (
 					<>
 						<div className="modal-backdrop fade show"></div>

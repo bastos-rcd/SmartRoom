@@ -98,8 +98,6 @@ SmartRoom est une application moderne permettant à une entreprise de gérer eff
 2. Démarrer l'application avec Docker Compose
 
    ```bash
-   # Installer les dépendances en local si nécessaire
-   npm install
    # Démarrer les services
    docker compose up -d
    ```

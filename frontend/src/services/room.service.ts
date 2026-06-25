@@ -20,6 +20,24 @@ export const roomService = {
 		return response.data
 	},
 
+	async updateRoom(
+		id: number,
+		name: string,
+		capacity: number,
+		floor: number,
+		location: string,
+		buildingId: number,
+	): Promise<Room> {
+		const response = await API.put(`/rooms/${id}`, {
+			name,
+			capacity,
+			floor,
+			location,
+			buildingId,
+		})
+		return response.data
+	},
+
 	async deleteRoom(id: number) {
 		await API.delete(`/rooms/${id}`)
 	},
