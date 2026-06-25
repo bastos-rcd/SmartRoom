@@ -100,6 +100,7 @@ export default function Settings() {
 			setUser(updatedUser)
 			setPassword('')
 			showSuccess('Informations mises à jour avec succès !')
+			window.location.reload()
 		} catch (err) {
 			console.error(err)
 			showError('Erreur lors de la mise à jour des informations.')

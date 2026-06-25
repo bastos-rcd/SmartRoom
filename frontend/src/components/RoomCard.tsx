@@ -44,7 +44,6 @@ export default function RoomCard(props: RoomProps) {
 			month: 'long',
 			year: 'numeric',
 		})
-		// Capitalize the first letter of the weekday
 		return formatted.charAt(0).toUpperCase() + formatted.slice(1)
 	}
 
@@ -65,11 +64,13 @@ export default function RoomCard(props: RoomProps) {
 					</div>
 				</div>
 				<div>
-					<DeleteIcon
-						className="fs-3 btn-icon-delete"
-						style={{ cursor: 'pointer' }}
-						onClick={handleDelete}
-					/>
+					{new Date(props.endDate) > new Date() && (
+						<DeleteIcon
+							className="fs-3 btn-icon-delete"
+							style={{ cursor: 'pointer' }}
+							onClick={handleDelete}
+						/>
+					)}
 				</div>
 			</div>
 
@@ -126,6 +127,7 @@ export default function RoomCard(props: RoomProps) {
 										>
 											Fermer
 										</button>
+
 										<button
 											className="btn btn-emerald rounded-pill fs-4 px-5 py-2"
 											onClick={handleConfirmDelete}

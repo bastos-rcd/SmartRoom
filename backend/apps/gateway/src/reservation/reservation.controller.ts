@@ -41,8 +41,6 @@ export class ReservationController {
 		private readonly reservationClient: ClientProxy,
 	) {}
 
-	@UseGuards(JwtAuthGuard, RolesGuard)
-	@Roles('ADMIN', 'USER')
 	@Get()
 	@ApiOperation({ summary: 'Récupérer la liste de toutes les réservations' })
 	@ApiOkResponse({

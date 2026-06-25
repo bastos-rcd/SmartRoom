@@ -64,9 +64,12 @@ export class UserService {
 		user.firstName = user.firstName
 		user.lastName = user.lastName
 		user.email = user.email
-		user.password = await bcrypt.hash(user.password, saltRounds)
+		if (user.password) {
+			user.password = await bcrypt.hash(user.password, saltRounds)
+		}
 		user.role = user.role
 		user.status = user.status
+
 		return await this.userRepository.save(user)
 	}
 

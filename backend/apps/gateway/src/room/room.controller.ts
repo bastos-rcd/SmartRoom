@@ -57,8 +57,6 @@ export class RoomController {
 		return this.roomClient.send(RoomMessages.FIND_ALL_ROOMS, {})
 	}
 
-	@UseGuards(JwtAuthGuard, RolesGuard)
-	@Roles('ADMIN', 'USER')
 	@Get('/:id')
 	@ApiOperation({ summary: "Récupérer les détails d'une salle par son ID" })
 	@ApiParam({
