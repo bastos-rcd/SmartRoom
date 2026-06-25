@@ -168,6 +168,7 @@ export default function Rooms() {
 								className="form-control border-0 p-0 bg-transparent text-dark fw-semibold shadow-none"
 								style={{ fontSize: '0.9rem' }}
 								value={searchDate}
+								min={new Date().toISOString().split('T')[0]}
 								onChange={(e) => setSearchDate(e.target.value)}
 							/>
 						</div>
@@ -349,9 +350,11 @@ function RoomDetailRow({
 	currentUser,
 	onReserveSuccess,
 }: RoomDetailRowProps) {
-	const [startDate, setStartDate] = useState('')
+	const [startDate, setStartDate] = useState(
+		new Date().toISOString().split('T')[0],
+	)
 	const [startTime, setStartTime] = useState('')
-	const [endDate, setEndDate] = useState('')
+	const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0])
 	const [endTime, setEndTime] = useState('')
 	const [comment, setComment] = useState('')
 	const [reserveError, setReserveError] = useState('')
@@ -451,7 +454,13 @@ function RoomDetailRow({
 										aria-label="Select start date"
 										className="form-control bg-white"
 										value={startDate}
-										onChange={(e) => setStartDate(e.target.value)}
+										min={new Date().toISOString().split('T')[0]}
+										onChange={(e) => {
+											setStartDate(e.target.value)
+											if (e.target.value > endDate) {
+												setEndDate(e.target.value)
+											}
+										}}
 									/>
 									<input
 										type="time"
@@ -473,6 +482,7 @@ function RoomDetailRow({
 										aria-label="Select end date"
 										className="form-control bg-white"
 										value={endDate}
+										min={startDate}
 										onChange={(e) => setEndDate(e.target.value)}
 									/>
 									<input
