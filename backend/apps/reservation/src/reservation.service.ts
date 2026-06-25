@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { LessThan, MoreThan, Repository } from 'typeorm'
 
 import { Reservation } from './reservation.entity'
 
@@ -26,6 +26,16 @@ export class ReservationService {
 	}
 
 	async create(reservation: Reservation): Promise<Reservation> {
+		const alreadyReservation = await this.reservationRepository.findOne({
+			where: {
+				roomId: reservation.roomId,
+				startDate: LessThan(new Date(reservation.endDate)),
+				endDate: MoreThan(new Date(reservation.startDate)),
+			},
+		})
+		if (alreadyReservation) {
+			throw new Error('Reservation already exists')
+		}
 		const newReservation = await this.reservationRepository.create(reservation)
 		return await this.reservationRepository.save(newReservation)
 	}
@@ -48,6 +58,16 @@ export class ReservationService {
 			existingReservation.roomId === reservation.roomId
 		) {
 			throw new Error('No changes detected')
+		}
+		const alreadyReservation = await this.reservationRepository.findOne({
+			where: {
+				roomId: reservation.roomId,
+				startDate: LessThan(new Date(reservation.endDate)),
+				endDate: MoreThan(new Date(reservation.startDate)),
+			},
+		})
+		if (alreadyReservation) {
+			throw new Error('Reservation already exists')
 		}
 		reservation.startDate = new Date(reservation.startDate)
 		reservation.endDate = new Date(reservation.endDate)
