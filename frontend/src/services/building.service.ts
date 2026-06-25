@@ -21,6 +21,21 @@ export const buildingService = {
 		return response.data
 	},
 
+	async updateBuilding(
+		id: number,
+		name: string,
+		address: string,
+		nbFloors: number,
+	): Promise<Building> {
+		const response = await API.put(`/buildings/${id}`, {
+			name,
+			address,
+			nbFloors,
+		})
+
+		return response.data
+	},
+
 	async deleteBuilding(id: number) {
 		await API.delete(`/buildings/${id}`)
 	},
