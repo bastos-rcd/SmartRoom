@@ -30,7 +30,10 @@ export class RoomController {
 	}
 
 	@MessagePattern(RoomMessages.DELETE_ROOM)
-	async delete(id: number): Promise<void> {
-		return this.roomService.delete(id)
+	async delete(id: number): Promise<boolean> {
+		return this.roomService
+			.delete(id)
+			.then(() => true)
+			.catch(() => false)
 	}
 }

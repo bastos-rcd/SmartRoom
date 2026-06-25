@@ -30,7 +30,10 @@ export class ParameterController {
 	}
 
 	@MessagePattern(ParameterMessages.DELETE_PARAMETER)
-	async delete(id: number): Promise<void> {
-		return this.parameterService.delete(id)
+	async delete(id: number): Promise<boolean> {
+		return this.parameterService
+			.delete(id)
+			.then(() => true)
+			.catch(() => false)
 	}
 }

@@ -56,7 +56,7 @@ export class ParameterService {
 		return await this.parameterRepository.save(parameter)
 	}
 
-	async delete(id: number): Promise<void> {
+	async delete(id: number): Promise<boolean> {
 		const existingParameter = await this.parameterRepository.findOne({
 			where: { id },
 		})
@@ -64,5 +64,6 @@ export class ParameterService {
 			throw new Error('Parameter not found')
 		}
 		await this.parameterRepository.delete(id)
+		return true
 	}
 }

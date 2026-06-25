@@ -70,7 +70,7 @@ export class UserService {
 		return await this.userRepository.save(user)
 	}
 
-	async delete(id: number): Promise<void> {
+	async delete(id: number): Promise<boolean> {
 		const user = await this.userRepository.findOne({
 			where: { id },
 		})
@@ -78,6 +78,7 @@ export class UserService {
 		if (!user) {
 			throw new Error('User not found')
 		}
-		await this.userRepository.delete(id)
+		await this.userRepository.delete(user.id)
+		return true
 	}
 }

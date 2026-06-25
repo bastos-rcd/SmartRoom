@@ -53,7 +53,7 @@ export class RequestService {
 		return await this.requestRepository.save(request)
 	}
 
-	async delete(id: number): Promise<void> {
+	async delete(id: number): Promise<boolean> {
 		const existingRequest = await this.requestRepository.findOne({
 			where: { id },
 		})
@@ -61,5 +61,6 @@ export class RequestService {
 			throw new Error('Request not found')
 		}
 		await this.requestRepository.delete(id)
+		return true
 	}
 }

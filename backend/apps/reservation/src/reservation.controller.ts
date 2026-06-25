@@ -30,7 +30,10 @@ export class ReservationController {
 	}
 
 	@MessagePattern(ReservationMessages.DELETE_RESERVATION)
-	async delete(id: number): Promise<void> {
-		return this.reservationService.delete(id)
+	async delete(id: number): Promise<boolean> {
+		return this.reservationService
+			.delete(id)
+			.then(() => true)
+			.catch(() => false)
 	}
 }

@@ -35,7 +35,10 @@ export class UserController {
 	}
 
 	@MessagePattern(UserMessages.DELETE_USER)
-	async delete(id: number): Promise<void> {
-		return this.userService.delete(id)
+	async delete(id: number): Promise<boolean> {
+		return this.userService
+			.delete(id)
+			.then(() => true)
+			.catch(() => false)
 	}
 }

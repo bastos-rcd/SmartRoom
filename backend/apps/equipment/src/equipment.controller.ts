@@ -30,7 +30,10 @@ export class EquipmentController {
 	}
 
 	@MessagePattern(EquipmentMessages.DELETE_EQUIPMENT)
-	async delete(id: number): Promise<void> {
-		return this.equipmentService.delete(id)
+	async delete(id: number): Promise<boolean> {
+		return this.equipmentService
+			.delete(id)
+			.then(() => true)
+			.catch(() => false)
 	}
 }

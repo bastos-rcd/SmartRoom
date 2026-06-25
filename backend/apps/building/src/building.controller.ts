@@ -30,7 +30,10 @@ export class BuildingController {
 	}
 
 	@MessagePattern(BuildingMessages.DELETE_BUILDING)
-	async delete(id: number): Promise<void> {
-		return this.buildingService.delete(id)
+	async delete(id: number): Promise<boolean> {
+		return this.buildingService
+			.delete(id)
+			.then(() => true)
+			.catch(() => false)
 	}
 }

@@ -52,7 +52,7 @@ export class EquipmentService {
 		return await this.equipmentRepository.save(existingEquipment)
 	}
 
-	async delete(id: number): Promise<void> {
+	async delete(id: number): Promise<boolean> {
 		const existingEquipment = await this.equipmentRepository.findOne({
 			where: { id },
 		})
@@ -60,5 +60,6 @@ export class EquipmentService {
 			throw new Error('Equipment not found')
 		}
 		await this.equipmentRepository.delete(id)
+		return true
 	}
 }

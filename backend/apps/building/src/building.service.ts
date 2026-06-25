@@ -50,7 +50,7 @@ export class BuildingService {
 		return await this.buildingRepository.save(existingBuilding)
 	}
 
-	async delete(id: number): Promise<void> {
+	async delete(id: number): Promise<boolean> {
 		const existingBuilding = await this.buildingRepository.findOne({
 			where: { id },
 		})
@@ -58,5 +58,6 @@ export class BuildingService {
 			throw new Error('Building not found')
 		}
 		await this.buildingRepository.delete(id)
+		return true
 	}
 }

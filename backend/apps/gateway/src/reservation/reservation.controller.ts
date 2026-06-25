@@ -145,7 +145,7 @@ export class ReservationController {
 		status: 200,
 		description: 'La réservation a été retirée de la base de données.',
 	})
-	delete(@Param('id') id: number): Observable<void> {
+	delete(@Param('id') id: number): Observable<boolean> {
 		return this.reservationClient.send(
 			ReservationMessages.DELETE_RESERVATION,
 			Number(id),
